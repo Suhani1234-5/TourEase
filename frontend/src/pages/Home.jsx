@@ -1,7 +1,7 @@
 import React from 'react';
 import { Globe, Shield, Smartphone, Video, Calendar, Headphones, Users, MapPin, Clock, DollarSign, Award, Star } from 'lucide-react';
 
-export default function App() {
+export default function Home() {
   return (
     <div className="min-h-screen bg-white">
       {/* Hero Section */}
@@ -11,22 +11,22 @@ export default function App() {
             backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
           }}></div>
         </div>
-        
+
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 w-full">
           <div className="inline-block bg-orange-500 text-white px-4 py-1 rounded-full text-sm font-semibold mb-6">
             Explore the World!
           </div>
-          
+
           <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
             Your Smart Travel<br />Assistant Awaits
           </h1>
-          
+
           <p className="text-xl md:text-2xl mb-8 max-w-3xl opacity-90">
-            Plan smarter, travel better! Whether you're exploring nearby or venturing abroad, 
-            our intelligent assistant has everything covered — from itineraries to bookings, 
+            Plan smarter, travel better! Whether you're exploring nearby or venturing abroad,
+            our intelligent assistant has everything covered — from itineraries to bookings,
             all in one place.
           </p>
-          
+
           <div className="flex flex-wrap gap-4 mb-12">
             <button className="bg-orange-500 hover:bg-orange-600 text-white px-10 py-4 rounded-lg font-semibold transition text-lg">
               Start Your Journey
@@ -35,7 +35,7 @@ export default function App() {
               Explore Features
             </button>
           </div>
-          
+
           <div className="grid grid-cols-3 gap-8 max-w-3xl">
             <div>
               <div className="text-4xl md:text-5xl font-bold mb-2">50K+</div>
@@ -61,59 +61,59 @@ export default function App() {
         <p className="text-center text-gray-600 text-lg mb-16 max-w-3xl mx-auto">
           Your all-in-one travel companion powered by smart features designed to simplify every step of your journey
         </p>
-        
+
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Feature Cards */}
-          <FeatureCard 
+          <FeatureCard
             icon={<Globe className="w-10 h-10" />}
             title="AI Travel Planner"
             description="Smart itinerary builder tailored to your interests, budget, and time. Get personalized recommendations instantly."
             color="bg-blue-100 text-blue-600"
           />
-          
-          <FeatureCard 
+
+          <FeatureCard
             icon={<Shield className="w-10 h-10" />}
             title="Local Advice & Support"
             description="Get real-time tips from locals and travelers. Know what to do, where to go, and what to avoid."
             color="bg-teal-100 text-teal-600"
           />
-          
-          <FeatureCard 
+
+          <FeatureCard
             icon={<Smartphone className="w-10 h-10" />}
             title="Smart Accommodation"
             description="Find the perfect stay with AI-driven suggestions based on reviews, location, and price."
             color="bg-purple-100 text-purple-600"
           />
-          
-          <FeatureCard 
+
+          <FeatureCard
             icon={<Video className="w-10 h-10" />}
             title="Online Translation"
             description="Break language barriers with instant AI-powered translation for over 100 languages."
             color="bg-green-100 text-green-600"
           />
-          
-          <FeatureCard 
+
+          <FeatureCard
             icon={<Calendar className="w-10 h-10" />}
             title="Offline Accessibility"
             description="Access your itinerary, maps & guides without internet. Travel worry-free anywhere."
             color="bg-orange-100 text-orange-600"
           />
-          
-          <FeatureCard 
+
+          <FeatureCard
             icon={<Headphones className="w-10 h-10" />}
             title="24/7 Live Support"
             description="Get instant help anytime, anywhere. Our travel experts are always ready to assist you."
             color="bg-pink-100 text-pink-600"
           />
-          
-          <FeatureCard 
+
+          <FeatureCard
             icon={<Users className="w-10 h-10" />}
             title="Group Trip Planner"
             description="Coordinate with friends easily. Share itineraries, split costs, and vote on activities."
             color="bg-indigo-100 text-indigo-600"
           />
-          
-          <FeatureCard 
+
+          <FeatureCard
             icon={<DollarSign className="w-10 h-10" />}
             title="Budget Tracker"
             description="Stay on budget with smart expense tracking and cost predictions for your entire trip."
@@ -131,33 +131,33 @@ export default function App() {
           <p className="text-center text-gray-600 text-lg mb-16">
             Four simple steps to planning your perfect trip with AI assistance
           </p>
-          
+
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <StepCard 
+            <StepCard
               number="1"
               icon={<MapPin className="w-8 h-8" />}
               title="Tell Us Your Destination"
               description="Simply enter where you want to go and when. Our AI understands your preferences."
               color="bg-teal-500"
             />
-            
-            <StepCard 
+
+            <StepCard
               number="2"
               icon={<Star className="w-8 h-8" />}
               title="Get Personalized Suggestions"
               description="Receive custom itineraries based on your interests, budget, and travel style."
               color="bg-orange-500"
             />
-            
-            <StepCard 
+
+            <StepCard
               number="3"
               icon={<Clock className="w-8 h-8" />}
               title="Travel with Confidence"
               description="Access your plans offline, get real-time updates, and enjoy 24/7 support."
               color="bg-teal-500"
             />
-            
-            <StepCard 
+
+            <StepCard
               number="4"
               icon={<Award className="w-8 h-8" />}
               title="Share Your Story"
@@ -176,30 +176,30 @@ export default function App() {
         <p className="text-center text-gray-600 text-lg mb-16 max-w-3xl mx-auto">
           Connect with fellow travelers, share experiences, and get inspired for your next adventure
         </p>
-        
+
         <div className="grid md:grid-cols-3 gap-8 mb-16">
-          <CommunityCard 
+          <CommunityCard
             name="Emily Chen"
             location="New York, USA"
             quote="TourEase made planning my Europe trip so easy! The AI suggestions were spot-on, and I discovered hidden gems I never would have found."
             trips="23 Trips"
           />
-          
-          <CommunityCard 
+
+          <CommunityCard
             name="Marco Rossi"
             location="Rome, Italy"
             quote="As a frequent traveler, this app has become essential. The offline features saved me countless times, and the community is incredibly helpful."
             trips="47 Trips"
           />
-          
-          <CommunityCard 
+
+          <CommunityCard
             name="Priya Patel"
             location="Mumbai, India"
             quote="The budget tracker helped me travel more while spending less. I love how it suggests alternatives and helps optimize my expenses!"
             trips="15 Trips"
           />
         </div>
-        
+
         <div className="relative h-80 rounded-2xl overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-r from-teal-400 to-cyan-500 opacity-90"></div>
           <div className="absolute inset-0 flex items-center justify-center">
@@ -221,15 +221,15 @@ export default function App() {
           <div className="inline-block bg-orange-500 text-white px-4 py-1 rounded-full text-sm font-semibold mb-6">
             Ready to Explore the World?
           </div>
-          
+
           <h2 className="text-4xl md:text-6xl font-bold mb-6">
             Ready to Experience Travel<br />Like Never Before?
           </h2>
-          
+
           <p className="text-xl mb-10 opacity-90">
             Join thousands of smart travelers who plan better and explore more with TourEase
           </p>
-          
+
           <div className="flex flex-wrap justify-center gap-4 mb-16">
             <button className="bg-orange-500 hover:bg-orange-600 text-white px-10 py-4 rounded-lg font-semibold transition text-lg">
               Get Started Free
@@ -238,7 +238,7 @@ export default function App() {
               Watch Demo
             </button>
           </div>
-          
+
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto">
             <div className="text-center">
               <div className="text-3xl md:text-4xl font-bold mb-2">Free</div>
