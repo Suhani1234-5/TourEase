@@ -109,6 +109,50 @@ Our mission is to make travel **personalized**, **safe**, and **immersive** for 
 | **Event Data** | Integration with global event APIs or local tourism boards |
 
 ---
+📁 FOLDER STRUCTURE-
+TourEase/
+├── backend/
+│   ├── src/
+│   │   ├── controllers/
+│   │   ├── models/
+│   │   ├── routes/
+│   │   ├── middlewares/
+│   │   ├── services/
+│   │   ├── utils/
+│   │   └── config/
+│   ├── tests/
+│   │   ├── unit/
+│   │   └── integration/
+│   ├── .env.example
+│   └── package.json
+│
+├── frontend/
+│   ├── public/
+│   ├── src/
+│   │   ├── assets/
+│   │   │   ├── images/
+│   │   │   └── styles/
+│   │   ├── components/
+│   │   ├── pages/
+│   │   ├── services/
+│   │   ├── utils/
+│   │   ├── hooks/
+│   │   └── config/
+│   ├── tests/
+│   │   ├── unit/
+│   │   └── integration/
+│   ├── .env.example
+│   └── package.json
+│
+├── docs/
+│   └── architecture.md
+│
+├── .gitignore
+├── README.md
+└── LICENSE
+
+
+---
 
 ## 🚀 Getting Started
 
