@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, Heart } from 'lucide-react';
+import { useFavorites } from '../hooks/useFavorites';
 
 export default function Navigation() {
     const [isOpen, setIsOpen] = useState(false);
     const location = useLocation();
     const navigate = useNavigate();
+    const { favoriteIds } = useFavorites();
 
     const navItems = [
         { path: '/', label: 'Home' },
@@ -52,6 +54,24 @@ export default function Navigation() {
                                 {item.label}
                             </Link>
                         ))}
+                        
+                        {/* Favorites Link */}
+                        <Link
+                            to="/favorites"
+                            className={`px-4 py-2 rounded-lg font-semibold transition-all flex items-center gap-2 ${
+                                isActive('/favorites')
+                                    ? 'bg-teal-500 text-white'
+                                    : 'text-gray-700 hover:bg-gray-100'
+                            }`}
+                        >
+            
+                            <span>Favorites</span>
+                            {favoriteIds.length > 0 && (
+                                <span className="bg-red-500 text-white text-xs rounded-full px-2 py-0.5 font-bold">
+                                    {favoriteIds.length}
+                                </span>
+                            )}
+                        </Link>
                     </div>
 
                     {/* CTA Button */}
@@ -94,6 +114,25 @@ export default function Navigation() {
                                 {item.label}
                             </Link>
                         ))}
+                        
+                        {/* Mobile Favorites Link */}
+                        <Link
+                            to="/favorites"
+                            onClick={() => setIsOpen(false)}
+                            className={`flex items-center gap-2 px-4 py-2 rounded-lg font-semibold transition ${
+                                isActive('/favorites')
+                                    ? 'bg-teal-500 text-white'
+                                    : 'text-gray-700 hover:bg-gray-100'
+                            }`}
+                        >
+                            <Heart className={`w-5 h-5 ${favoriteIds.length > 0 ? 'fill-red-500 text-red-500' : ''}`} />
+                            <span>Favorites</span>
+                            {favoriteIds.length > 0 && (
+                                <span className="bg-red-500 text-white text-xs rounded-full px-2 py-0.5 font-bold">
+                                    {favoriteIds.length}
+                                </span>
+                            )}
+                        </Link>
 
                         <Link
                             to="/signup"

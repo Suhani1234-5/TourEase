@@ -7,6 +7,7 @@ import {
   Navigate
 } from 'react-router-dom';
 
+import { FavoritesProvider } from './context/FavoritesContext';
 import Navigation from './components/Navigation';
 import Home from './pages/Home';
 import Home2 from './pages/Home2';
@@ -15,6 +16,7 @@ import Destinations from './pages/Destinations';
 import Contact from './pages/Contact';
 import Signup from './pages/signup';
 import Login from './pages/Login';
+import AddFavorite from './pages/AddFavorite';
 
 function ProtectedRoute({ children }) {
   const isAuthenticated = Boolean(localStorage.getItem('token'));
@@ -50,6 +52,7 @@ function AppRoutes() {
           <Route path="/contact" element={<Contact />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/favorites" element={<AddFavorite/>}/>
         </Routes>
       </div>
     </>
@@ -58,8 +61,10 @@ function AppRoutes() {
 
 export default function App() {
   return (
-    <Router>
-      <AppRoutes />
-    </Router>
+    <FavoritesProvider>
+      <Router>
+        <AppRoutes />
+      </Router>
+    </FavoritesProvider>
   );
 }
