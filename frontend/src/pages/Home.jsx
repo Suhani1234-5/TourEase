@@ -274,111 +274,43 @@ export default function Home() {
       </div>
 
       {/* Footer */}
-     <footer className="bg-[#0b1120] text-gray-400 py-16 relative overflow-hidden">
-  {/* Top Accent Line */}
-  <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-orange-500/40 to-transparent"></div>
-
-  <div className="max-w-7xl mx-auto px-6 lg:px-8">
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 mb-16">
-      
-      {/* 1. Brand Section */}
-      <div className="lg:col-span-4 space-y-6">
-        <h3 className="text-white font-bold text-3xl tracking-tight">
-          Tour<span className="text-teal-400">Ease</span>
-        </h3>
-        <p className="text-sm leading-relaxed max-w-xs text-gray-400">
-          Your smart travel companion for unforgettable adventures around the world.
-        </p>
-        <div className="space-y-2 text-sm">
-          <p className="text-gray-300 font-medium">support@tourease.com</p>
-          <p className="text-gray-500 text-xs uppercase tracking-widest">San Francisco, CA, USA</p>
+      <footer className="bg-gray-900 text-gray-300 py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid md:grid-cols-4 gap-12 mb-12">
+            <div>
+              <h3 className="text-white font-bold text-2xl mb-4">TourEase</h3>
+              <p className="text-sm leading-relaxed">Your smart travel companion for unforgettable adventures around the world.</p>
+            </div>
+            <div>
+              <h4 className="text-white font-semibold mb-4 text-lg">Product</h4>
+              <ul className="space-y-3 text-sm">
+                <li><a href="#" className="hover:text-white transition">Features</a></li>
+                <li><a href="#" className="hover:text-white transition">Pricing</a></li>
+                <li><a href="#" className="hover:text-white transition">Reviews</a></li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="text-white font-semibold mb-4 text-lg">Company</h4>
+              <ul className="space-y-3 text-sm">
+                <li><a href="#" className="hover:text-white transition">About Us</a></li>
+                <li><a href="#" className="hover:text-white transition">Careers</a></li>
+                <li><a href="#" className="hover:text-white transition">Contact</a></li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="text-white font-semibold mb-4 text-lg">Support</h4>
+              <ul className="space-y-3 text-sm">
+                <li><a href="#" className="hover:text-white transition">Help Center</a></li>
+                <li><a href="#" className="hover:text-white transition">Terms of Service</a></li>
+                <li><a href="#" className="hover:text-white transition">Privacy Policy</a></li>
+              </ul>
+            </div>
+          </div>
+          <div className="border-t border-gray-800 pt-8 text-center text-sm">
+            <p>&copy; 2025 TourEase. All rights reserved. Made with ❤️ for travelers worldwide.</p>
+          </div>
         </div>
-      </div>
-
-      {/* 2. Links Section with Orange Dots */}
-      <div className="lg:col-span-5 grid grid-cols-3 gap-4">
-        {/* Product */}
-        <div>
-          <h4 className="text-white font-bold mb-7 text-[12px] uppercase tracking-[0.2em]">Product</h4>
-          <ul className="space-y-4">
-            {['Features', 'Pricing', 'Reviews'].map((item) => (
-              <li key={item} className="group flex items-center">
-                {/* Solid Orange Dot */}
-                <span className="h-1.5 w-1.5 rounded-full bg-orange-500 mr-3 opacity-70 group-hover:opacity-100 group-hover:scale-125 transition-all duration-300"></span>
-                <a href="#" className="text-sm group-hover:text-teal-400 group-hover:translate-x-1 transform transition-all duration-300">
-                  {item}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        {/* Company */}
-        <div>
-          <h4 className="text-white font-bold mb-7 text-[12px] uppercase tracking-[0.2em]">Company</h4>
-          <ul className="space-y-4">
-            {['About Us', 'Careers', 'Contact'].map((item) => (
-              <li key={item} className="group flex items-center">
-                <span className="h-1.5 w-1.5 rounded-full bg-orange-500 mr-3 opacity-70 group-hover:opacity-100 group-hover:scale-125 transition-all duration-300"></span>
-                <a href="#" className="text-sm group-hover:text-teal-400 group-hover:translate-x-1 transform transition-all duration-300">
-                  {item}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        {/* Support */}
-        <div>
-          <h4 className="text-white font-bold mb-7 text-[12px] uppercase tracking-[0.2em]">Support</h4>
-          <ul className="space-y-4">
-            {['Help Center', 'Terms', 'Privacy'].map((item) => (
-              <li key={item} className="group flex items-center">
-                <span className="h-1.5 w-1.5 rounded-full bg-orange-500 mr-3 opacity-70 group-hover:opacity-100 group-hover:scale-125 transition-all duration-300"></span>
-                <a href="#" className="text-sm group-hover:text-teal-400 group-hover:translate-x-1 transform transition-all duration-300">
-                  {item}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </div>
-
-      {/* 3. Newsletter Section */}
-      <div className="lg:col-span-3 space-y-6">
-        <h4 className="text-white font-bold text-[12px] uppercase tracking-[0.2em]">Newsletter</h4>
-        <div className="space-y-3">
-          <input 
-            type="email" 
-            placeholder="Your email address" 
-            className="w-full bg-[#111827] border border-gray-800 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-orange-500 transition-all text-white"
-          />
-          <button 
-            onClick={() => window.location.href='/signup'}
-            className="w-full bg-orange-600 hover:bg-orange-500 text-white font-bold py-3 rounded-xl transition-all shadow-lg shadow-orange-900/40 active:scale-95 text-sm uppercase tracking-wider"
-          >
-            Subscribe Now
-          </button>
-        </div>
-        <div className="flex items-center justify-center space-x-2 opacity-60">
-           <span className="h-[1px] w-4 bg-gray-600"></span>
-           <p className="text-[10px] text-gray-400 uppercase tracking-widest">Join 50k+ Travelers</p>
-           <span className="h-[1px] w-4 bg-gray-600"></span>
-        </div>
-      </div>
-    </div>
-
-    {/* Bottom Bar */}
-    <div className="border-t border-gray-800/80 pt-8 flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0 text-[10px] text-gray-500 uppercase tracking-[0.25em] font-medium">
-      <p>&copy; 2025 TourEase. All rights reserved.</p>
-      <div className="flex items-center space-x-1 hover:text-white transition-colors cursor-default">
-        <span>Handcrafted with</span>
-        <span className="text-orange-500 text-sm mx-1 animate-bounce">🧡</span>
-        <span>globally</span>
-      </div>
-    </div>
-  </div>
-</footer>
+      </footer>
     </div>
   );
 }
