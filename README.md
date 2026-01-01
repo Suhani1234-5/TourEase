@@ -173,7 +173,7 @@ Our mission is to make travel **personalized**, **safe**, and **immersive** for 
 
    # In a new terminal, start frontend
    cd frontend
-   npm start
+   npm run dev
    
 
 5. **Access the application**
