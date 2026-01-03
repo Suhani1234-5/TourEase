@@ -1,10 +1,24 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { MapPin, Star, Heart, Clock, Users, TrendingUp } from 'lucide-react';
 import { useFavorites } from '../hooks/useFavorites';
 import { destinations } from '../utils/destinationsData';
 
 export default function Destinations() {
     const { toggleFavorite, isFavorite } = useFavorites();
+    const [activeFilter, setActiveFilter] = useState('All Destinations');
+
+    const filteredDestinations = destinations.filter((d) => {
+        const label = activeFilter;
+        if (label === 'All Destinations') return true;
+        if (label === 'Budget Friendly') return d.cost === '$' || (d.bestFor && d.bestFor.includes('Budget'));
+        if (label === 'Luxury') return (d.bestFor && d.bestFor.includes('Luxury')) || d.cost === '$$$';
+        if (label === 'Beach') return d.bestFor && d.bestFor.includes('Beach');
+        if (label === 'Mountains') return d.bestFor && d.bestFor.includes('Mountains');
+        if (label === 'Cultural') return (
+            (d.bestFor && (d.bestFor.includes('Culture') || d.bestFor.includes('History') || d.bestFor.includes('Art') || d.bestFor.includes('Museums')))
+        );
+        return true;
+    });
 
     return (
         <div className="min-h-screen bg-white">
@@ -21,19 +35,19 @@ export default function Destinations() {
             {/* Filter Section */}
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
                 <div className="flex flex-wrap gap-4 mb-12">
-                    <FilterButton label="All Destinations" active />
-                    <FilterButton label="Budget Friendly" />
-                    <FilterButton label="Luxury" />
-                    <FilterButton label="Beach" />
-                    <FilterButton label="Mountains" />
-                    <FilterButton label="Cultural" />
+                    <FilterButton label="All Destinations" active={activeFilter === 'All Destinations'} onClick={() => setActiveFilter('All Destinations')} />
+                    <FilterButton label="Budget Friendly" active={activeFilter === 'Budget Friendly'} onClick={() => setActiveFilter('Budget Friendly')} />
+                    <FilterButton label="Luxury" active={activeFilter === 'Luxury'} onClick={() => setActiveFilter('Luxury')} />
+                    <FilterButton label="Beach" active={activeFilter === 'Beach'} onClick={() => setActiveFilter('Beach')} />
+                    <FilterButton label="Mountains" active={activeFilter === 'Mountains'} onClick={() => setActiveFilter('Mountains')} />
+                    <FilterButton label="Cultural" active={activeFilter === 'Cultural'} onClick={() => setActiveFilter('Cultural')} />
                 </div>
             </div>
 
             {/* Destinations Grid */}
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
                 <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-                    {destinations.map((destination) => (
+                    {filteredDestinations.map((destination) => (
                         <DestinationCard
                             key={destination.id}
                             destination={destination}
@@ -62,9 +76,11 @@ export default function Destinations() {
     );
 }
 
-function FilterButton({ label, active }) {
+function FilterButton({ label, active, onClick }) {
     return (
         <button
+            onClick={onClick}
+            aria-pressed={active}
             className={`px-6 py-2 rounded-full font-semibold transition ${active
                     ? 'bg-teal-500 text-white'
                     : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
