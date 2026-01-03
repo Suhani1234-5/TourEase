@@ -2,7 +2,7 @@ export const destinations = [
     {
         id: 1,
         name: 'Paris, France',
-        image: 'bg-gradient-to-br from-blue-400 to-blue-600',
+        image: 'https://images.unsplash.com/photo-1499856871958-5b9627545d1a?q=80&w=1600',
         rating: 4.9,
         reviews: 2450,
         bestFor: 'Romance, Culture',
@@ -12,7 +12,7 @@ export const destinations = [
     {
         id: 2,
         name: 'Tokyo, Japan',
-        image: 'bg-gradient-to-br from-pink-400 to-red-600',
+        image: 'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?q=80&w=1600',
         rating: 4.8,
         reviews: 1890,
         bestFor: 'Tech, Culture, Food',
@@ -22,7 +22,7 @@ export const destinations = [
     {
         id: 3,
         name: 'Barcelona, Spain',
-        image: 'bg-gradient-to-br from-yellow-400 to-orange-600',
+        image: 'https://images.unsplash.com/photo-1509840841025-9088ba78a826?q=80&w=1600',
         rating: 4.7,
         reviews: 2100,
         bestFor: 'Art, Beach, Architecture',
@@ -32,7 +32,7 @@ export const destinations = [
     {
         id: 4,
         name: 'Bali, Indonesia',
-        image: 'bg-gradient-to-br from-green-400 to-teal-600',
+        image: 'https://images.unsplash.com/photo-1558005530-a7958896ec60?q=80&w=1600',
         rating: 4.8,
         reviews: 3200,
         bestFor: 'Beach, Spirituality, Budget',
@@ -42,7 +42,7 @@ export const destinations = [
     {
         id: 5,
         name: 'New York, USA',
-        image: 'bg-gradient-to-br from-red-400 to-purple-600',
+        image: 'https://images.unsplash.com/photo-1546436836-07a91091f160?q=80&w=1600',
         rating: 4.6,
         reviews: 3890,
         bestFor: 'City Life, Broadway, Food',
@@ -52,7 +52,7 @@ export const destinations = [
     {
         id: 6,
         name: 'Dubai, UAE',
-        image: 'bg-gradient-to-br from-amber-400 to-orange-600',
+        image: 'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?q=80&w=1600',
         rating: 4.7,
         reviews: 2670,
         bestFor: 'Luxury, Desert, Shopping',
@@ -62,7 +62,7 @@ export const destinations = [
     {
         id: 7,
         name: 'Amsterdam, Netherlands',
-        image: 'bg-gradient-to-br from-cyan-400 to-blue-600',
+        image: 'https://images.unsplash.com/photo-1469474968028-56623f02e42e?q=80&w=1600',
         rating: 4.8,
         reviews: 2340,
         bestFor: 'Cycling, Canals, Art',
@@ -72,7 +72,7 @@ export const destinations = [
     {
         id: 8,
         name: 'London, UK',
-        image: 'bg-gradient-to-br from-indigo-400 to-purple-600',
+        image: 'https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?q=80&w=1600',
         rating: 4.7,
         reviews: 3100,
         bestFor: 'History, Museums, Food',
