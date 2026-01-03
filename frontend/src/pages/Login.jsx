@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Mail, Lock, Eye, EyeOff } from "lucide-react";
 import { api } from "../services/api";
-
+import { API_BASE_URL } from "../config/auth";
 export default function Login() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -14,6 +14,16 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [success, setSuccess] = useState(false);
 
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      navigate("/home2", { replace: true });
+    }
+  }, []);
+
+  const handleGoogleLogin = () => {
+    window.location.href = `${API_BASE_URL}/auth/google`;
+  };
   const handleChange = (e) => {
     const { name, value } = e.target;
 
@@ -119,6 +129,29 @@ export default function Login() {
             </p>
           </div>
         )}
+        {/* GOOGLE LOGIN */}
+        <button
+          onClick={handleGoogleLogin}
+          className="w-full mb-6 flex items-center justify-center gap-3 border border-gray-300 py-3 rounded-lg hover:bg-gray-50 transition"
+        >
+          <img
+            src="https://developers.google.com/identity/images/g-logo.png"
+            alt="Google"
+            className="h-5 w-5"
+          />
+          <span className="font-medium text-gray-700">
+            Continue with Google
+          </span>
+        </button>
+
+        <div className="relative mb-6">
+          <div className="absolute inset-0 flex items-center">
+            <div className="w-full border-t border-gray-200"></div>
+          </div>
+          <div className="relative flex justify-center text-sm">
+            <span className="bg-white px-3 text-gray-500">or</span>
+          </div>
+        </div>
 
         <form onSubmit={handleSubmit} className="space-y-5">
           {/* EMAIL */}
@@ -134,9 +167,8 @@ export default function Login() {
                 required
                 value={formData.email}
                 onChange={handleChange}
-                className={`w-full pl-10 pr-3 py-3 border rounded-lg ${
-                  errors.email ? "border-red-300 bg-red-50" : "border-gray-300"
-                }`}
+                className={`w-full pl-10 pr-3 py-3 border rounded-lg ${errors.email ? "border-red-300 bg-red-50" : "border-gray-300"
+                  }`}
                 placeholder="you@example.com"
               />
             </div>
@@ -156,11 +188,10 @@ export default function Login() {
                 required
                 value={formData.password}
                 onChange={handleChange}
-                className={`w-full pl-10 pr-10 py-3 border rounded-lg ${
-                  errors.password
-                    ? "border-red-300 bg-red-50"
-                    : "border-gray-300"
-                }`}
+                className={`w-full pl-10 pr-10 py-3 border rounded-lg ${errors.password
+                  ? "border-red-300 bg-red-50"
+                  : "border-gray-300"
+                  }`}
                 placeholder="••••••••"
               />
               <button

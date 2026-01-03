@@ -158,10 +158,15 @@ Our mission is to make travel **personalized**, **safe**, and **immersive** for 
    OPENAI_API_KEY=your_openai_api_key
    MAPBOX_ACCESS_TOKEN=your_mapbox_token
    
+   // For Google OAuth
+   GOOGLE_CLIENT_ID=Google_Client_Id
+   GOOGLE_CLIENT_SECRET=Your_Client_Secret
+   GOOGLE_CALLBACK_URL=http://localhost:5000/api/auth/google/callback
+   
    
    **Frontend `.env`:**
   
-   REACT_APP_API_URL=http://localhost:5000
+   VITE_API_URL=http://localhost:5000/api
    REACT_APP_MAPBOX_TOKEN=your_mapbox_token
   
 

@@ -17,6 +17,7 @@ import Contact from './pages/Contact';
 import Signup from './pages/signup';
 import Login from './pages/Login';
 import AddFavorite from './pages/AddFavorite';
+import OAuthSuccess from './pages/OAuthsuccess';
 
 function ProtectedRoute({ children }) {
   const isAuthenticated = Boolean(localStorage.getItem('token'));
@@ -53,6 +54,7 @@ function AppRoutes() {
           <Route path="/signup" element={<Signup />} />
           <Route path="/login" element={<Login />} />
           <Route path="/favorites" element={<AddFavorite/>}/>
+          <Route path="/oauth-success" element={<OAuthSuccess />} />
         </Routes>
       </div>
     </>
