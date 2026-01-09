@@ -1,6 +1,6 @@
 const Contact = require('../models/contact');
+const sendContactMail = require('../services/contactMail.service');
 
-// Save contact form submission
 exports.saveContact = async (req, res) => {
     try {
         const { name, email, subject, message } = req.body;
@@ -13,19 +13,21 @@ exports.saveContact = async (req, res) => {
             });
         }
 
-        // Create new contact
-        const contact = new Contact({
+        // Save contact to database
+        const contact = await Contact.create({
             name,
             email,
             subject: subject || '',
             message
         });
 
-        // Save to database
-        await contact.save();
+        // Try sending email (DO NOT block response)
+        sendContactMail(contact).catch((err) => {
+            console.error('Nodemailer error:', err.message);
+        });
 
-        // Success response
-        res.status(201).json({
+        // Success response (always succeeds if DB save succeeds)
+        return res.status(201).json({
             success: true,
             message: 'Message sent successfully!',
             data: {
@@ -38,11 +40,11 @@ exports.saveContact = async (req, res) => {
 
     } catch (error) {
         console.error('Contact save error:', error);
-        res.status(500).json({
+
+        return res.status(500).json({
             success: false,
             message: 'Failed to send message. Please try again.',
             error: process.env.NODE_ENV === 'development' ? error.message : undefined
         });
     }
 };
-
