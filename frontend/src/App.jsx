@@ -24,6 +24,7 @@ import DestinationDetails from "./pages/DestinationDetails";
 import PlanTrip from "./pages/PlanTrip";
 import OAuthSuccess from "./pages/OAuthSuccess";
 import Privacy from "./pages/Privacy";
+import Terms from "./pages/Terms";
 import NotFound from "./components/NotFound";
 import TripPlanner from './pages/TripPlanner';
 
@@ -62,10 +63,11 @@ function AppRoutes() {
           <Route path="/destinations" element={<Destinations />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/privacy" element={<Privacy />} />
+          <Route path="/terms" element={<Terms />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/login" element={<Login />} />
           <Route path="/favorites" element={<AddFavorite />} />
-         <Route path="/destinations/:id" element={<DestinationDetails />} />
+          <Route path="/destinations/:id" element={<DestinationDetails />} />
 
           <Route path="/plan-trip" element={<PlanTrip />} />
           <Route path="/oauth-success" element={<OAuthSuccess />} />
@@ -91,7 +93,7 @@ export default function App() {
   if (isLoading) {
     return <Loader />;
   }
-  
+
   return (
     <FavoritesProvider>
       <Router>
