@@ -51,10 +51,18 @@ app.use('/api/itinerary', itineraryRoutes);
 app.use('/api/events', eventRoutes);
 app.use('/api/weather', weatherRoutes);
 
-// Health check route
+// Enhanced health check route
 app.get('/api/health', (req, res) => {
-  res.json({ success: true, message: 'Server is running' });
+  res.status(200).json({
+    success: true,
+    status: "ok",
+    message: "Server is running",
+    environment: process.env.NODE_ENV || "development",
+    uptime: process.uptime(),
+    timestamp: new Date().toISOString(),
+  });
 });
+
 
 app.use((err, req, res, next) => {
   console.error("Error:", err);
