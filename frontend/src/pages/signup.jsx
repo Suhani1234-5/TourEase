@@ -18,6 +18,65 @@ export default function Signup() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [passwordStrength, setPasswordStrength] = useState({
+    score: 0,
+    level: "",
+    requirements: {
+      minLength: false,
+      hasLowercase: false,
+      hasUppercase: false,
+      hasNumber: false,
+      hasSpecial: false,
+    },
+  });
+
+  // Calculate password strength
+  const calculatePasswordStrength = (password) => {
+    if (!password) {
+      return {
+        score: 0,
+        level: "",
+        requirements: {
+          minLength: false,
+          hasLowercase: false,
+          hasUppercase: false,
+          hasNumber: false,
+          hasSpecial: false,
+        },
+      };
+    }
+
+    let score = 0;
+    const requirements = {
+      minLength: password.length >= 8,
+      hasLowercase: /[a-z]/.test(password),
+      hasUppercase: /[A-Z]/.test(password),
+      hasNumber: /\d/.test(password),
+      hasSpecial: /[!@#$%^&*(),.?":{}|<>]/.test(password),
+    };
+
+    // Score calculation
+    if (requirements.minLength) score++;
+    if (requirements.hasLowercase) score++;
+    if (requirements.hasUppercase) score++;
+    if (requirements.hasNumber) score++;
+    if (requirements.hasSpecial) score++;
+
+    // Bonus for longer passwords
+    if (password.length >= 12) score++;
+
+    // Determine strength level
+    let level = "";
+    if (score <= 2) {
+      level = "Weak";
+    } else if (score <= 4) {
+      level = "Medium";
+    } else {
+      level = "Strong";
+    }
+
+    return { score, level, requirements };
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -26,6 +85,12 @@ export default function Signup() {
       ...prev,
       [name]: value,
     }));
+
+    // Calculate password strength when password changes
+    if (name === "password") {
+      const strength = calculatePasswordStrength(value);
+      setPasswordStrength(strength);
+    }
 
     if (errors[name]) {
       setErrors((prev) => ({
@@ -191,8 +256,8 @@ export default function Signup() {
                 value={formData.name}
                 onChange={handleChange}
                 className={`w-full pl-10 pr-3 py-3 border rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:ring-1 focus:ring-teal-500 dark:focus:ring-indigo-400 focus:border-teal-500 dark:focus:border-indigo-400 ${errors.name
-                    ? "border-red-300 bg-red-50 dark:border-red-900 dark:bg-red-950"
-                    : "border-gray-300 dark:border-gray-700"
+                  ? "border-red-300 bg-red-50 dark:border-red-900 dark:bg-red-950"
+                  : "border-gray-300 dark:border-gray-700"
                   }`}
                 placeholder="John Doe"
               />
@@ -218,8 +283,8 @@ export default function Signup() {
                 value={formData.email}
                 onChange={handleChange}
                 className={`w-full pl-10 pr-3 py-3 border rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:ring-1 focus:ring-teal-500 dark:focus:ring-indigo-400 focus:border-teal-500 dark:focus:border-indigo-400 ${errors.email
-                    ? "border-red-300 bg-red-50 dark:border-red-900 dark:bg-red-950"
-                    : "border-gray-300 dark:border-gray-700"
+                  ? "border-red-300 bg-red-50 dark:border-red-900 dark:bg-red-950"
+                  : "border-gray-300 dark:border-gray-700"
                   }`}
                 placeholder="you@example.com"
               />
@@ -244,8 +309,8 @@ export default function Signup() {
                 value={formData.phone}
                 onChange={handleChange}
                 className={`w-full pl-10 pr-3 py-3 border rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:ring-1 focus:ring-teal-500 dark:focus:ring-indigo-400 focus:border-teal-500 dark:focus:border-indigo-400 ${errors.phone
-                    ? "border-red-300 bg-red-50 dark:border-red-900 dark:bg-red-950"
-                    : "border-gray-300 dark:border-gray-700"
+                  ? "border-red-300 bg-red-50 dark:border-red-900 dark:bg-red-950"
+                  : "border-gray-300 dark:border-gray-700"
                   }`}
                 placeholder="+1 (555) 123-4567"
               />
@@ -271,8 +336,8 @@ export default function Signup() {
                 value={formData.password}
                 onChange={handleChange}
                 className={`w-full pl-10 pr-10 py-3 border rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:ring-1 focus:ring-teal-500 dark:focus:ring-indigo-400 focus:border-teal-500 dark:focus:border-indigo-400 ${errors.password
-                    ? "border-red-300 bg-red-50 dark:border-red-900 dark:bg-red-950"
-                    : "border-gray-300 dark:border-gray-700"
+                  ? "border-red-300 bg-red-50 dark:border-red-900 dark:bg-red-950"
+                  : "border-gray-300 dark:border-gray-700"
                   }`}
                 placeholder="••••••••"
               />
@@ -288,6 +353,98 @@ export default function Signup() {
                 )}
               </button>
             </div>
+
+            {/* PASSWORD STRENGTH INDICATOR */}
+            {formData.password && (
+              <div className="mt-3 space-y-2 animate-fadeIn">
+                {/* Strength Bar */}
+                <div className="flex items-center gap-2">
+                  <div className="flex-1 h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                    <div
+                      className={`h-full transition-all duration-500 ease-out ${passwordStrength.level === "Weak"
+                          ? "bg-red-500 dark:bg-red-500"
+                          : passwordStrength.level === "Medium"
+                            ? "bg-yellow-500 dark:bg-yellow-500"
+                            : "bg-green-500 dark:bg-green-500"
+                        }`}
+                      style={{
+                        width: `${(passwordStrength.score / 6) * 100}%`,
+                      }}
+                    />
+                  </div>
+                  <span
+                    className={`text-xs font-semibold min-w-[60px] transition-colors duration-300 ${passwordStrength.level === "Weak"
+                        ? "text-red-600 dark:text-red-400"
+                        : passwordStrength.level === "Medium"
+                          ? "text-yellow-600 dark:text-yellow-400"
+                          : "text-green-600 dark:text-green-400"
+                      }`}
+                  >
+                    {passwordStrength.level}
+                  </span>
+                </div>
+
+                {/* Requirements Checklist */}
+                <div className="space-y-1 text-xs">
+                  <div
+                    className={`flex items-center gap-1.5 transition-colors duration-200 ${passwordStrength.requirements.minLength
+                        ? "text-green-600 dark:text-green-400"
+                        : "text-gray-500 dark:text-gray-400"
+                      }`}
+                  >
+                    <span className="font-bold">
+                      {passwordStrength.requirements.minLength ? "✓" : "○"}
+                    </span>
+                    <span>At least 8 characters</span>
+                  </div>
+                  <div
+                    className={`flex items-center gap-1.5 transition-colors duration-200 ${passwordStrength.requirements.hasLowercase
+                        ? "text-green-600 dark:text-green-400"
+                        : "text-gray-500 dark:text-gray-400"
+                      }`}
+                  >
+                    <span className="font-bold">
+                      {passwordStrength.requirements.hasLowercase ? "✓" : "○"}
+                    </span>
+                    <span>Contains lowercase letter</span>
+                  </div>
+                  <div
+                    className={`flex items-center gap-1.5 transition-colors duration-200 ${passwordStrength.requirements.hasUppercase
+                        ? "text-green-600 dark:text-green-400"
+                        : "text-gray-500 dark:text-gray-400"
+                      }`}
+                  >
+                    <span className="font-bold">
+                      {passwordStrength.requirements.hasUppercase ? "✓" : "○"}
+                    </span>
+                    <span>Contains uppercase letter</span>
+                  </div>
+                  <div
+                    className={`flex items-center gap-1.5 transition-colors duration-200 ${passwordStrength.requirements.hasNumber
+                        ? "text-green-600 dark:text-green-400"
+                        : "text-gray-500 dark:text-gray-400"
+                      }`}
+                  >
+                    <span className="font-bold">
+                      {passwordStrength.requirements.hasNumber ? "✓" : "○"}
+                    </span>
+                    <span>Contains number</span>
+                  </div>
+                  <div
+                    className={`flex items-center gap-1.5 transition-colors duration-200 ${passwordStrength.requirements.hasSpecial
+                        ? "text-green-600 dark:text-green-400"
+                        : "text-gray-500 dark:text-gray-400"
+                      }`}
+                  >
+                    <span className="font-bold">
+                      {passwordStrength.requirements.hasSpecial ? "✓" : "○"}
+                    </span>
+                    <span>Contains special character (!@#$%^&*...)</span>
+                  </div>
+                </div>
+              </div>
+            )}
+
             {errors.password && (
               <p className="text-red-600 dark:text-red-300 text-sm mt-1">
                 {errors.password}
@@ -309,8 +466,8 @@ export default function Signup() {
                 value={formData.confirmPassword}
                 onChange={handleChange}
                 className={`w-full pl-10 pr-10 py-3 border rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:ring-1 focus:ring-teal-500 dark:focus:ring-indigo-400 focus:border-teal-500 dark:focus:border-indigo-400 ${errors.confirmPassword
-                    ? "border-red-300 bg-red-50 dark:border-red-900 dark:bg-red-950"
-                    : "border-gray-300 dark:border-gray-700"
+                  ? "border-red-300 bg-red-50 dark:border-red-900 dark:bg-red-950"
+                  : "border-gray-300 dark:border-gray-700"
                   }`}
                 placeholder="••••••••"
               />
