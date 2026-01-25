@@ -430,9 +430,26 @@ export default function TripPlanner() {
                   <Users className="w-5 h-5 mr-2 text-teal-500" /> Number of Travelers
                 </label>
                 <div className="flex items-center space-x-4">
-                  <button onClick={() => setFormData({ ...formData, travelers: Math.max(1, formData.travelers - 1) })} className="w-12 h-12 bg-gray-100 dark:bg-gray-800 rounded-xl font-bold text-xl">−</button>
-                  <div className="flex-1 text-center"><span className="text-4xl font-black">{formData.travelers}</span></div>
-                  <button onClick={() => setFormData({ ...formData, travelers: formData.travelers + 1 })} className="w-12 h-12 bg-teal-500 text-white rounded-xl font-bold text-xl">+</button>
+                  <button
+                    onClick={() => setFormData({ ...formData, travelers: Math.max(1, formData.travelers - 1) })}
+                    className="w-12 h-12 bg-teal-500 hover:bg-teal-600 text-white rounded-xl font-bold text-xl transition-all active:scale-95"
+                  >
+                    −
+                  </button>
+                  <div className="flex-1 text-center">
+                    <span className="text-4xl font-black text-gray-900 dark:text-white">
+                      {formData.travelers}
+                    </span>
+                    <p className="text-sm text-gray-500 mt-1">
+                      {formData.travelers === 1 ? 'Traveler' : 'Travelers'}
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => setFormData({ ...formData, travelers: formData.travelers + 1 })}
+                    className="w-12 h-12 bg-teal-500 hover:bg-teal-600 text-white rounded-xl font-bold text-xl transition-all active:scale-95"
+                  >
+                    +
+                  </button>
                 </div>
               </div>
               <div className="bg-white dark:bg-gray-900 rounded-2xl p-8 shadow-xl border dark:border-gray-800">
