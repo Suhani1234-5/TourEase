@@ -15,6 +15,7 @@ import {
   Award,
   Star,
 } from "lucide-react";
+import CountUp from "../components/CountUp";
 
 export default function Home() {
   return (
@@ -287,7 +288,7 @@ export default function Home() {
             <div className="text-center text-white px-4">
               <Users className="w-20 h-20 mx-auto mb-6 opacity-80" />
               <h3 className="text-3xl md:text-4xl font-bold mb-4">
-                Join 50,000+ Travelers
+                Join <CountUp/> Travelers
               </h3>
               <p className="text-lg mb-6 opacity-90">
                 Start your journey with the smartest travel assistant
