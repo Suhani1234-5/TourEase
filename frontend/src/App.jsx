@@ -26,6 +26,7 @@ import PlanTrip from "./pages/PlanTrip";
 import OAuthSuccess from "./pages/OAuthSuccess";
 import Privacy from "./pages/Privacy";
 import Terms from "./pages/Terms";
+import HelpCenter from "./pages/HelpCenter";
 import NotFound from "./components/NotFound";
 import TripPlanner from './pages/TripPlanner';
 import Footer from "./components/Footer";
@@ -66,6 +67,7 @@ function AppRoutes() {
           <Route path="/contact" element={<Contact />} />
           <Route path="/privacy" element={<Privacy />} />
           <Route path="/terms" element={<Terms />} />
+          <Route path="/help" element={<HelpCenter />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/login" element={<Login />} />
           <Route path="/favorites" element={<AddFavorite />} />
