@@ -56,8 +56,9 @@ export default function Home() {
               </p>
 
               <div className="flex flex-wrap gap-4">
+                {/* CHANGED: Direct link to Trip Planner */}
                 <Link
-                  to="/signup"
+                  to="/trip-planner"
                   className="px-8 py-3.5 bg-orange-600 hover:bg-orange-500 text-white rounded-xl font-bold transition-all duration-300 shadow-lg shadow-orange-900/20 active:scale-95 text-md flex items-center justify-center min-w-[180px]"
                 >
                   Start Your Journey
@@ -292,8 +293,9 @@ export default function Home() {
               <p className="text-lg mb-6 opacity-90">
                 Start your journey with the smartest travel assistant
               </p>
+              {/* CHANGED: Direct link to Trip Planner */}
               <Link
-                to="/signup"
+                to="/trip-planner"
                 className="bg-orange-500 hover:bg-orange-600 text-white px-10 py-4 rounded-lg font-semibold transition text-lg inline-block"
               >
                 Get Started Free
@@ -322,8 +324,9 @@ export default function Home() {
           </p>
 
           <div className="flex flex-wrap justify-center gap-4 mb-16">
+            {/* CHANGED: Direct link to Trip Planner */}
             <Link
-              to="/signup"
+              to="/trip-planner"
               className="bg-orange-500 hover:bg-orange-600 text-white px-10 py-4 rounded-lg font-semibold transition text-lg"
             >
               Get Started Free

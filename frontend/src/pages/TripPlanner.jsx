@@ -5,8 +5,10 @@ import {
   ChevronRight, Sparkles, Clock, Heart, CheckCircle,
   X, ArrowLeft, Star
 } from 'lucide-react';
+import { api } from '../services/api'; // Import the centralized API service
 
 function formatItinerary(plan) {
+  if (!plan) return null;
   const lines = plan.split("\n").filter(Boolean);
 
   return lines.map((line, index) => {
@@ -97,11 +99,9 @@ export default function TripPlanner() {
   const [isGenerating, setIsGenerating] = useState(false);
   const [error, setError] = useState('');
   const [generatedPlan, setGeneratedPlan] = useState(null);
-  const [previousPlan, setPreviousPlan] = useState(null);
   const [refinementInput, setRefinementInput] = useState("");
   const [isRefining, setIsRefining] = useState(false);
 
-  // --- Validation Logic ---
   const isStep1Valid = formData.destination.trim() !== '' && formData.startDate !== '' && formData.endDate !== '';
   const isStep3Valid = formData.interests.length > 0;
 
@@ -109,47 +109,18 @@ export default function TripPlanner() {
     const style = document.createElement("style");
     style.innerHTML = `
       @media print {
-        body * {
-          visibility: hidden;
-        }
-        #print-area,
-        #print-area * {
-          visibility: visible;
-        }
-        #print-area {
-          position: absolute;
-          left: 0;
-          top: 0;
-          width: 100%;
-          padding: 24px;
-          background: white;
-          color: black;
-        }
-        * {
-          box-shadow: none !important;
-          background: white !important;
-          color: black !important;
-        }
-        h1, h2, h3 {
-          page-break-after: avoid;
-        }
-        p, li {
-          font-size: 12pt;
-          line-height: 1.6;
-        }
-        h3 {
-          page-break-inside: avoid;
-        }
-        button, nav, footer {
-          display: none !important;
-        }
+        body * { visibility: hidden; }
+        #print-area, #print-area * { visibility: visible; }
+        #print-area { position: absolute; left: 0; top: 0; width: 100%; padding: 24px; background: white; color: black; }
+        * { box-shadow: none !important; background: white !important; color: black !important; }
+        h1, h2, h3 { page-break-after: avoid; }
+        p, li { font-size: 12pt; line-height: 1.6; }
+        h3 { page-break-inside: avoid; }
+        button, nav, footer { display: none !important; }
       }
     `;
     document.head.appendChild(style);
-
-    return () => {
-      document.head.removeChild(style);
-    };
+    return () => { document.head.removeChild(style); };
   }, []);
 
   const interests = [
@@ -180,30 +151,8 @@ export default function TripPlanner() {
     setError('');
 
     try {
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 25000); 
-
-      const response = await fetch("http://localhost:5000/api/trip/generate", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-        signal: controller.signal,
-      });
-
-      clearTimeout(timeoutId);
-
-      if (!response.ok) {
-        let errorMessage = "Failed to generate trip";
-        try {
-          const errorData = await response.json();
-          errorMessage = errorData.error || errorMessage;
-        } catch { }
-        throw new Error(errorMessage);
-      }
-
-      const data = await response.json();
+      // Use the centralized api service instead of a hardcoded fetch
+      const data = await api.generateTrip(formData);
 
       if (!data.plan || data.plan.trim().length === 0) {
         throw new Error("AI returned an empty itinerary");
@@ -211,12 +160,8 @@ export default function TripPlanner() {
 
       setGeneratedPlan(data.plan);
     } catch (err) {
-      if (err.name === "AbortError") {
-        setError("AI took too long. Please try again.");
-      } else {
-        setError(err.message || "Failed to generate trip. Please try again.");
-      }
-      console.error("Error:", err);
+      setError(err.message || "Failed to generate trip. Please try again.");
+      console.error("Generation Error:", err);
     } finally {
       setIsGenerating(false);
     }
@@ -226,26 +171,18 @@ export default function TripPlanner() {
     if (!refinementInput.trim()) return;
     setIsRefining(true);
     try {
-      const response = await fetch("http://localhost:5000/api/trip/refine", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          originalPlan: generatedPlan,
-          refinementPrompt: refinementInput,
-        }),
-      });
-
-      const data = await response.json();
+      // Use the centralized api service instead of a hardcoded fetch
+      const data = await api.refineTrip(generatedPlan, refinementInput);
+      
       if (!data.updatedPlan || data.updatedPlan.trim().length === 0) {
         throw new Error("No refined itinerary returned");
       }
 
-      setPreviousPlan(generatedPlan);
       setGeneratedPlan(data.updatedPlan);
       setRefinementInput("");
     } catch (err) {
-      console.error(err);
-      alert("Failed to refine itinerary");
+      console.error("Refinement Error:", err);
+      alert("Failed to refine itinerary: " + err.message);
     } finally {
       setIsRefining(false);
     }
@@ -346,7 +283,6 @@ export default function TripPlanner() {
 
   return (
     <div className="min-h-screen bg-white dark:bg-gray-950">
-      {/* Hero Header */}
       <div className="relative bg-gradient-to-br from-teal-500 via-teal-600 to-cyan-600 text-white py-20 text-center overflow-hidden">
         <div className="relative max-w-7xl mx-auto px-6 z-10">
           <div className="inline-flex items-center space-x-2 bg-white/10 border border-white/20 backdrop-blur-xl px-4 py-1.5 rounded-full mb-6">
@@ -358,7 +294,6 @@ export default function TripPlanner() {
         </div>
       </div>
 
-      {/* Progress Steps */}
       <div className="bg-gray-50 dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800">
         <div className="max-w-4xl mx-auto px-6 py-8">
           <div className="flex items-center justify-between">
@@ -520,7 +455,6 @@ export default function TripPlanner() {
             </div>
           )}
 
-          {/* Navigation Controls */}
           <div className="flex justify-between pt-8">
             {step > 1 && (
               <button onClick={() => setStep(step - 1)} className="px-8 py-3.5 bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white rounded-xl font-bold transition-all active:scale-95">

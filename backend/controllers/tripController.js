@@ -1,4 +1,5 @@
 const OpenAI = require("openai");
+const weatherService = require("../services/weatherService");
 
 const openai = new OpenAI({
   apiKey: process.env.OPENROUTER_API_KEY,
@@ -24,6 +25,23 @@ const generateTrip = async (req, res) => {
       return res.status(400).json({ error: "Missing required fields" });
     }
 
+    // --- Fetch Weather Context ---
+    let weatherContext = "Weather data unavailable for these dates.";
+    try {
+      const forecast = await weatherService.getWeatherForecast(destination, { 
+        start: startDate, 
+        end: endDate 
+      });
+      
+      if (forecast && forecast.length > 0) {
+        weatherContext = forecast.map(day => 
+          `Date: ${day.date}, Condition: ${day.condition}, Temp: ${day.temp.avg}°C, Rain Probability: ${day.precipitation}%`
+        ).join("\n");
+      }
+    } catch (weatherErr) {
+      console.error("⚠️ Weather service integration error:", weatherErr.message);
+    }
+
     const interestText =
       interests && interests.length > 0
         ? interests.join(", ")
@@ -40,35 +58,32 @@ Budget: ${budget}
 Accommodation: ${accommodation}
 Interests: ${interestText}
 
-Include:
-- Morning, Afternoon, Evening plans
-- Must-visit places
-- Food suggestions
-- Travel tips
-- Approximate daily budget
+LOCAL WEATHER FORECAST:
+${weatherContext}
+
+IMPORTANT PLANNING RULES:
+1. WEATHER AWARENESS: If the forecast shows a high rain probability (>60%) or storms, prioritize indoor activities. 
+2. OUTDOOR OPTIMIZATION: On clear/sunny days, prioritize outdoor landmarks.
+3. CLIMATE TIPS: Include specific advice based on the temperature.
+4. COMPLETENESS: Ensure the itinerary is COMPLETE.
+5. STRUCTURE: Include Morning, Afternoon, and Evening plans with food suggestions and approximate daily budget.
 
 Return in clean readable text.
-IMPORTANT:
-- Ensure the itinerary is COMPLETE
-- Do not cut off mid-day or mid-sentence
-- If space is limited, shorten descriptions but finish all days
-
 `;
 
-    const response = await openai.responses.create({
+    const response = await openai.chat.completions.create({
       model: "meta-llama/llama-3.1-8b-instruct",
-      input: prompt,
-      max_output_tokens: 1200,
+      messages: [{ role: "user", content: prompt }],
+      max_tokens: 1200,
       temperature: 0.7,
     });
 
-    const plan = response.output_text;
+    const plan = response.choices[0].message.content;
 
     if (!plan || plan.trim().length === 0) {
       throw new Error("AI returned empty itinerary");
     }
 
-    console.log("✅ AI itinerary generated");
     res.json({ plan });
   } catch (error) {
     console.error("❌ AI Error:", error);
@@ -110,20 +125,19 @@ Rules:
 Return the updated itinerary only.
 `;
 
-    const response = await openai.responses.create({
+    const response = await openai.chat.completions.create({
       model: "meta-llama/llama-3.1-8b-instruct",
-      input: prompt,
-      max_output_tokens: 1200,
+      messages: [{ role: "user", content: prompt }],
+      max_tokens: 1200,
       temperature: 0.6,
     });
 
-    const updatedPlan = response.output_text;
+    const updatedPlan = response.choices[0].message.content;
 
     if (!updatedPlan || updatedPlan.trim().length === 0) {
       throw new Error("AI returned empty refinement");
     }
 
-    console.log("✅ AI itinerary refined");
     res.json({ updatedPlan });
   } catch (error) {
     console.error("❌ Refinement AI Error:", error);

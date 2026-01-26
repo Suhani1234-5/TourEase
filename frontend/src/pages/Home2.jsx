@@ -76,7 +76,8 @@ export default function Home2() {
             title="Plan Your Trip"
             description="Create a personalized itinerary for your next destination"
             color="from-teal-500 to-cyan-600 dark:from-indigo-600 dark:to-purple-600"
-            onClick={() => navigate('/destinations')}
+            onClick={() => navigate('/trip-planner')} 
+            /* CHANGED: Points to Trip Planner */
           />
           <ActionCard
             icon={<Calendar className="w-8 h-8" />}
@@ -165,7 +166,8 @@ export default function Home2() {
         {/* CTA Section */}
         <div className="text-center">
           <button
-            onClick={() => navigate('/destinations')}
+            onClick={() => navigate('/trip-planner')}
+            /* CHANGED: Points to Trip Planner */
             className="bg-gradient-to-r from-teal-500 to-cyan-600 dark:from-indigo-600 dark:to-purple-600 hover:from-teal-600 hover:to-cyan-700 dark:hover:from-indigo-500 dark:hover:to-purple-500 text-white px-10 py-4 rounded-lg font-semibold transition-all text-lg shadow-lg hover:shadow-xl transform hover:scale-105"
           >
             Start Planning Your First Trip

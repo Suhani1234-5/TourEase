@@ -8,8 +8,10 @@ const OpenAI = require('openai');
 
 class ItineraryAdjustmentService {
     constructor() {
+        // CHANGED: Use OpenRouter configuration to match your .env file
         this.openai = new OpenAI({
-            apiKey: process.env.OPENAI_KEY
+            apiKey: process.env.OPENROUTER_API_KEY,
+            baseURL: "https://openrouter.ai/api/v1"
         });
     }
 
@@ -240,7 +242,7 @@ Return a brief explanation of changes made.
 `;
 
             const response = await this.openai.chat.completions.create({
-                model: 'gpt-4',
+                model: 'meta-llama/llama-3.1-8b-instruct', // CHANGED: Compatible model for OpenRouter
                 messages: [{ role: 'user', content: prompt }],
                 max_tokens: 500
             });

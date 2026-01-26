@@ -160,8 +160,9 @@ export default function Navigation() {
 
               {/* CTA */}
               {!isLoggedIn ? (
+                /* CHANGED: Points to Trip Planner */
                 <Link
-                  to="/login"
+                  to="/trip-planner"
                   className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-2 rounded-lg font-semibold transition items-center"
                 >
                   Get Started
@@ -278,8 +279,9 @@ export default function Navigation() {
             }}
           >
             {!isLoggedIn ? (
+              /* CHANGED: Points to Trip Planner */
               <Link
-                to="/login"
+                to="/trip-planner"
                 className="block w-full bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white px-6 py-4 rounded-2xl font-bold text-lg transition-all duration-300 shadow-lg text-center"
                 onClick={() => setIsOpen(false)}
               >
