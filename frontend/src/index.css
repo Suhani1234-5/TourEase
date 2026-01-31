@@ -9,7 +9,8 @@
 
 /* Animated Blob Effects */
 @keyframes blob {
-  0%, 100% {
+  0%,
+  100% {
     transform: translate(0px, 0px) scale(1);
   }
   33% {
@@ -53,3 +54,43 @@
   animation: fadeIn 0.3s ease-out;
 }
 
+/* Scrollbar theme (site-wide) */
+:root {
+  --scrollbar-track: #0b1220;
+  --scrollbar-thumb: #14b8a6;
+  --scrollbar-thumb-hover: #2dd4bf;
+  --scrollbar-thumb-active: #0d9488;
+}
+
+/* Firefox */
+*,
+*::before,
+*::after {
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+}
+
+/* WebKit (Chrome, Edge, Safari) */
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+*::-webkit-scrollbar-track {
+  background: var(--scrollbar-track);
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: var(--scrollbar-thumb);
+  border-radius: 9999px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background-color: var(--scrollbar-thumb-hover);
+}
+
+*::-webkit-scrollbar-thumb:active {
+  background-color: var(--scrollbar-thumb-active);
+}
