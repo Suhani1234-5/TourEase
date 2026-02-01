@@ -147,73 +147,78 @@ function DestinationCard({ destination, isFavorite, onToggleFavorite }) {
 
   return (
     <div
-      onClick={() => navigate(`/destinations/${destination.id}`)}
-      className="bg-white dark:bg-slate-900 rounded-xl shadow-sm hover:shadow-xl transition-all overflow-hidden group cursor-pointer border border-gray-100 dark:border-slate-800"
-    >
+    onClick={() => navigate(`/destinations/${destination.id}`)}
+    className="h-full flex flex-col bg-white dark:bg-slate-900 rounded-xl shadow-sm hover:shadow-xl transition-all overflow-hidden group cursor-pointer border border-gray-100 dark:border-slate-800">
+      
       {/* Image */}
       <div
-        className="h-48 relative overflow-hidden bg-cover bg-center"
-        style={{ backgroundImage: `url(${destination.image})` }}
+      className="h-48 relative overflow-hidden bg-cover bg-center"
+      style={{ backgroundImage: `url(${destination.image})` }}
       >
         <div className="absolute inset-0 bg-black/20 group-hover:bg-black/30 transition" />
-
+        
         <button
-          type="button"
-          onClick={(e) => {
-            e.stopPropagation();
-            onToggleFavorite();
-          }}
-          className="absolute top-4 right-4 bg-white dark:bg-slate-900 rounded-full p-2 hover:bg-gray-100 dark:hover:bg-slate-800 transition z-10 shadow-md"
+        type="button"
+        onClick={(e) => {
+          e.stopPropagation();
+          onToggleFavorite();
+        }}
+        className="absolute top-4 right-4 bg-white dark:bg-slate-900 rounded-full p-2 hover:bg-gray-100 dark:hover:bg-slate-800 transition z-10 shadow-md"
         >
           <Heart
-            className={`w-6 h-6 transition ${
-              isFavorite
-                ? "fill-red-500 text-red-500"
-                : "text-gray-600 dark:text-slate-200"
-            }`}
+          className={`w-6 h-6 transition ${
+            isFavorite
+            ? "fill-red-500 text-red-500"
+            : "text-gray-600 dark:text-slate-200"
+          }`}
           />
         </button>
       </div>
+      
+      {/* Content */}
+      <div className="p-6 flex flex-col flex-1">
+        <div>
+          <h3 className="font-bold text-xl mb-2 text-slate-900 dark:text-slate-50">
+            {destination.name}
+            </h3>
+            
+            <div className="flex items-center mb-4">
+              <Star className="w-5 h-5 text-yellow-400 fill-yellow-400" />
+              <span className="ml-2 font-semibold">{destination.rating}</span>
+              <span className="text-gray-500 dark:text-slate-400 text-sm ml-2">
+                ({destination.reviews})
+                </span>
+            </div>
+              
+              <div className="space-y-2 text-sm text-gray-600 dark:text-slate-300 mb-4">
+                <div className="flex items-center">
+                  <MapPin className="w-4 h-4 mr-2 text-teal-600 dark:text-teal-400" />
+                  Best for: {destination.bestFor}
+                </div>
+                <div className="flex items-center">
+                  <Clock className="w-4 h-4 mr-2 text-teal-600 dark:text-teal-400" />
+                    Best season: {destination.season}
+                </div>
+                <div className="flex items-center">
+                  <TrendingUp className="w-4 h-4 mr-2 text-teal-600 dark:text-teal-400" />
+                    Budget: {destination.cost}
+                </div>
+              </div>
+              </div>
 
-      <div className="p-6">
-        <h3 className="font-bold text-xl mb-2 text-slate-900 dark:text-slate-50">
-          {destination.name}
-        </h3>
+    {/* Explore button */}
+    <button
+      type="button"
+      onClick={(e) => {
+        e.stopPropagation();
+        navigate(`/destinations/${destination.id}`);
+      }}
+      className="mt-auto w-full bg-teal-500 hover:bg-teal-600 text-white py-2 rounded-lg font-semibold transition dark:bg-teal-500 dark:hover:bg-teal-400"
+    >
+      Explore
+    </button>
+  </div>
+</div>
 
-        <div className="flex items-center mb-4">
-          <Star className="w-5 h-5 text-yellow-400 fill-yellow-400" />
-          <span className="ml-2 font-semibold">{destination.rating}</span>
-          <span className="text-gray-500 dark:text-slate-400 text-sm ml-2">
-            ({destination.reviews})
-          </span>
-        </div>
-
-        <div className="space-y-2 text-sm text-gray-600 dark:text-slate-300 mb-4">
-          <div className="flex items-center">
-            <MapPin className="w-4 h-4 mr-2 text-teal-600 dark:text-teal-400" />
-            Best for: {destination.bestFor}
-          </div>
-          <div className="flex items-center">
-            <Clock className="w-4 h-4 mr-2 text-teal-600 dark:text-teal-400" />
-            Best season: {destination.season}
-          </div>
-          <div className="flex items-center">
-            <TrendingUp className="w-4 h-4 mr-2 text-teal-600 dark:text-teal-400" />
-            Budget: {destination.cost}
-          </div>
-        </div>
-
-        <button
-          type="button"
-          onClick={(e) => {
-            e.stopPropagation();
-            navigate(`/destinations/${destination.id}`);
-          }}
-          className="w-full bg-teal-500 hover:bg-teal-600 text-white py-2 rounded-lg font-semibold transition dark:bg-teal-500 dark:hover:bg-teal-400"
-        >
-          Explore
-        </button>
-      </div>
-    </div>
   );
 }
