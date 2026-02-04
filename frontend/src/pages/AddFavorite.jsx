@@ -153,7 +153,7 @@ function EmptyFavoritesState() {
   return (
     <div className="text-center py-20">
       <HeartOff className="w-16 h-16 mx-auto text-gray-400 mb-6" />
-      <h2 className="text-3xl font-bold mb-4">No Favorites Yet</h2>
+      <h2 className="text-3xl font-bold mb-4 dark:text-white">No Favorites Yet</h2>
       <p className="text-xl text-gray-600 mb-8">
         Explore destinations and add favorites using the heart icon.
       </p>
