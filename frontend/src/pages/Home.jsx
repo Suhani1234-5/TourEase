@@ -16,6 +16,8 @@ import {
   Star,
 } from "lucide-react";
 import CountUp from "../components/CountUp";
+import ChatbotLauncher from "../components/chatbot/ChatbotLauncher";
+
 
 export default function Home() {
   return (
@@ -357,6 +359,8 @@ export default function Home() {
           </div>
         </div>
       </div>
+    {/* ================= CHATBOT ================= */}
+      <ChatbotLauncher />
     </div>
   );
 }
