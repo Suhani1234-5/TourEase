@@ -64,9 +64,9 @@ export default function Home() {
                 >
                   Start Your Journey
                 </Link>
-                
-                <Link 
-                  to="/destinations" 
+
+                <Link
+                  to="/destinations"
                   className="px-8 py-3.5 bg-white/5 border border-white/10 backdrop-blur-md text-white hover:bg-white/10 rounded-xl font-bold transition-all duration-300 active:scale-95 text-md flex items-center justify-center min-w-[180px]"
                 >
                   Explore Features
@@ -289,7 +289,7 @@ export default function Home() {
             <div className="text-center text-white px-4">
               <Users className="w-20 h-20 mx-auto mb-6 opacity-80" />
               <h3 className="text-3xl md:text-4xl font-bold mb-4">
-                Join <CountUp/> Travelers
+                Join <CountUp /> Travelers
               </h3>
               <p className="text-lg mb-6 opacity-90">
                 Start your journey with the smartest travel assistant
@@ -332,9 +332,9 @@ export default function Home() {
             >
               Get Started Free
             </Link>
-            <button className="bg-white text-teal-600 hover:bg-gray-100 px-10 py-4 rounded-lg font-semibold transition text-lg">
+            <Link to="/demo" className="bg-white text-teal-600 hover:bg-gray-100 px-10 py-4 rounded-lg font-semibold transition text-lg">
               Watch Demo
-            </button>
+            </Link>
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto">
