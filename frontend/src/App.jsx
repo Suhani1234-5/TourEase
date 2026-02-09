@@ -30,6 +30,7 @@ import HelpCenter from "./pages/HelpCenter";
 import NotFound from "./components/NotFound";
 import TripPlanner from './pages/TripPlanner';
 import Footer from "./components/Footer";
+import WatchDemoPage from './pages/DemoSection';
 
 function ProtectedRoute({ children }) {
   const isAuthenticated = Boolean(localStorage.getItem("token"));
@@ -61,6 +62,7 @@ function AppRoutes() {
               </ProtectedRoute>
             }
           />
+          <Route path='/demo' element={<WatchDemoPage />} />
           <Route path="/about" element={<About />} />
           <Route path="/features" element={<Features />} />
           <Route path="/destinations" element={<Destinations />} />
