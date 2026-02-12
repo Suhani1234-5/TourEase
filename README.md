@@ -65,6 +65,75 @@ We’ve packed TourEase with features to make travel personalized and safe.
 
 ---
 
+---
+
+## 📸 UI Preview
+
+### 🏠 Home Page
+Displays featured destinations, search functionality, and navigation menu.
+
+![Home Page](screenshots/home.png)
+
+---
+
+### 🌍 Explore Destinations
+Shows available travel destinations with filtering options.
+
+![Explore Page](screenshots/explore.png)
+
+---
+
+### 🔎 Search Destinations
+Search and filter destinations by category like Budget, Luxury, Beach, Mountains, etc.
+
+![Search Page](screenshots/search.png)
+
+---
+
+### ❤️ Favorites Page
+Users can save and manage their favorite destinations.
+
+![Favorites Page](screenshots/favorites.png)
+
+---
+
+### 📍 Destination Details
+Provides detailed information about selected destination including pricing and description.
+
+![Details Page](screenshots/details.png)
+
+---
+
+### 📝 Booking Page
+Allows users to enter booking details and confirm reservations.
+
+![Booking Page](screenshots/booking.png)
+
+---
+
+### 📞 Contact Page
+Users can send queries or feedback through contact form.
+
+![Contact Page](screenshots/contact.png)
+
+---
+
+### 🔐 Authentication Pages
+
+#### Login Page
+![Login Page](screenshots/login.png)
+
+#### Register Page
+![Register Page](screenshots/register.png)
+
+---
+
+### 📱 Responsive Design
+TourEase is fully responsive and works seamlessly across devices.
+
+---
+
+
 ## 🛠️ Tech Stack
 
 **Frontend:** ![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB) ![TailwindCSS](https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?style=for-the-badge&logo=tailwind-css&logoColor=white) ![Leaflet](https://img.shields.io/badge/Leaflet-199900?style=for-the-badge&logo=Leaflet&logoColor=white)
