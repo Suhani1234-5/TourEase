@@ -83,12 +83,36 @@ export default function About() {
             A diverse group of travel enthusiasts, engineers, designers, and entrepreneurs united by the passion to revolutionize travel planning.
           </p>
 
-          <div className="grid md:grid-cols-4 gap-8">
+          {/* <div className="grid md:grid-cols-4 gap-8">
             <TeamMember name="Alex Johnson" role="Founder & CEO" />
             <TeamMember name="Sarah Chen" role="Head of Product" />
             <TeamMember name="Marcus Williams" role="Lead Engineer" />
             <TeamMember name="Priya Singh" role="Designer" />
-          </div>
+          </div> */}
+
+  <div className="grid md:grid-cols-4 gap-8">
+  <TeamMember 
+    name="Alex Johnson" 
+    role="Founder & CEO" 
+    image="https://randomuser.me/api/portraits/men/1.jpg" 
+  />
+  <TeamMember 
+    name="Sarah Chen" 
+    role="Head of Product" 
+    image="https://randomuser.me/api/portraits/women/2.jpg" 
+  />
+  {/* This one will still show the "M" fallback */}
+  <TeamMember 
+    name="Marcus Williams" 
+    role="Lead Engineer"
+    image="/public/images.jpg" 
+  />
+  <TeamMember 
+    name="Priya Singh" 
+    role="Designer" 
+    image="https://randomuser.me/api/portraits/women/3.jpg" 
+  />
+</div>
         </div>
       </div>
 
@@ -133,12 +157,36 @@ function ValueCard({ icon, title, description, color }) {
   );
 }
 
-function TeamMember({ name, role }) {
+// function TeamMember({ name, role }) {
+//   return (
+//     <div className="bg-white dark:bg-gray-900 p-8 rounded-xl shadow-sm dark:shadow-lg hover:shadow-md dark:hover:shadow-xl transition-all text-center border border-gray-100 dark:border-gray-800">
+//       <div className="w-24 h-24 bg-gradient-to-br from-teal-400 to-cyan-500 dark:from-indigo-500 dark:to-purple-500 rounded-full mx-auto mb-6 flex items-center justify-center text-white text-3xl font-bold">
+//         {name.charAt(0)}
+//       </div>
+//       <h3 className="font-semibold text-lg mb-2 text-gray-900 dark:text-white">{name}</h3>
+//       <p className="text-gray-600 dark:text-gray-300">{role}</p>
+//     </div>
+//   );
+// }
+
+function TeamMember({ name, role, image }) {
   return (
     <div className="bg-white dark:bg-gray-900 p-8 rounded-xl shadow-sm dark:shadow-lg hover:shadow-md dark:hover:shadow-xl transition-all text-center border border-gray-100 dark:border-gray-800">
-      <div className="w-24 h-24 bg-gradient-to-br from-teal-400 to-cyan-500 dark:from-indigo-500 dark:to-purple-500 rounded-full mx-auto mb-6 flex items-center justify-center text-white text-3xl font-bold">
-        {name.charAt(0)}
+      {/* Image / Initial Container */}
+      <div className="w-24 h-24 mx-auto mb-6 flex items-center justify-center overflow-hidden rounded-full">
+        {image ? (
+          <img 
+            src={image} 
+            alt={name} 
+            className="w-full h-full object-cover" 
+          />
+        ) : (
+          <div className="w-full h-full bg-gradient-to-br from-teal-400 to-cyan-500 dark:from-indigo-500 dark:to-purple-500 flex items-center justify-center text-white text-3xl font-bold">
+            {name.charAt(0)}
+          </div>
+        )}
       </div>
+      
       <h3 className="font-semibold text-lg mb-2 text-gray-900 dark:text-white">{name}</h3>
       <p className="text-gray-600 dark:text-gray-300">{role}</p>
     </div>
