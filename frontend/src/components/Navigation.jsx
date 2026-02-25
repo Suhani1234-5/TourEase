@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Menu, X, Heart, Sun, Moon } from "lucide-react";
 import { useFavorites } from "../hooks/useFavorites";
@@ -102,7 +102,7 @@ export default function Navigation() {
             {/* LOGO */}
             <span
               onClick={handleLogoClick}
-              className="cursor-pointer text-2xl font-bold bg-gradient-to-r from-teal-500 to-cyan-600 dark:from-indigo-400 dark:to-purple-500 bg-clip-text text-transparent"
+              className="cursor-pointer text-2xl font-bold bg-linear-to-r from-teal-500 to-cyan-600 dark:from-indigo-400 dark:to-purple-500 bg-clip-text text-transparent"
             >
               TourEase
             </span>
@@ -131,7 +131,7 @@ export default function Navigation() {
                 <Heart className="w-5 h-5" />
                 Favorites
                 {favoriteIds.length > 0 && (
-                  <span className="absolute right-3 top-1/2 -translate-y-1/2 bg-red-500 text-white text-xs px-2 h-5 min-w-[1.75rem] rounded-full inline-flex items-center justify-center">
+                  <span className="absolute right-3 top-1/2 -translate-y-1/2 bg-red-500 text-white text-xs px-2 h-5 min-w-7 rounded-full inline-flex items-center justify-center">
                     {favoriteIds.length}
                   </span>
                 )}
@@ -232,7 +232,7 @@ export default function Navigation() {
                 to={item.path}
                 onClick={() => setIsOpen(false)}
                 className={`block px-5 py-4 rounded-2xl font-semibold transition-all duration-200 ${isActive(item.path)
-                  ? "bg-gradient-to-r from-teal-500 to-cyan-600 dark:from-indigo-500 dark:to-purple-600 text-white shadow-lg"
+                  ? "bg-linear-to-r from-teal-500 to-cyan-600 dark:from-indigo-500 dark:to-purple-600 text-white shadow-lg"
                   : "text-gray-700 dark:text-gray-100 hover:bg-gray-50 dark:hover:bg-gray-700/50"
                   }`}
                 style={{
@@ -250,7 +250,7 @@ export default function Navigation() {
               to="/favorites"
               onClick={() => setIsOpen(false)}
               className={`relative px-5 py-4 rounded-2xl font-semibold flex items-center gap-3 transition-all duration-200 ${isActive("/favorites")
-                ? "bg-gradient-to-r from-teal-500 to-cyan-600 dark:from-indigo-500 dark:to-purple-600 text-white shadow-lg"
+                ? "bg-linear-to-r from-teal-500 to-cyan-600 dark:from-indigo-500 dark:to-purple-600 text-white shadow-lg"
                 : "text-gray-700 dark:text-gray-100 hover:bg-gray-50 dark:hover:bg-gray-700/50"
                 }`}
               style={{
@@ -259,10 +259,10 @@ export default function Navigation() {
                   : "none"
               }}
             >
-              <Heart className="w-5 h-5 flex-shrink-0" />
+              <Heart className="w-5 h-5 shrink-0" />
               <span>Favorites</span>
               {favoriteIds.length > 0 && (
-                <span className="ml-auto bg-red-500 text-white text-xs px-2.5 py-1 rounded-full font-bold min-w-[2rem] flex items-center justify-center shadow-lg">
+                <span className="ml-auto bg-red-500 text-white text-xs px-2.5 py-1 rounded-full font-bold min-w-8 flex items-center justify-center shadow-lg">
                   {favoriteIds.length}
                 </span>
               )}
@@ -282,7 +282,7 @@ export default function Navigation() {
               /* CHANGED: Points to Trip Planner */
               <Link
                 to="/trip-planner"
-                className="block w-full bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white px-6 py-4 rounded-2xl font-bold text-lg transition-all duration-300 shadow-lg text-center"
+                className="block w-full bg-linear-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white px-6 py-4 rounded-2xl font-bold text-lg transition-all duration-300 shadow-lg text-center"
                 onClick={() => setIsOpen(false)}
               >
                 Get Started
@@ -293,7 +293,7 @@ export default function Navigation() {
                   setIsOpen(false);
                   handleLogout();
                 }}
-                className="block w-full bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white px-6 py-4 rounded-2xl font-bold text-lg transition-all duration-300 shadow-lg text-center"
+                className="block w-full bg-linear-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white px-6 py-4 rounded-2xl font-bold text-lg transition-all duration-300 shadow-lg text-center"
               >
                 Logout
               </button>

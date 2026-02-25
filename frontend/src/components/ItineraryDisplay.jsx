@@ -23,7 +23,7 @@ const ItineraryDisplay = ({ itinerary }) => {
     return (
         <div className="space-y-6">
             {/* Header */}
-            <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-6 rounded-lg">
+            <div className="bg-linear-to-r from-blue-600 to-purple-600 text-white p-6 rounded-lg">
                 <div className="flex items-center gap-2 mb-2">
                     <MapPin className="w-5 h-5" />
                     <h2 className="text-2xl font-bold">{itinerary.destination}</h2>
@@ -49,8 +49,8 @@ const ItineraryDisplay = ({ itinerary }) => {
                     >
                         {/* Day Header */}
                         <div className={`p-4 ${day.eventEnhanced
-                                ? 'bg-gradient-to-r from-purple-50 to-pink-50'
-                                : 'bg-gray-50'
+                            ? 'bg-linear-to-r from-purple-50 to-pink-50'
+                            : 'bg-gray-50'
                             }`}>
                             <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-3">
@@ -90,7 +90,7 @@ const ItineraryDisplay = ({ itinerary }) => {
                                         className="flex gap-4 p-3 bg-white border border-gray-100 rounded-lg hover:shadow-md transition-shadow"
                                     >
                                         {/* Time indicator */}
-                                        <div className="flex-shrink-0">
+                                        <div className="shrink-0">
                                             <div className="flex items-center gap-2 text-sm font-medium text-gray-600">
                                                 <Clock className="w-4 h-4" />
                                                 <span className="capitalize">{activity.time}</span>
