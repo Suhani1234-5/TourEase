@@ -74,7 +74,31 @@ export const destinations = [
       "Mount Batur Sunrise Trek"
     ]
   },
-
+  // Add these to your existing destinations array
+  {
+    id: 13,
+    name: "Maldives",
+    image: "https://images.unsplash.com/photo-1514282401047-d79a71a590e8?q=80&w=1600",
+    rating: 4.9,
+    reviews: 4200,
+    bestFor: "Beach, Luxury, Romance", // Includes 'Beach'
+    season: "November–April",
+    cost: "$$$",
+    overview: "A tropical nation in the Indian Ocean composed of 26 ring-shaped atolls, which are made up of more than 1,000 coral islands.",
+    highlights: ["Overwater Bungalows", "Snorkeling with Mantas", "Sandbank Dinners", "Underwater Spa"]
+  },
+  {
+    id: 14,
+    name: "Santorini, Greece",
+    image: "https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?q=80&w=1600",
+    rating: 4.8,
+    reviews: 3100,
+    bestFor: "Beach, Culture, Romance", // Includes 'Beach'
+    season: "May–October",
+    cost: "$$$",
+    overview: "Famous for its whitewashed buildings with blue domes, stunning sunsets over the caldera, and unique volcanic beaches.",
+    highlights: ["Oia Sunset", "Red Beach", "Akrotiri Ruins", "Wine Tasting"]
+  },
   {
     id: 5,
     name: "New York, USA",
