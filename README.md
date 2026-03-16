@@ -141,6 +141,50 @@ TourEase is fully responsive and works seamlessly across devices.
 **Backend & AI:** ![NodeJS](https://img.shields.io/badge/node.js-6DA55F?style=for-the-badge&logo=node.js&logoColor=white) ![MongoDB](https://img.shields.io/badge/MongoDB-%234ea94b.svg?style=for-the-badge&logo=mongodb&logoColor=white) ![OpenAI](https://img.shields.io/badge/OpenAI-412991?style=for-the-badge&logo=openai&logoColor=white) ![Firebase](https://img.shields.io/badge/firebase-%23039BE5.svg?style=for-the-badge&logo=firebase)
 
 ---
+📁 FOLDER STRUCTURE-
+TourEase/
+├── backend/
+│   ├── src/
+│   │   ├── controllers/
+│   │   ├── models/
+│   │   ├── routes/
+│   │   ├── middlewares/
+│   │   ├── services/
+│   │   ├── utils/
+│   │   └── config/
+│   ├── tests/
+│   │   ├── unit/
+│   │   └── integration/
+│   ├── .env.example
+│   └── package.json
+│
+├── frontend/
+│   ├── public/
+│   ├── src/
+│   │   ├── assets/
+│   │   │   ├── images/
+│   │   │   └── styles/
+│   │   ├── components/
+│   │   ├── pages/
+│   │   ├── services/
+│   │   ├── utils/
+│   │   ├── hooks/
+│   │   └── config/
+│   ├── tests/
+│   │   ├── unit/
+│   │   └── integration/
+│   ├── .env.example
+│   └── package.json
+│
+├── docs/
+│   └── architecture.md
+│
+├── .gitignore
+├── README.md
+└── LICENSE
+
+
+---
 
 ## 🚀 Quick Start (SWOC'26)
 
