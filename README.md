@@ -6,7 +6,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](http://makeapullrequest.com)
-[![SWOC'26](https://img.shields.io/badge/SWOC-2026-blue.svg)](https://socialwinterofcode.com/)
+[![GSSoC'2026](https://img.shields.io/badge/GSSoC-2026-blue.svg)](https://gssoc.girlscript.org/)
 
 </div>
 
