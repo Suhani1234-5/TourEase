@@ -6,35 +6,47 @@ import { useNavigate } from "react-router-dom";
 
 export default function Destinations() {
   const { toggleFavorite, isFavorite } = useFavorites();
+
   const [activeFilter, setActiveFilter] = useState("All Destinations");
   const [searchQuery, setSearchQuery] = useState("");
 
   const navigate = useNavigate();
 
-  const filters = useMemo(() => [
-    { label: "All Destinations", keywords: [] },
-    { label: "Budget Friendly", keywords: ["budget"] },
-    { label: "Luxury", keywords: ["luxury"] },
-    { label: "Beach", keywords: ["beach"] },
-    { label: "Mountains", keywords: ["mountain"] },
-    { label: "Cultural", keywords: ["culture", "history", "art", "museum"] },
-  ], []);
+  const filters = useMemo(
+    () => [
+      { label: "All Destinations", keywords: [] },
+      { label: "Budget Friendly", keywords: ["budget"] },
+      { label: "Luxury", keywords: ["luxury"] },
+      { label: "Beach", keywords: ["beach"] },
+      { label: "Mountains", keywords: ["mountain"] },
+      {
+        label: "Cultural",
+        keywords: ["culture", "history", "art", "museum"],
+      },
+    ],
+    []
+  );
 
   const filtered = useMemo(() => {
     let result = destinations;
 
+    // Filter by category buttons
     if (activeFilter !== "All Destinations") {
       const f = filters.find((x) => x.label === activeFilter);
+
       if (f && f.keywords.length) {
         result = result.filter((d) => {
           const bestFor = (d.bestFor || "").toLowerCase();
+
           return f.keywords.some((kw) => bestFor.includes(kw));
         });
       }
     }
 
+    // Search filtering
     if (searchQuery.trim()) {
-      const query = searchQuery.toLowerCase();
+      const query = searchQuery.toLowerCase().trim();
+
       result = result.filter(
         (d) =>
           d.name.toLowerCase().includes(query) ||
@@ -54,9 +66,10 @@ export default function Destinations() {
           <h1 className="text-5xl md:text-6xl font-bold mb-6">
             Explore Destinations
           </h1>
+
           <p className="text-xl md:text-2xl opacity-90 max-w-3xl">
-            Discover amazing places around the world, carefully curated for every
-            type of traveler.
+            Discover amazing places around the world, carefully curated for
+            every type of traveler.
           </p>
         </div>
       </div>
@@ -67,6 +80,7 @@ export default function Destinations() {
         <div className="mb-8">
           <div className="relative max-w-2xl mx-auto">
             <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-slate-400 w-5 h-5" />
+
             <input
               type="text"
               placeholder="Search destinations by name, type, or season..."
@@ -77,6 +91,15 @@ export default function Destinations() {
           </div>
         </div>
 
+        {/* Dynamic Search Feedback */}
+        {searchQuery.trim() && filtered.length > 0 && (
+          <div className="mb-6 text-gray-600 dark:text-slate-300 text-lg">
+            Showing {filtered.length} destination
+            {filtered.length > 1 ? "s" : ""} matching "{searchQuery}"
+          </div>
+        )}
+
+        {/* Filter Buttons */}
         <div className="flex flex-wrap gap-4 mb-12">
           {filters.map((f) => (
             <FilterButton
@@ -91,16 +114,30 @@ export default function Destinations() {
 
       {/* Destinations Grid */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {filtered.map((destination) => (
-            <DestinationCard
-              key={destination.id}
-              destination={destination}
-              isFavorite={isFavorite(destination.id)}
-              onToggleFavorite={() => toggleFavorite(destination.id)}
-            />
-          ))}
-        </div>
+        {filtered.length > 0 ? (
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {filtered.map((destination) => (
+              <DestinationCard
+                key={destination.id}
+                destination={destination}
+                isFavorite={isFavorite(destination.id)}
+                onToggleFavorite={() => toggleFavorite(destination.id)}
+              />
+            ))}
+          </div>
+        ) : (
+          searchQuery.trim() && (
+            <div className="text-center py-16">
+              <h3 className="text-2xl font-semibold text-gray-700 dark:text-slate-200 mb-2">
+                No destinations found
+              </h3>
+
+              <p className="text-gray-500 dark:text-slate-400">
+                Try searching for another place or category.
+              </p>
+            </div>
+          )
+        )}
       </div>
 
       {/* CTA Section */}
@@ -109,6 +146,7 @@ export default function Destinations() {
           <h2 className="text-4xl md:text-5xl font-bold mb-6">
             Ready to Explore?
           </h2>
+
           <p className="text-xl mb-10 opacity-90">
             Start planning your next adventure with TourEase
           </p>
@@ -147,78 +185,83 @@ function DestinationCard({ destination, isFavorite, onToggleFavorite }) {
 
   return (
     <div
-    onClick={() => navigate(`/destinations/${destination.id}`)}
-    className="h-full flex flex-col bg-white dark:bg-slate-900 rounded-xl shadow-sm hover:shadow-xl transition-all overflow-hidden group cursor-pointer border border-gray-100 dark:border-slate-800">
-      
+      onClick={() => navigate(`/destinations/${destination.id}`)}
+      className="h-full flex flex-col bg-white dark:bg-slate-900 rounded-xl shadow-sm hover:shadow-xl transition-all overflow-hidden group cursor-pointer border border-gray-100 dark:border-slate-800"
+    >
       {/* Image */}
       <div
-      className="h-48 relative overflow-hidden bg-cover bg-center"
-      style={{ backgroundImage: `url(${destination.image})` }}
+        className="h-48 relative overflow-hidden bg-cover bg-center"
+        style={{ backgroundImage: `url(${destination.image})` }}
       >
         <div className="absolute inset-0 bg-black/20 group-hover:bg-black/30 transition" />
-        
+
         <button
-        type="button"
-        onClick={(e) => {
-          e.stopPropagation();
-          onToggleFavorite();
-        }}
-        className="absolute top-4 right-4 bg-white dark:bg-slate-900 rounded-full p-2 hover:bg-gray-100 dark:hover:bg-slate-800 transition z-10 shadow-md"
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            onToggleFavorite();
+          }}
+          className="absolute top-4 right-4 bg-white dark:bg-slate-900 rounded-full p-2 hover:bg-gray-100 dark:hover:bg-slate-800 transition z-10 shadow-md"
         >
           <Heart
-          className={`w-6 h-6 transition ${
-            isFavorite
-            ? "fill-red-500 text-red-500"
-            : "text-gray-600 dark:text-slate-200"
-          }`}
+            className={`w-6 h-6 transition ${
+              isFavorite
+                ? "fill-red-500 text-red-500"
+                : "text-gray-600 dark:text-slate-200"
+            }`}
           />
         </button>
       </div>
-      
+
       {/* Content */}
       <div className="p-6 flex flex-col flex-1">
         <div>
           <h3 className="font-bold text-xl mb-2 text-slate-900 dark:text-slate-50">
             {destination.name}
-            </h3>
-            
-            <div className="flex items-center mb-4">
-              <Star className="w-5 h-5 text-yellow-400 fill-yellow-400" />
-              <span className="ml-2 font-semibold">{destination.rating}</span>
-              <span className="text-gray-500 dark:text-slate-400 text-sm ml-2">
-                ({destination.reviews})
-                </span>
+          </h3>
+
+          <div className="flex items-center mb-4">
+            <Star className="w-5 h-5 text-yellow-400 fill-yellow-400" />
+
+            <span className="ml-2 font-semibold">
+              {destination.rating}
+            </span>
+
+            <span className="text-gray-500 dark:text-slate-400 text-sm ml-2">
+              ({destination.reviews})
+            </span>
+          </div>
+
+          <div className="space-y-2 text-sm text-gray-600 dark:text-slate-300 mb-4">
+            <div className="flex items-center">
+              <MapPin className="w-4 h-4 mr-2 text-teal-600 dark:text-teal-400" />
+              Best for: {destination.bestFor}
             </div>
-              
-              <div className="space-y-2 text-sm text-gray-600 dark:text-slate-300 mb-4">
-                <div className="flex items-center">
-                  <MapPin className="w-4 h-4 mr-2 text-teal-600 dark:text-teal-400" />
-                  Best for: {destination.bestFor}
-                </div>
-                <div className="flex items-center">
-                  <Clock className="w-4 h-4 mr-2 text-teal-600 dark:text-teal-400" />
-                    Best season: {destination.season}
-                </div>
-                <div className="flex items-center">
-                  <TrendingUp className="w-4 h-4 mr-2 text-teal-600 dark:text-teal-400" />
-                    Budget: {destination.cost}
-                </div>
-              </div>
-              </div>
 
-    {/* Explore button */}
-    <button
-      type="button"
-      onClick={(e) => {
-        e.stopPropagation();
-        navigate(`/destinations/${destination.id}`);
-      }}
-      className="mt-auto w-full bg-teal-500 hover:bg-teal-600 text-white py-2 rounded-lg font-semibold transition dark:bg-teal-500 dark:hover:bg-teal-400"
-    >
-      Explore
-    </button>
-  </div>
-</div>
+            <div className="flex items-center">
+              <Clock className="w-4 h-4 mr-2 text-teal-600 dark:text-teal-400" />
+              Best season: {destination.season}
+            </div>
 
+            <div className="flex items-center">
+              <TrendingUp className="w-4 h-4 mr-2 text-teal-600 dark:text-teal-400" />
+              Budget: {destination.cost}
+            </div>
+          </div>
+        </div>
+
+        {/* Explore Button */}
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            navigate(`/destinations/${destination.id}`);
+          }}
+          className="mt-auto w-full bg-teal-500 hover:bg-teal-600 text-white py-2 rounded-lg font-semibold transition dark:bg-teal-500 dark:hover:bg-teal-400"
+        >
+          Explore
+        </button>
+      </div>
+    </div>
   );
 }

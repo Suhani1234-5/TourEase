@@ -9,7 +9,7 @@
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.20.1",
-    "nodemailer": "^7.0.12",
+    "nodemailer": "^8.0.7",
     "openai": "^6.16.0",
     "passport": "^0.7.0",
     "passport-google-oauth20": "^2.0.0"
