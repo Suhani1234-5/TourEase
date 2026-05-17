@@ -28,7 +28,7 @@ npm install
 ```
 * **For Frontend:**
 ```
-cd client
+cd frontend
 npm install
 cd ..
 ```
@@ -40,19 +40,38 @@ npm install -g nodemon vite
 ```
 
 ### 4. Environment Variables
-Create a `.env` file in the root directory and add your credentials:
+Create a `.env` file in your `backend/` folder and add your credentials:
 ```Code snippet
 MONGODB_URI=your_mongodb_connection_string
 MONGODB_URL=your_mongodb_connection_string
-PORT=3000
+PORT=5050
 FRONTEND_URL=http://localhost:5173
-# For production, set FRONTEND_URL to your deployed frontend URL
-# Add other keys like API tokens below as needed
+JWT_SECRET=your_jwt_secret_here
+
+# Google OAuth Configuration (Optional - to enable Google Sign-In)
+GOOGLE_CLIENT_ID=your_google_client_id_here
+GOOGLE_CLIENT_SECRET=your_google_client_secret_here
+GOOGLE_CALLBACK_URL=http://localhost:5050/api/auth/google/callback
 ```
 
 > **Note: Never commit your `.env` file to GitHub. It is already included in `.gitignore`.**
 > 
 > **Important:** The code supports both `MONGODB_URI` and `MONGODB_URL` for compatibility. Use either one.
+
+#### 🔑 Google OAuth Credentials Setup
+To make Google Sign-In work, follow these steps to configure your credentials on the Google Cloud Console:
+1. Go to the [Google Cloud Console](https://console.cloud.google.com/).
+2. **OAuth Consent Screen**:
+   * Navigate to **APIs & Services** > **OAuth consent screen**.
+   * Choose **External** and complete the basic application registration details (app name, support email).
+3. **Generate Credentials**:
+   * Navigate to **APIs & Services** > **Credentials**.
+   * Click **Create Credentials** > **OAuth client ID**.
+   * Select **Web application** as the application type.
+4. **Authorized URIs Configuration**:
+   * Under **Authorized JavaScript origins**, add: `http://localhost:5173`.
+   * Under **Authorized redirect URIs**, add: `http://localhost:5050/api/auth/google/callback` (or your production callback URL).
+5. Copy your **Client ID** and **Client Secret** into your backend `.env` variables above!
 
 ### 5. Running the Project
 You will need two terminals open:
@@ -65,7 +84,7 @@ nodemon app.js
 ```
 * **Terminal 2: Frontend**
 ```
-cd client
+cd frontend
 npm run dev
 ```
 The application should now be accessible at: `http://localhost:5173` (Vite default) or `http://localhost:3000`.

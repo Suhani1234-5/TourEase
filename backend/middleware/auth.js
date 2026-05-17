@@ -13,7 +13,12 @@ const verifyToken = (req, res, next) => {
 
   try {
     const verified = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = verified;
+    const userId = verified.id || verified._id || verified.userId;
+    req.user = {
+      ...verified,
+      id: userId,
+      _id: userId
+    };
     next();
   } catch (err) {
     res.status(400).json({ 
