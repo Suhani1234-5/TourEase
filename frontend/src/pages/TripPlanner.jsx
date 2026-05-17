@@ -102,7 +102,18 @@ export default function TripPlanner() {
   const [refinementInput, setRefinementInput] = useState("");
   const [isRefining, setIsRefining] = useState(false);
 
-  const isStep1Valid = formData.destination.trim() !== '' && formData.startDate !== '' && formData.endDate !== '';
+  const isDateValid =
+    !formData.startDate ||
+    !formData.endDate ||
+    new Date(formData.endDate) >= new Date(formData.startDate);
+
+  const isStep1Valid =
+    formData.destination.trim() !== '' &&
+    formData.startDate !== '' &&
+    formData.endDate !== '' &&
+    isDateValid;
+
+  // Added logic safely back to ensure condition checks in JSX execute correctly without breaking logic
   const isStep3Valid = formData.interests.length > 0;
 
   useEffect(() => {
@@ -143,10 +154,15 @@ export default function TripPlanner() {
 
   const handleGenerate = async () => {
     if (!isStep1Valid || !isStep3Valid) {
-        setError("Missing information. Please go back and fill in all details.");
-        return;
+      setError("Missing information. Please go back and fill in all details.");
+      return;
     }
-
+    const start = new Date(formData.startDate);
+    const end = new Date(formData.endDate);
+    if (end < start) {
+      setError("End date cannot be earlier than start date.");
+      return;
+    }
     setIsGenerating(true);
     setError('');
 
@@ -325,6 +341,7 @@ export default function TripPlanner() {
                 <h2 className="text-4xl font-black text-gray-900 dark:text-white mb-4">Where do you want to go?</h2>
                 <p className="text-gray-600 dark:text-gray-400 text-lg">Choose your dream destination to get started</p>
               </div>
+              
               <div className="bg-white dark:bg-gray-900 rounded-2xl p-8 shadow-xl border dark:border-gray-800">
                 <label className="flex items-center text-sm font-bold text-gray-700 dark:text-gray-300 mb-3 uppercase tracking-wider">
                   <MapPin className="w-5 h-5 mr-2 text-teal-500" /> Destination
@@ -337,18 +354,37 @@ export default function TripPlanner() {
                   className="w-full bg-gray-50 dark:bg-gray-800 border dark:border-gray-700 rounded-xl px-6 py-4 text-lg outline-none focus:ring-2 focus:ring-teal-500/20"
                 />
               </div>
-              <div className="grid md:grid-cols-2 gap-6">
+           
+              <div className="grid md:grid-cols-2 gap-8">     
+                {/* Start Date */}
                 <div className="bg-white dark:bg-gray-900 rounded-2xl p-8 shadow-xl border dark:border-gray-800">
                   <label className="flex items-center text-sm font-bold text-gray-700 dark:text-gray-300 mb-3 uppercase tracking-wider">
                     <Calendar className="w-5 h-5 mr-2 text-teal-500" /> Start Date
                   </label>
-                  <input type="date" value={formData.startDate} onChange={(e) => setFormData({ ...formData, startDate: e.target.value })} className="w-full bg-gray-50 dark:bg-gray-800 border rounded-xl px-6 py-4 outline-none" />
+                  <input
+                    type="date"
+                    value={formData.startDate}
+                    onChange={(e) => setFormData({ ...formData, startDate: e.target.value })}
+                    className="w-full bg-gray-50 dark:bg-gray-800 border dark:border-gray-700 rounded-xl px-6 py-4 outline-none"
+                  />
                 </div>
+
+                {/* End Date */}
                 <div className="bg-white dark:bg-gray-900 rounded-2xl p-8 shadow-xl border dark:border-gray-800">
                   <label className="flex items-center text-sm font-bold text-gray-700 dark:text-gray-300 mb-3 uppercase tracking-wider">
                     <Calendar className="w-5 h-5 mr-2 text-orange-500" /> End Date
                   </label>
-                  <input type="date" value={formData.endDate} onChange={(e) => setFormData({ ...formData, endDate: e.target.value })} className="w-full bg-gray-50 dark:bg-gray-800 border rounded-xl px-6 py-4 outline-none" />
+                  <input
+                    type="date"
+                    value={formData.endDate}
+                    onChange={(e) => setFormData({ ...formData, endDate: e.target.value })}
+                    className="w-full bg-gray-50 dark:bg-gray-800 border dark:border-gray-700 rounded-xl px-6 py-4 outline-none"
+                  />
+                  {!isDateValid && (
+                    <p className="text-red-600 text-sm mt-2 font-medium">
+                      End date cannot be earlier than start date.
+                    </p>
+                  )}
                 </div>
               </div>
             </div>
@@ -360,6 +396,7 @@ export default function TripPlanner() {
                 <h2 className="text-4xl font-black text-gray-900 dark:text-white mb-4">Tell us about your trip</h2>
                 <p className="text-gray-600 dark:text-gray-400 text-lg">Help us personalize your experience</p>
               </div>
+              
               <div className="bg-white dark:bg-gray-900 rounded-2xl p-8 shadow-xl border dark:border-gray-800">
                 <label className="flex items-center text-sm font-bold text-gray-700 dark:text-gray-300 mb-4 uppercase tracking-wider">
                   <Users className="w-5 h-5 mr-2 text-teal-500" /> Number of Travelers
@@ -387,11 +424,18 @@ export default function TripPlanner() {
                   </button>
                 </div>
               </div>
+
               <div className="bg-white dark:bg-gray-900 rounded-2xl p-8 shadow-xl border dark:border-gray-800">
-                <label className="flex items-center text-sm font-bold text-gray-700 dark:text-gray-300 mb-4 uppercase tracking-wider"><DollarSign className="w-5 h-5 mr-2 text-teal-500" /> Budget Range</label>
+                <label className="flex items-center text-sm font-bold text-gray-700 dark:text-gray-300 mb-4 uppercase tracking-wider">
+                  <DollarSign className="w-5 h-5 mr-2 text-teal-500" /> Budget Range
+                </label>
                 <div className="grid grid-cols-3 gap-4">
                   {['budget', 'moderate', 'luxury'].map((b) => (
-                    <button key={b} onClick={() => setFormData({ ...formData, budget: b })} className={`py-4 px-6 rounded-xl font-bold transition-all ${formData.budget === b ? 'bg-teal-500 text-white shadow-lg shadow-teal-500/40' : 'bg-gray-100 dark:bg-gray-800'}`}>
+                    <button 
+                      key={b} 
+                      onClick={() => setFormData({ ...formData, budget: b })} 
+                      className={`py-4 px-6 rounded-xl font-bold transition-all ${formData.budget === b ? 'bg-teal-500 text-white shadow-lg shadow-teal-500/40' : 'bg-gray-100 dark:bg-gray-800'}`}
+                    >
                       {b.charAt(0).toUpperCase() + b.slice(1)}
                     </button>
                   ))}
@@ -411,8 +455,14 @@ export default function TripPlanner() {
                   const Icon = interest.icon;
                   const isSelected = formData.interests.includes(interest.id);
                   return (
-                    <button key={interest.id} onClick={() => toggleInterest(interest.id)} className={`bg-white dark:bg-gray-900 p-8 rounded-2xl border-2 transition-all ${isSelected ? 'border-teal-500 shadow-xl shadow-teal-500/20' : 'border-gray-200 dark:border-gray-800'}`}>
-                      <div className={`w-16 h-16 rounded-xl flex items-center justify-center mb-4 mx-auto transition-all ${isSelected ? 'bg-teal-500 text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-600'}`}><Icon className="w-8 h-8" /></div>
+                    <button 
+                      key={interest.id} 
+                      onClick={() => toggleInterest(interest.id)} 
+                      className={`bg-white dark:bg-gray-900 p-8 rounded-2xl border-2 transition-all ${isSelected ? 'border-teal-500 shadow-xl shadow-teal-500/20' : 'border-gray-200 dark:border-gray-800'}`}
+                    >
+                      <div className={`w-16 h-16 rounded-xl flex items-center justify-center mb-4 mx-auto transition-all ${isSelected ? 'bg-teal-500 text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-600'}`}>
+                        <Icon className="w-8 h-8" />
+                      </div>
                       <h3 className={`font-bold text-lg ${isSelected ? 'text-teal-600 dark:text-teal-400' : 'text-gray-900 dark:text-white'}`}>{interest.label}</h3>
                     </button>
                   );
