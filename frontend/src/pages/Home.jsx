@@ -21,6 +21,8 @@ import CountUp from "../components/CountUp";
 
 
 export default function Home() {
+  const isLoggedIn = !!localStorage.getItem("token");
+
   return (
     <div className="min-h-screen bg-white dark:bg-gray-950">
       {/* ================= HERO SECTION ================= */}
@@ -30,7 +32,7 @@ export default function Home() {
           <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-teal-500/10 blur-[100px] rounded-full"></div>
           <div className="absolute bottom-[-5%] right-[-5%] w-[40%] h-[40%] bg-orange-500/5 blur-[100px] rounded-full"></div>
         </div>
-
+ 
         <div className="relative max-w-7xl mx-auto px-6 lg:px-12 w-full z-10">
           <div className="flex flex-col lg:grid lg:grid-cols-2 gap-12 items-center">
             {/* LEFT */}
@@ -44,7 +46,7 @@ export default function Home() {
                   Explore the World!
                 </span>
               </div>
-
+ 
               <h1 className="text-5xl md:text-6xl lg:text-7xl font-black text-gray-900 dark:text-white leading-[1.1] tracking-tighter">
                 Your Smart Travel
                 <br />
@@ -52,14 +54,14 @@ export default function Home() {
                   Assistant Awaits
                 </span>
               </h1>
-
+ 
               <p className="text-base md:text-lg text-gray-600 dark:text-gray-400 max-w-md leading-relaxed font-medium">
                 Plan smarter, travel better! Whether you're exploring nearby or
                 venturing abroad, our intelligent assistant has everything
                 covered — from itineraries to bookings, all in one place.
               </p>
-
-              <div className="flex flex-wrap gap-4">
+ 
+              <div className="flex flex-wrap gap-4 items-center">
                 {/* CHANGED: Direct link to Trip Planner */}
                 <Link
                   to="/trip-planner"
@@ -67,13 +69,30 @@ export default function Home() {
                 >
                   Start Your Journey
                 </Link>
-
-                <Link
-                  to="/destinations"
-                  className="px-8 py-3.5 bg-white/5 border border-white/10 backdrop-blur-md text-white hover:bg-white/10 rounded-xl font-bold transition-all duration-300 active:scale-95 text-md flex items-center justify-center min-w-[180px]"
-                >
-                  Explore Features
-                </Link>
+ 
+                {isLoggedIn ? (
+                  <Link
+                    to="/my-trips"
+                    className="px-8 py-3.5 bg-white/5 border border-white/10 backdrop-blur-md text-gray-900 dark:text-white hover:bg-teal-600/10 rounded-xl font-bold transition-all duration-300 active:scale-95 text-md flex items-center justify-center min-w-[180px]"
+                  >
+                    My Trips Dashboard
+                  </Link>
+                ) : (
+                  <>
+                    <Link
+                      to="/login"
+                      className="px-8 py-3.5 bg-teal-600 hover:bg-teal-500 text-white rounded-xl font-bold transition-all duration-300 shadow-lg shadow-teal-900/20 active:scale-95 text-md flex items-center justify-center min-w-[120px]"
+                    >
+                      Log In
+                    </Link>
+                    <Link
+                      to="/signup"
+                      className="px-8 py-3.5 bg-gray-100 hover:bg-gray-200 dark:bg-white/5 border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white dark:hover:bg-white/10 rounded-xl font-bold transition-all duration-300 active:scale-95 text-md flex items-center justify-center min-w-[120px]"
+                    >
+                      Sign Up
+                    </Link>
+                  </>
+                )}
               </div>
 
               <div className="flex items-center gap-8 pt-4">

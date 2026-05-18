@@ -21,6 +21,7 @@ export default function Navigation() {
     { path: "/destinations", label: "Explore" },
     { path: "/contact", label: "Contact" },
     { path: "/trip-planner", label: "Trip Planner" },
+    ...(isLoggedIn ? [{ path: "/my-trips", label: "My Trips" }] : []),
   ];
 
   const isActive = (path) => location.pathname === path;

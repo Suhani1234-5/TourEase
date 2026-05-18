@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { 
   MapPin, Calendar, Users, DollarSign, Plane, 
   Hotel, Compass, Coffee, Camera, Mountain,
@@ -86,6 +87,7 @@ function ReviewItem({ icon, label, value }) {
 }
 
 export default function TripPlanner() {
+  const navigate = useNavigate();
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
     destination: '',
@@ -101,6 +103,78 @@ export default function TripPlanner() {
   const [generatedPlan, setGeneratedPlan] = useState(null);
   const [refinementInput, setRefinementInput] = useState("");
   const [isRefining, setIsRefining] = useState(false);
+  const [saving, setSaving] = useState(false);
+
+  const isLoggedIn = !!localStorage.getItem('token');
+
+  const handleSaveItinerary = async () => {
+    try {
+      setSaving(true);
+      const start = new Date(formData.startDate);
+      const end = new Date(formData.endDate);
+      const days = Math.ceil((end - start) / (1000 * 60 * 60 * 24)) + 1;
+
+      // Create a simplified daily schedule matching DynamicTripPlanner
+      const dailySchedule = [];
+      for (let i = 0; i < days; i++) {
+        const date = new Date(start);
+        date.setDate(date.getDate() + i);
+
+        dailySchedule.push({
+          day: i + 1,
+          date: date.toISOString(),
+          activities: [
+            {
+              time: 'morning',
+              activity: 'Explore local attractions',
+              location: formData.destination,
+              type: 'sightseeing'
+            },
+            {
+              time: 'afternoon',
+              activity: 'Lunch and leisure',
+              location: formData.destination,
+              type: 'dining'
+            },
+            {
+              time: 'evening',
+              activity: 'Dinner and relaxation',
+              location: formData.destination,
+              type: 'dining'
+            }
+          ],
+          eventEnhanced: false,
+          weatherAlert: false
+        });
+      }
+
+      const itineraryData = {
+        destination: formData.destination,
+        startDate: formData.startDate,
+        endDate: formData.endDate,
+        travelers: formData.travelers,
+        budget: formData.budget,
+        accommodation: formData.accommodation,
+        interests: formData.interests,
+        dailySchedule,
+        originalPlan: generatedPlan,
+        dynamicMonitoring: true
+      };
+
+      const response = await api.saveItinerary(itineraryData);
+      if (response.success) {
+        alert('Itinerary saved to My Trips successfully!');
+        navigate('/my-trips');
+      } else {
+        alert('Failed to save itinerary: ' + (response.message || 'Unknown error'));
+      }
+    } catch (err) {
+      console.error('Error saving itinerary:', err);
+      alert('Error saving itinerary: ' + err.message);
+    } finally {
+      setSaving(false);
+    }
+  };
 
   const isStep1Valid = formData.destination.trim() !== '' && formData.startDate !== '' && formData.endDate !== '';
   const isStep3Valid = formData.interests.length > 0;
@@ -272,9 +346,30 @@ export default function TripPlanner() {
             <button onClick={handleStartOver} className="px-8 py-4 bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white rounded-xl font-bold flex items-center">
               <ArrowLeft className="w-5 h-5 mr-2" /> Plan Another Trip
             </button>
-            <button onClick={() => window.print()} className="px-8 py-4 bg-teal-500 text-white rounded-xl font-bold shadow-lg shadow-teal-500/30">
+            <button onClick={() => window.print()} className="px-8 py-4 bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white rounded-xl font-bold">
               Print Itinerary
             </button>
+            {isLoggedIn ? (
+              <button 
+                onClick={handleSaveItinerary} 
+                disabled={saving}
+                className="px-8 py-4 bg-teal-500 hover:bg-teal-600 disabled:bg-teal-400 text-white rounded-xl font-bold shadow-lg shadow-teal-500/30 flex items-center gap-2 transition"
+              >
+                <Sparkles className="w-5 h-5" />
+                {saving ? 'Saving...' : 'Save to My Trips'}
+              </button>
+            ) : (
+              <button 
+                onClick={() => {
+                  alert('Please sign in or register to save itineraries to your dashboard!');
+                  navigate('/login');
+                }} 
+                className="px-8 py-4 bg-teal-500 hover:bg-teal-600 text-white rounded-xl font-bold shadow-lg shadow-teal-500/30 flex items-center gap-2 transition"
+              >
+                <Sparkles className="w-5 h-5" />
+                Save to My Trips
+              </button>
+            )}
           </div>
         </div>
       </div>

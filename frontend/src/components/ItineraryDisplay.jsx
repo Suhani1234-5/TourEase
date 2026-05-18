@@ -1,5 +1,5 @@
 import React from 'react';
-import { Calendar, MapPin, Clock, Sparkles } from 'lucide-react';
+import { Calendar, MapPin, Clock, Sparkles, CloudRain } from 'lucide-react';
 
 // Component to display the full itinerary with day-by-day breakdown
 const ItineraryDisplay = ({ itinerary }) => {

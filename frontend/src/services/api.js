@@ -29,7 +29,20 @@ export const api = {
     }
 
     const response = await fetch(url, config);
-    const data = await response.json();
+    const responseClone = response.clone();
+    let data;
+    try {
+      data = await response.json();
+    } catch (e) {
+      console.error("❌ API request failed to parse JSON from:", url);
+      try {
+        const text = await responseClone.text();
+        console.error("📄 Response text was:", text);
+      } catch (err) {
+        console.error("Could not read response text:", err);
+      }
+      throw new Error(`Invalid response from server at ${url}. Please verify your backend server is running and reachable.`);
+    }
 
     if (!response.ok) {
       throw new Error(data.message || 'Something went wrong');
@@ -57,6 +70,16 @@ export const api = {
     return this.request('/itinerary/save', {
       method: 'POST',
       body: itineraryData,
+    });
+  },
+
+  async getUserItineraries() {
+    return this.request('/itinerary/user');
+  },
+
+  async deleteItinerary(id) {
+    return this.request(`/itinerary/${id}`, {
+      method: 'DELETE',
     });
   },
 

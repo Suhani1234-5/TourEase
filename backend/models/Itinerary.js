@@ -48,17 +48,7 @@ const itinerarySchema = new mongoose.Schema({
     dailySchedule: [{
         day: Number,
         date: Date,
-        activities: [{
-            time: String, // 'morning', 'afternoon', 'evening'
-            activity: String,
-            location: String,
-            coordinates: {
-                lat: Number,
-                lng: Number
-            },
-            type: String, // 'sightseeing', 'dining', 'entertainment', etc.
-            notes: String
-        }],
+        activities: [mongoose.Schema.Types.Mixed],
         eventEnhanced: {
             type: Boolean,
             default: false

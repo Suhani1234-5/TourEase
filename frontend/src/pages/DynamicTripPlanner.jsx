@@ -13,7 +13,7 @@ import WeatherWidget from '../components/WeatherWidget';
 import EventCard from '../components/EventCard';
 
 // Enhanced Trip Planner with dynamic itinerary monitoring
-const DynamicTripPlanner = ({ tripData, onBack }) => {
+const DynamicTripPlanner = ({ tripData, initialItineraryId, onBack }) => {
     const [itinerary, setItinerary] = useState(null);
     const [suggestions, setSuggestions] = useState([]);
     const [weather, setWeather] = useState([]);
@@ -23,10 +23,29 @@ const DynamicTripPlanner = ({ tripData, onBack }) => {
     const [activeTab, setActiveTab] = useState('itinerary'); // 'itinerary', 'suggestions', 'events'
 
     useEffect(() => {
-        // Save the itinerary when component mounts
-        saveItinerary();
+        if (initialItineraryId) {
+            loadExistingItinerary(initialItineraryId);
+        } else if (tripData) {
+            saveItinerary();
+        }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [initialItineraryId]);
+
+    const loadExistingItinerary = async (id) => {
+        try {
+            setLoading(true);
+            const response = await api.getItinerary(id);
+            if (response.success) {
+                setItinerary(response.itinerary);
+                // Auto-analyze for dynamic content
+                analyzeDynamicContent(id);
+            }
+        } catch (error) {
+            console.error('Error loading itinerary:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     const saveItinerary = async () => {
         try {
@@ -274,7 +293,7 @@ const DynamicTripPlanner = ({ tripData, onBack }) => {
                         <div className="bg-white rounded-lg shadow-md p-6">
                             <h3 className="font-bold text-lg mb-4 text-gray-800">Original AI-Generated Plan</h3>
                             <div className="bg-gray-50 rounded-lg p-4 whitespace-pre-wrap text-gray-700 text-sm">
-                                {tripData.plan}
+                                {itinerary?.originalPlan || tripData?.plan}
                             </div>
                         </div>
                     </div>

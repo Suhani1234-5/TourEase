@@ -34,6 +34,8 @@ import NotFound from "./components/NotFound";
 import TripPlanner from './pages/TripPlanner';
 import Footer from "./components/Footer";
 import WatchDemoPage from './pages/DemoSection';
+import MyTrips from './pages/MyTrips';
+import DynamicPlannerPage from './pages/DynamicPlannerPage';
 
 function ProtectedRoute({ children }) {
   const isAuthenticated = Boolean(localStorage.getItem("token"));
@@ -88,6 +90,30 @@ function AppRoutes() {
           <Route path="/oauth-success" element={<OAuthSuccess />} />
           <Route path="*" element={<NotFound />} />
           <Route path="/trip-planner" element={<TripPlanner />} />
+          <Route
+            path="/my-trips"
+            element={
+              <ProtectedRoute>
+                <MyTrips />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/itinerary/:id"
+            element={
+              <ProtectedRoute>
+                <DynamicPlannerPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/dynamic-planner"
+            element={
+              <ProtectedRoute>
+                <DynamicPlannerPage />
+              </ProtectedRoute>
+            }
+          />
         </Routes>
       </div>
       {showNavigation && <Footer />}
