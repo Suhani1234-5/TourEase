@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { MapPin, Star, Heart, Clock, TrendingUp, Search } from "lucide-react";
 import { useFavorites } from "../hooks/useFavorites";
 import { destinations } from "../utils/destinationsData";
@@ -144,26 +144,36 @@ function FilterButton({ label, active, onClick }) {
 
 function DestinationCard({ destination, isFavorite, onToggleFavorite }) {
   const navigate = useNavigate();
+  const [imgSrc, setImgSrc] = useState(destination.image); // ← tracks image src
+
+  useEffect(() => {
+    setImgSrc(destination.image);
+  }, [destination.image]); 
 
   return (
     <div
-    onClick={() => navigate(`/destinations/${destination.id}`)}
-    className="h-full flex flex-col bg-white dark:bg-slate-900 rounded-xl shadow-sm hover:shadow-xl transition-all overflow-hidden group cursor-pointer border border-gray-100 dark:border-slate-800">
-      
+      onClick={() => navigate(`/destinations/${destination.id}`)}
+      className="h-full flex flex-col bg-white dark:bg-slate-900 rounded-xl shadow-sm hover:shadow-xl transition-all overflow-hidden group cursor-pointer border border-gray-100 dark:border-slate-800"
+    >
       {/* Image */}
-      <div
-      className="h-48 relative overflow-hidden bg-cover bg-center"
-      style={{ backgroundImage: `url(${destination.image})` }}
-      >
+      <div className="h-48 relative overflow-hidden">
+        <img
+          src={imgSrc}                      
+          alt={destination.name}
+          className="w-full h-full object-cover"
+          onError={() => setImgSrc("/fallback.jpg")}
+        />
+
+        {/* Overlay and button stay exactly the same */}
         <div className="absolute inset-0 bg-black/20 group-hover:bg-black/30 transition" />
         
         <button
-        type="button"
-        onClick={(e) => {
-          e.stopPropagation();
-          onToggleFavorite();
-        }}
-        className="absolute top-4 right-4 bg-white dark:bg-slate-900 rounded-full p-2 hover:bg-gray-100 dark:hover:bg-slate-800 transition z-10 shadow-md"
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            onToggleFavorite();
+          }}
+          className="absolute top-4 right-4 bg-white dark:bg-slate-900 rounded-full p-2 hover:bg-gray-100 dark:hover:bg-slate-800 transition z-10 shadow-md"
         >
           <Heart
           className={`w-6 h-6 transition ${
