@@ -1,15 +1,23 @@
-import React from "react";
+import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { ArrowLeft, MapPin, Star, Clock, TrendingUp } from "lucide-react";
 import { destinations } from "../utils/destinationsData";
 import { useFavorites } from "../hooks/useFavorites";
+import ReviewPanel from "../components/features/reviews/ReviewPanel";
 
 export default function DestinationDetails() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { toggleFavorite, isFavorite } = useFavorites();
 
+  // 1. Find the destination FIRST!
   const destination = destinations.find((d) => String(d.id) === String(id));
+
+  // 2. NOW you can use it to set your default state!
+  const [liveRating, setLiveRating] = useState(destination?.rating || 0);
+  const [liveReviewsCount, setLiveReviewsCount] = useState(
+    destination?.reviews || 0,
+  );
 
   if (!destination) {
     return (
@@ -49,24 +57,29 @@ export default function DestinationDetails() {
             </div>
 
             {/* Title */}
-            <h1 className="mt-6 text-3xl font-bold">
-              {destination.name}
-            </h1>
+            <h1 className="mt-6 text-3xl font-bold">{destination.name}</h1>
 
             {/* Rating */}
             <div className="mt-2 flex items-center gap-2">
               <Star className="w-5 h-5 text-yellow-400 fill-yellow-400" />
-              <span className="font-semibold">{destination.rating}</span>
+              <span className="font-semibold">{liveRating}</span>{" "}
+              {/* Changed! */}
               <span className="text-gray-500 dark:text-gray-400">
-                ({destination.reviews} reviews)
+                ({liveReviewsCount} reviews) {/* Changed! */}
               </span>
             </div>
 
             {/* Info Chips */}
             <div className="mt-6 grid sm:grid-cols-3 gap-4">
-              <InfoChip icon={MapPin} label={`Best for: ${destination.bestFor}`} />
+              <InfoChip
+                icon={MapPin}
+                label={`Best for: ${destination.bestFor}`}
+              />
               <InfoChip icon={Clock} label={`Season: ${destination.season}`} />
-              <InfoChip icon={TrendingUp} label={`Budget: ${destination.cost}`} />
+              <InfoChip
+                icon={TrendingUp}
+                label={`Budget: ${destination.cost}`}
+              />
             </div>
 
             {/* Overview */}
@@ -90,8 +103,33 @@ export default function DestinationDetails() {
                 </ul>
               </div>
             )}
-          </div>
 
+            <div className="mt-12">
+              <ReviewPanel
+                destinationId={destination.id || destination._id}
+                onStatsUpdate={(avg, total) => {
+                  // Grab the baseline numbers
+                  const baseRating = destination?.rating || 4.8;
+                  const baseCount = destination?.reviews || 1200;
+
+                  if (total > 0) {
+                    // Combine them!
+                    const combinedCount = baseCount + total;
+                    const combinedRating =
+                      (baseRating * baseCount + avg * total) / combinedCount;
+
+                    setLiveRating(combinedRating.toFixed(1));
+                    setLiveReviewsCount(combinedCount);
+                  } else {
+                    // Fallback to baseline
+                    setLiveRating(baseRating);
+                    setLiveReviewsCount(baseCount);
+                  }
+                }}
+              />
+            </div>
+          </div>{" "}
+          {/* <--- END OF LEFT SECTION */}
           {/* Right Section */}
           <div className="lg:col-span-4">
             <div className="sticky top-6 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl p-6">
@@ -132,9 +170,7 @@ function InfoChip({ icon, label }) {
   return (
     <div className="flex items-center gap-2 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg px-4 py-3">
       <Icon className="w-5 h-5 text-teal-600 dark:text-teal-400" />
-      <span className="text-sm text-gray-800 dark:text-gray-200">
-        {label}
-      </span>
+      <span className="text-sm text-gray-800 dark:text-gray-200">{label}</span>
     </div>
   );
 }
