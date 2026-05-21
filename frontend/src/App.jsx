@@ -1,4 +1,4 @@
-import Loader from './components/common/Loader';
+import Loader from "./components/common/Loader";
 import React from "react";
 import {
   BrowserRouter as Router,
@@ -10,7 +10,9 @@ import {
 
 import { FavoritesProvider } from "./context/FavoritesContext";
 import { ThemeProvider } from "./context/ThemeContext";
-import Navigation from "./components/Navigation";
+
+import Sidebar from "./components/Sidebar";
+
 import Home from "./pages/Home";
 import Home2 from "./pages/Home2";
 import About from "./pages/About";
@@ -28,9 +30,9 @@ import Privacy from "./pages/Privacy";
 import Terms from "./pages/Terms";
 import HelpCenter from "./pages/HelpCenter";
 import NotFound from "./components/NotFound";
-import TripPlanner from './pages/TripPlanner';
+import TripPlanner from "./pages/TripPlanner";
 import Footer from "./components/Footer";
-import WatchDemoPage from './pages/DemoSection';
+import WatchDemoPage from "./pages/DemoSection";
 
 function ProtectedRoute({ children }) {
   const isAuthenticated = Boolean(localStorage.getItem("token"));
@@ -44,16 +46,22 @@ function ProtectedRoute({ children }) {
 
 function AppRoutes() {
   const location = useLocation();
+
   const hideNavigationPaths = ["/signup", "/login"];
-  const showNavigation = !hideNavigationPaths.includes(location.pathname);
+
+  const showNavigation =
+    !hideNavigationPaths.includes(location.pathname);
 
   return (
     <>
-      {showNavigation && <Navigation />}
+      {showNavigation && <Sidebar />}
+
       <ScrollToTopButton />
-      <div className={showNavigation ? "pt-16" : ""}>
+
+      <div className="flex-1">
         <Routes>
           <Route path="/" element={<Home />} />
+
           <Route
             path="/home2"
             element={
@@ -62,38 +70,100 @@ function AppRoutes() {
               </ProtectedRoute>
             }
           />
-          <Route path='/demo' element={<WatchDemoPage />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/features" element={<Features />} />
-          <Route path="/destinations" element={<Destinations />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/privacy" element={<Privacy />} />
-          <Route path="/terms" element={<Terms />} />
-          <Route path="/help" element={<HelpCenter />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/favorites" element={<AddFavorite />} />
-          <Route path="/destinations/:id" element={<DestinationDetails />} />
 
-          <Route path="/plan-trip" element={<PlanTrip />} />
-          <Route path="/oauth-success" element={<OAuthSuccess />} />
-          <Route path="*" element={<NotFound />} />
-          <Route path="/trip-planner" element={<TripPlanner />} />
+          <Route
+            path="/demo"
+            element={<WatchDemoPage />}
+          />
+
+          <Route path="/about" element={<About />} />
+
+          <Route
+            path="/features"
+            element={<Features />}
+          />
+
+          <Route
+            path="/destinations"
+            element={<Destinations />}
+          />
+
+          <Route
+            path="/contact"
+            element={<Contact />}
+          />
+
+          <Route
+            path="/privacy"
+            element={<Privacy />}
+          />
+
+          <Route
+            path="/terms"
+            element={<Terms />}
+          />
+
+          <Route
+            path="/help"
+            element={<HelpCenter />}
+          />
+
+          <Route
+            path="/signup"
+            element={<Signup />}
+          />
+
+          <Route
+            path="/login"
+            element={<Login />}
+          />
+
+          <Route
+            path="/favorites"
+            element={<AddFavorite />}
+          />
+
+          <Route
+            path="/destinations/:id"
+            element={<DestinationDetails />}
+          />
+
+          <Route
+            path="/plan-trip"
+            element={<PlanTrip />}
+          />
+
+          <Route
+            path="/oauth-success"
+            element={<OAuthSuccess />}
+          />
+
+          <Route
+            path="/trip-planner"
+            element={<TripPlanner />}
+          />
+
+          <Route
+            path="*"
+            element={<NotFound />}
+          />
         </Routes>
+
+        {showNavigation && <Footer />}
       </div>
-      {showNavigation && <Footer />}
     </>
   );
 }
 
 export default function App() {
-  const [isLoading, setIsLoading] = React.useState(true);
+  const [isLoading, setIsLoading] =
+    React.useState(true);
 
   React.useEffect(() => {
-    // This simulates the app "loading" data for 2 seconds
     const timer = setTimeout(() => {
       setIsLoading(false);
     }, 2000);
+
     return () => clearTimeout(timer);
   }, []);
 
