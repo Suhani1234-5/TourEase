@@ -261,3 +261,17 @@ body > .skiptranslate {
     padding: 3px 8px;
   }
 }
+
+/* Hide browser-default native password reveal buttons in Microsoft Edge/IE */
+input::-ms-reveal,
+input::-ms-clear {
+    display: none !important;
+}
+
+/* Hide native browser validation reveal or fill buttons in WebKit browsers (Chrome, Safari, Opera) */
+input::-webkit-contacts-auto-fill-button,
+input::-webkit-credentials-auto-fill-button {
+    visibility: hidden !important;
+    display: none !important;
+    pointer-events: none !important;
+}
