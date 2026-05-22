@@ -71,11 +71,12 @@ export default function Destinations() {
         <div className="mb-8">
           <div className="relative max-w-2xl mx-auto">
             <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-slate-400 w-5 h-5" />
-            <input
+           <input
               type="text"
               placeholder="Search destinations by name, type, or season..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
+              autoFocus
               className="w-full pl-12 pr-4 py-4 rounded-full border-2 border-gray-200 dark:border-slate-700 focus:border-teal-500 dark:focus:border-teal-400 focus:outline-none text-lg bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 placeholder-gray-400 dark:placeholder-slate-500"
             />
           </div>
