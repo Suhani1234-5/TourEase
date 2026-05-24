@@ -293,7 +293,7 @@ export default function TripPlanner() {
               onChange={(e) => setRefinementInput(e.target.value)}
               placeholder="e.g. Make it more budget friendly, add local food spots..."
               rows={3}
-              className="w-full p-4 rounded-xl bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 outline-none focus:ring-2 focus:ring-teal-500/20 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
+              className="w-full p-4 rounded-xl bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 outline-none focus:ring-2 focus:ring-teal-500/20 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-300"
             />
             <button
               onClick={handleRefine}
@@ -376,7 +376,7 @@ export default function TripPlanner() {
                   value={formData.destination}
                   onChange={(e) => setFormData({ ...formData, destination: e.target.value })}
                   placeholder="e.g., Paris, Tokyo, Bali..."
-                  className="w-full bg-gray-50 dark:bg-gray-800 border dark:border-gray-700 rounded-xl px-6 py-4 text-lg outline-none focus:ring-2 focus:ring-teal-500/20 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-400"
+                  className="w-full bg-gray-50 dark:bg-gray-800 border dark:border-gray-700 rounded-xl px-6 py-4 text-lg outline-none focus:ring-2 focus:ring-teal-500/20 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-300"
                 />
 
                 {/* Recent Searches */}
