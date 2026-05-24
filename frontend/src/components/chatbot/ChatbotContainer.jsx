@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { X, RotateCcw, Send } from "lucide-react";
+import "./chatbot.css"; 
 
 export default function ChatbotContainer({ onClose }) {
 
