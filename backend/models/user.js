@@ -1,5 +1,5 @@
-const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs');
+const mongoose = require("mongoose");
+const bcrypt = require("bcryptjs");
 
 const userSchema = new mongoose.Schema(
   {
@@ -14,9 +14,10 @@ const userSchema = new mongoose.Schema(
     email: {
       type: String,
       required: true,
-      unique: true,
+      unique: true,       // ← index defined here, no need to repeat below
       lowercase: true,
       trim: true,
+      match: [/^\S+@\S+\.\S+$/, "Please enter a valid email"],
     },
 
     password: {
@@ -30,17 +31,20 @@ const userSchema = new mongoose.Schema(
 
     googleId: {
       type: String,
-      unique: true,
+      unique: true,       // ← index defined here, no need to repeat below
       sparse: true,
     },
 
     avatar: {
       type: String,
+      default: "",
     },
 
     phone: {
       type: String,
       trim: true,
+      //Loose E.164-compatible validation
+      match: [/^\+?[1-9]\d{6,14}$/, "Please enter a valid phone number"],
     },
 
     authProvider: {
@@ -52,22 +56,19 @@ const userSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// Hash password before saving
-userSchema.pre('save', async function (next) {
-  if (!this.isModified('password')) {
-    return next();
-  }
+//Removed duplicate index declarations — schema field options are sufficient
+
+userSchema.pre("save", async function (next) {
+  if (!this.isModified("password") || !this.password) return next();
   const salt = await bcrypt.genSalt(10);
   this.password = await bcrypt.hash(this.password, salt);
   next();
 });
 
-// Method to compare password
 userSchema.methods.comparePassword = async function (candidatePassword) {
+  if (!this.password) return false;
   return await bcrypt.compare(candidatePassword, this.password);
 };
 
-const User = mongoose.model('User', userSchema);
-
+const User = mongoose.model("User", userSchema);
 module.exports = User;
-

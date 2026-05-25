@@ -1,5 +1,5 @@
 import React from 'react';
-import { Cloud, CloudRain, CloudSnow, Sun, Wind, Droplets } from 'lucide-react';
+import { Cloud, CloudRain, CloudSnow, Sun, Wind, Droplets, AlertTriangle } from 'lucide-react';
 
 // Weather widget to show forecast for trip days
 const WeatherWidget = ({ weather }) => {
@@ -94,9 +94,10 @@ const WeatherWidget = ({ weather }) => {
 
             {/* Weather alerts */}
             {weather.some(day => day.precipitation > 70 || day.temp.max > 38) && (
-                <div className="mt-4 p-3 bg-yellow-50 border border-yellow-300 rounded-lg">
+                <div className="mt-4 p-3 bg-yellow-50 border border-yellow-300 rounded-lg flex gap-2 items-start">
+                    <AlertTriangle className="w-5 h-5 text-yellow-600 shrink-0 mt-0.5" />
                     <p className="text-sm text-yellow-800">
-                        ⚠️ Some days have extreme weather conditions. Check suggestions for alternative plans.
+                        Some days have extreme weather conditions. Check suggestions for alternative plans.
                     </p>
                 </div>
             )}

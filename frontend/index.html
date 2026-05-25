@@ -27,6 +27,21 @@
   </head>
   <body>
     <div id="root"></div>
+    <div id="google_translate_element" class="google-translate-host"></div>
     <script type="module" src="/src/main.jsx"></script>
+    <script type="text/javascript">
+      function googleTranslateElementInit() {
+        globalThis.googleTranslateElement = new google.translate.TranslateElement(
+          {
+            pageLanguage: 'en',
+            includedLanguages: 'en,hi',
+            autoDisplay: false,
+          },
+          'google_translate_element'
+        );
+      }
+    </script>
+    <!-- Google Translate script - integrity hash not applicable for dynamic resources -->
+    <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
   </body>
 </html>

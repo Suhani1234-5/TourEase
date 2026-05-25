@@ -268,7 +268,7 @@ export default function Privacy() {
         {/* Contact Section */}
         <div className="mt-16 bg-gradient-to-br from-teal-50 to-cyan-50 dark:from-gray-900 dark:to-gray-950 p-10 rounded-2xl border border-teal-200 dark:border-gray-800">
           <div className="flex items-center mb-6">
-            <Mail className="w-10 h-10 text-teal-600 dark:text-teal-400 mr-4" />
+            <Mail className="w-10 h-10 text-teal-600 dark:text-indigo-600 mr-4" />
             <h2 className="text-3xl font-bold text-gray-900 dark:text-white">Contact Us</h2>
           </div>
           <p className="text-gray-700 dark:text-gray-300 mb-6 text-lg">
@@ -277,13 +277,13 @@ export default function Privacy() {
           </p>
           <div className="space-y-3">
             <div className="flex items-center text-gray-700 dark:text-gray-300">
-              <Mail className="w-5 h-5 mr-3 text-teal-600 dark:text-teal-400" />
-              <a href="mailto:support@tourease.com" className="text-teal-600 dark:text-teal-400 hover:underline font-medium">
+              <Mail className="w-5 h-5 mr-3 text-teal-600 dark:text-indigo-600" />
+              <a href="mailto:support@tourease.com" className="text-teal-600 dark:text-indigo-600 hover:underline font-medium">
                 support@tourease.com
               </a>
             </div>
             <div className="flex items-center text-gray-700 dark:text-gray-300">
-              <FileText className="w-5 h-5 mr-3 text-teal-600 dark:text-teal-400" />
+              <FileText className="w-5 h-5 mr-3 text-teal-600 dark:text-indigo-600" />
               <span>Data Protection Officer, TourEase Inc.</span>
             </div>
           </div>
@@ -342,7 +342,7 @@ function PrivacySection({ icon, title, iconColor, children }) {
 function ListItem({ children }) {
   return (
     <li className="flex items-start text-gray-700 dark:text-gray-300">
-      <span className="inline-block w-2 h-2 rounded-full bg-teal-500 dark:bg-teal-400 mr-3 mt-2 flex-shrink-0"></span>
+      <span className="inline-block w-2 h-2 rounded-full bg-teal-500 dark:bg-indigo-600 mr-3 mt-2 flex-shrink-0"></span>
       <span>{children}</span>
     </li>
   );

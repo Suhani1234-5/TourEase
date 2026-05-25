@@ -231,7 +231,7 @@ export default function Contact() {
                             name="name"
                             value={formData.name}
                             onChange={handleChange}
-                            className="w-full px-5 py-4 border-2 border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white rounded-xl focus:outline-none focus:border-teal-500 dark:focus:border-indigo-400 focus:bg-white dark:focus:bg-gray-750 focus:ring-4 focus:ring-teal-500/10 dark:focus:ring-indigo-400/10 transition-all duration-200 placeholder:text-gray-400 dark:placeholder:text-gray-500"
+                            className="w-full px-5 py-4 border-2 border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white rounded-xl focus:outline-none focus:border-teal-500 dark:focus:border-indigo-400 focus:bg-white dark:focus:bg-gray-800 focus:ring-4 focus:ring-teal-500/10 dark:focus:ring-indigo-400/10 transition-all duration-200 placeholder:text-gray-400 dark:placeholder:text-gray-500"
                             placeholder="John Doe"
                             disabled={loading}
                             required
@@ -259,7 +259,7 @@ export default function Contact() {
                                         ? 'border-red-300 dark:border-red-700 bg-red-50 dark:bg-red-950/20 focus:border-red-500 focus:ring-red-500/10'
                                         : isEmailValid
                                             ? 'border-green-400 dark:border-green-600 bg-green-50 dark:bg-green-950/20 focus:border-green-500 focus:ring-green-500/10'
-                                            : 'border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 focus:border-teal-500 dark:focus:border-indigo-400 focus:bg-white dark:focus:bg-gray-750 focus:ring-teal-500/10 dark:focus:ring-indigo-400/10'
+                                            : 'border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 focus:border-teal-500 dark:focus:border-indigo-400 focus:bg-white dark:focus:bg-gray-800 focus:ring-teal-500/10 dark:focus:ring-indigo-400/10'
                                     } text-gray-900 dark:text-white`}
                                 placeholder="john.doe@example.com"
                                 disabled={loading}
@@ -299,7 +299,7 @@ export default function Contact() {
                             name="subject"
                             value={formData.subject}
                             onChange={handleChange}
-                            className="w-full px-5 py-4 border-2 border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white rounded-xl focus:outline-none focus:border-teal-500 dark:focus:border-indigo-400 focus:bg-white dark:focus:bg-gray-750 focus:ring-4 focus:ring-teal-500/10 dark:focus:ring-indigo-400/10 transition-all duration-200 placeholder:text-gray-400 dark:placeholder:text-gray-500"
+                            className="w-full px-5 py-4 border-2 border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white rounded-xl focus:outline-none focus:border-teal-500 dark:focus:border-indigo-400 focus:bg-white dark:focus:bg-gray-800 focus:ring-4 focus:ring-teal-500/10 dark:focus:ring-indigo-400/10 transition-all duration-200 placeholder:text-gray-400 dark:placeholder:text-gray-500"
                             placeholder="How can we help you today?"
                             disabled={loading}
                         />
@@ -325,7 +325,7 @@ export default function Contact() {
                             rows="7"
                             className={`w-full px-5 py-4 border-2 rounded-xl focus:outline-none focus:ring-4 transition-all duration-200 resize-none placeholder:text-gray-400 dark:placeholder:text-gray-500 ${isNearLimit
                                     ? 'border-orange-300 dark:border-orange-700 focus:border-orange-500 focus:ring-orange-500/10 bg-orange-50/50 dark:bg-orange-950/10'
-                                    : 'border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 focus:border-teal-500 dark:focus:border-indigo-400 focus:bg-white dark:focus:bg-gray-750 focus:ring-teal-500/10 dark:focus:ring-indigo-400/10'
+                                    : 'border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 focus:border-teal-500 dark:focus:border-indigo-400 focus:bg-white dark:focus:bg-gray-800 focus:ring-teal-500/10 dark:focus:ring-indigo-400/10'
                                 } text-gray-900 dark:text-white`}
                             placeholder="Tell us more about your inquiry... What can we help you with?"
                             disabled={loading}

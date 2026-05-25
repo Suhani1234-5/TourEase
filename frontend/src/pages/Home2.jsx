@@ -84,7 +84,7 @@ export default function Home2() {
             title="View Itineraries"
             description="Browse and manage your saved travel plans"
             color="from-orange-500 to-red-600 dark:from-orange-600 dark:to-rose-600"
-            onClick={() => navigate('/destinations')}
+            onClick={() => navigate('/my-trips')}
           />
           <ActionCard
             icon={<Users className="w-8 h-8" />}

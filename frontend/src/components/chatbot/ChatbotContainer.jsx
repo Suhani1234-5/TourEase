@@ -1,128 +1,162 @@
 import { useEffect, useRef, useState } from "react";
-import { conversationFlow } from "./conversationFlow";
-import { getItinerary } from "./itineraryRules";
-import { formatItinerary } from "./itineraryFormatter";
+import { X, RotateCcw, Send } from "lucide-react";
+import "./chatbot.css"; 
 
 export default function ChatbotContainer({ onClose }) {
-  const [stepIndex, setStepIndex] = useState(0);
-  const [answers, setAnswers] = useState({});
+
   const [messages, setMessages] = useState([
     {
       sender: "bot",
-      text: "Hi 👋 I’m your TourEase assistant. Let’s plan your trip step by step."
+      text: "Hi 👋 I’m your TourEase assistant. How can I help you plan your trip?"
     }
   ]);
 
-  const chatEndRef = useRef(null);
-  const currentStep = conversationFlow[stepIndex];
+  const [input, setInput] = useState("");
 
-  // auto-scroll
+  const chatEndRef = useRef(null);
+
+  // auto scroll
   useEffect(() => {
-    chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    chatEndRef.current?.scrollIntoView({
+      behavior: "smooth"
+    });
   }, [messages]);
 
-  // CORE CONVERSATION ENGINE
-  useEffect(() => {
-    // Ask questions step-by-step
-    if (stepIndex < conversationFlow.length) {
-      const question = conversationFlow[stepIndex].question;
+  // send message to backend
+  async function sendMessage() {
 
-      setMessages(prev => {
-        const last = prev[prev.length - 1];
-        if (last?.text === question) return prev;
+    if (!input.trim()) return;
 
-        return [...prev, { sender: "bot", text: question }];
-      });
-    }
+    const userMessage = input;
 
-    // Finished → show itinerary once
-    if (stepIndex === conversationFlow.length) {
-      setMessages(prev => {
-        // prevent duplicate itinerary message
-        if (prev.some(m => m.sender === "bot" && m.text.startsWith("✨"))) {
-          return prev;
-        }
-
-        const itinerary = getItinerary(answers);
-        const formatted = formatItinerary(itinerary);
-
-        return [
-          ...prev,
-          { sender: "bot", text: formatted },
-          {
-            sender: "bot",
-            text: "You can restart and try different preferences 👇"
-          }
-        ];
-      });
-    }
-  }, [stepIndex, answers]);
-
-  // user selects an option
-  function handleOptionClick(option) {
-    setAnswers(prev => ({
-      ...prev,
-      [currentStep.id]: option.value
-    }));
-
+    // add user message
     setMessages(prev => [
       ...prev,
-      { sender: "user", text: option.label }
+      {
+        sender: "user",
+        text: userMessage
+      }
     ]);
 
-    setStepIndex(prev => prev + 1);
+    setInput("");
+
+    try {
+
+      const res = await fetch("/api/chat", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          message: userMessage
+        })
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+  throw new Error(data.error);
+}
+
+      // add bot response
+      setMessages(prev => [
+        ...prev,
+        {
+          sender: "bot",
+          text: data.response
+        }
+      ]);
+
+    } catch (error) {
+
+      console.log(error);
+
+      setMessages(prev => [
+        ...prev,
+        {
+          sender: "bot",
+          text: "⚠️ Something went wrong. Please try again."
+        }
+      ]);
+    }
   }
 
-  // restart flow
+  // restart conversation
   function restartConversation() {
-    setStepIndex(0);
-    setAnswers({});
+
     setMessages([
       {
         sender: "bot",
-        text: "Hi 👋 I’m your TourEase assistant. Let’s plan your trip step by step."
+        text: "Hi 👋 I’m your TourEase assistant. How can I help you plan your trip?"
       }
     ]);
+
+    setInput("");
+  }
+
+  // send on enter
+  function handleKeyDown(e) {
+    if (e.key === "Enter") {
+      sendMessage();
+    }
   }
 
   return (
     <div className="chatbot-container">
+
+      {/* HEADER */}
       <div className="chatbot-header">
         <span>TourEase Assistant</span>
-        <button onClick={onClose}>✖</button>
+
+        <button
+          onClick={onClose}
+          className="hover:opacity-70 transition-opacity"
+        >
+          <X className="w-5 h-5" />
+        </button>
       </div>
 
+      {/* CHAT BODY */}
       <div className="chatbot-body">
+
         {messages.map((msg, idx) => (
-          <div key={idx} className={`chat-message ${msg.sender}`}>
+          <div
+            key={idx}
+            className={`chat-message ${msg.sender}`}
+          >
             {msg.text}
           </div>
         ))}
+
         <div ref={chatEndRef} />
       </div>
 
-      {/* Active conversation options */}
-      {stepIndex < conversationFlow.length && currentStep && (
-        <div className="chatbot-footer">
-          {currentStep.options.map(opt => (
-            <button
-              key={opt.value}
-              onClick={() => handleOptionClick(opt)}
-            >
-              {opt.label}
-            </button>
-          ))}
-        </div>
-      )}
+      {/* FOOTER */}
+      <div className="chatbot-footer">
 
-      {/* Restart after itinerary */}
-      {stepIndex === conversationFlow.length && (
-        <div className="chatbot-footer">
-          <button className="restart-btn" onClick={restartConversation}>
-            🔄 Restart Trip Planning
-          </button>
-        </div>
-      )}
+        <input
+          type="text"
+          placeholder="Ask about your trip..."
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          onKeyDown={handleKeyDown}
+          className="chat-input"
+        />
+
+        <button
+          onClick={sendMessage}
+          className="send-btn"
+        >
+          <Send className="w-4 h-4" />
+        </button>
+
+        <button
+          className="restart-btn flex items-center justify-center gap-2"
+          onClick={restartConversation}
+        >
+          <RotateCcw className="w-4 h-4" />
+        </button>
+
+      </div>
     </div>
   );
 }

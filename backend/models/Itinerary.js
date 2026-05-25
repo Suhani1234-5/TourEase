@@ -35,6 +35,42 @@ const itinerarySchema = new mongoose.Schema({
         default: 'moderate'
     },
 
+    // Numeric budget (INR) for Smart Trip Planner
+    budgetAmount: {
+        type: Number
+    },
+
+    // Trip length in days (Smart Planner uses days instead of only date range)
+    days: {
+        type: Number
+    },
+
+    travelType: {
+        type: String,
+        enum: ['budget', 'luxury', 'adventure', 'family', 'solo', 'beach', 'mountains'],
+    },
+
+    // Distinguishes classic vs smart planner records
+    plannerType: {
+        type: String,
+        enum: ['classic', 'smart'],
+        default: 'classic'
+    },
+
+    // Full structured AI/rule-based plan (JSON)
+    generatedPlan: {
+        type: mongoose.Schema.Types.Mixed
+    },
+
+    estimatedCost: {
+        type: mongoose.Schema.Types.Mixed
+    },
+
+    isFavorite: {
+        type: Boolean,
+        default: false
+    },
+
     accommodation: {
         type: String,
         default: 'hotel'
@@ -48,17 +84,7 @@ const itinerarySchema = new mongoose.Schema({
     dailySchedule: [{
         day: Number,
         date: Date,
-        activities: [{
-            time: String, // 'morning', 'afternoon', 'evening'
-            activity: String,
-            location: String,
-            coordinates: {
-                lat: Number,
-                lng: Number
-            },
-            type: String, // 'sightseeing', 'dining', 'entertainment', etc.
-            notes: String
-        }],
+        activities: [mongoose.Schema.Types.Mixed],
         eventEnhanced: {
             type: Boolean,
             default: false

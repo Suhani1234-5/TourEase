@@ -29,10 +29,11 @@ export const api = {
     }
 
     const response = await fetch(url, config);
-    const data = await response.json();
+    const text = await response.text();
+    const data = text ? JSON.parse(text) : {};
 
     if (!response.ok) {
-      throw new Error(data.message || 'Something went wrong');
+      throw new Error(data.message || data.error || 'Something went wrong');
     }
 
     return data;
@@ -60,6 +61,16 @@ export const api = {
     });
   },
 
+  async getUserItineraries() {
+    return this.request('/itinerary/user');
+  },
+
+  async deleteItinerary(id) {
+    return this.request(`/itinerary/${id}`, {
+      method: 'DELETE',
+    });
+  },
+
   // ... (keep all other methods like generateTrip, etc.)
   async generateTrip(tripData) {
     return this.request('/trip/generate', {
@@ -77,6 +88,9 @@ export const api = {
   
   // Keep all the existing weather/event methods below...
   async getItinerary(id) { return this.request(`/itinerary/${id}`); },
+  async analyzeItinerary(itineraryId) {
+    return this.request(`/itinerary/${itineraryId}/analyze`);
+  },
   async getSuggestions(itineraryId, status = null) {
     const query = status ? `?status=${status}` : '';
     return this.request(`/itinerary/${itineraryId}/suggestions${query}`);
@@ -108,5 +122,81 @@ export const api = {
   async getWeatherDisruptions(location, startDate, endDate) {
     const params = new URLSearchParams({ location, startDate, endDate });
     return this.request(`/weather/disruptions?${params}`);
+  },
+
+  // --- Smart Trip Planner ---
+  async generateSmartItinerary(tripData) {
+    return this.request('/smart-planner/generate-itinerary', {
+      method: 'POST',
+      body: tripData,
+    });
+  },
+
+  async saveSmartItinerary(payload) {
+    return this.request('/smart-planner/save', {
+      method: 'POST',
+      body: payload,
+    });
+  },
+
+  async getSavedSmartItineraries() {
+    return this.request('/smart-planner/saved-itineraries');
+  },
+
+  async getSavedSmartItinerary(id) {
+    return this.request(`/smart-planner/saved-itineraries/${id}`);
+  },
+
+  async updateSmartItinerary(id, payload) {
+    return this.request(`/smart-planner/saved-itineraries/${id}`, {
+      method: 'PATCH',
+      body: payload,
+    });
+  },
+
+  async deleteSmartItinerary(id) {
+    return this.request(`/smart-planner/saved-itineraries/${id}`, {
+      method: 'DELETE',
+    });
+  },
+
+  async toggleSmartItineraryFavorite(id) {
+    return this.request(`/smart-planner/saved-itineraries/${id}/favorite`, {
+      method: 'PATCH',
+    });
+  },
+
+  async getUserItineraries() {
+    return this.request('/itinerary/user');
+  },
+
+  // --- Split & Expense Tracker ---
+  async getExpenseGroups() {
+    return this.request('/expenses');
+  },
+  async createExpenseGroup(data) {
+    return this.request('/expenses', {
+      method: 'POST',
+      body: data,
+    });
+  },
+  async getExpenseGroup(id) {
+    return this.request(`/expenses/${id}`);
+  },
+  async deleteExpenseGroup(id) {
+    return this.request(`/expenses/${id}`, {
+      method: 'DELETE',
+    });
+  },
+  async addExpense(groupId, data) {
+    return this.request(`/expenses/${groupId}/expense`, {
+      method: 'POST',
+      body: data,
+    });
+  },
+  async deleteExpense(groupId, expenseId) {
+    return this.request(`/expenses/${groupId}/expense/${expenseId}`, {
+      method: 'DELETE',
+    });
   },
 };

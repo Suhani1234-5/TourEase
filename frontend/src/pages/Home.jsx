@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect, useMemo, useState } from "react";
+import PropTypes from "prop-types";
 import Testimonials from "../pages/Testimonials";
 import { Link } from "react-router-dom";
 import {
@@ -14,10 +15,169 @@ import {
   DollarSign,
   Award,
   Star,
+  Sparkles,
 } from "lucide-react";
 import CountUp from "../components/CountUp";
-import ChatbotLauncher from "../components/chatbot/ChatbotLauncher";
 
+//Carousel feature data
+const featureCards = [
+  {
+    icon: <Globe className="w-10 h-10" />,
+    title: "AI Travel Planner",
+    description:
+      "Smart itinerary builder tailored to your interests, budget, and time. Get personalized recommendations instantly.",
+    color: "bg-blue-100 text-blue-600",
+  },
+  {
+    icon: <Shield className="w-10 h-10" />,
+    title: "Local Advice & Support",
+    description:
+      "Get real-time tips from locals and travelers. Know what to do, where to go, and what to avoid.",
+    color: "bg-teal-100 text-teal-600",
+  },
+  {
+    icon: <Smartphone className="w-10 h-10" />,
+    title: "Smart Accommodation",
+    description:
+      "Find the perfect stay with AI-driven suggestions based on reviews, location, and price.",
+    color: "bg-purple-100 text-purple-600",
+  },
+  {
+    icon: <Video className="w-10 h-10" />,
+    title: "Online Translation",
+    description:
+      "Break language barriers with instant AI-powered translation for over 100 languages.",
+    color: "bg-green-100 text-green-600",
+  },
+  {
+    icon: <Calendar className="w-10 h-10" />,
+    title: "Offline Accessibility",
+    description:
+      "Access your itinerary, maps & guides without internet. Travel worry-free anywhere.",
+    color: "bg-orange-100 text-orange-600",
+  },
+  {
+    icon: <Headphones className="w-10 h-10" />,
+    title: "24/7 Live Support",
+    description:
+      "Get instant help anytime, anywhere. Our travel experts are always ready to assist you.",
+    color: "bg-pink-100 text-pink-600",
+  },
+  {
+    icon: <Users className="w-10 h-10" />,
+    title: "Group Trip Planner",
+    description:
+      "Coordinate with friends easily. Share itineraries, split costs, and vote on activities.",
+    color: "bg-indigo-100 text-indigo-600",
+  },
+  {
+    icon: <DollarSign className="w-10 h-10" />,
+    title: "Budget Tracker",
+    description:
+      "Stay on budget with smart expense tracking and cost predictions for your entire trip.",
+    color: "bg-yellow-100 text-yellow-600",
+  },
+];
+
+function FeatureCarousel({ cards }) {
+  const [activeSlide, setActiveSlide] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
+  const [viewportWidth, setViewportWidth] = useState(
+    typeof window !== "undefined" ? window.innerWidth : 1280,
+  );
+
+  useEffect(() => {
+    const handleResize = () => setViewportWidth(window.innerWidth);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const slidesToShow = useMemo(() => {
+    if (viewportWidth < 768) return 1;
+    if (viewportWidth < 1024) return 2;
+    if (viewportWidth < 1280) return 3;
+    return 4;
+  }, [viewportWidth]);
+
+  const maxSlideIndex = Math.max(0, cards.length - slidesToShow);
+
+  useEffect(() => {
+    if (activeSlide > maxSlideIndex) {
+      setActiveSlide(maxSlideIndex);
+    }
+  }, [maxSlideIndex, activeSlide]);
+
+  useEffect(() => {
+    if (isPaused || maxSlideIndex <= 0) return undefined;
+    const timer = window.setInterval(() => {
+      setActiveSlide((current) => (current >= maxSlideIndex ? 0 : current + 1));
+    }, 3200);
+    return () => window.clearInterval(timer);
+  }, [isPaused, maxSlideIndex]);
+
+  const cardWidthPercent = 100 / slidesToShow;
+  const translateX = `translateX(-${activeSlide * cardWidthPercent}%)`;
+
+  const indicatorCount = maxSlideIndex + 1;
+
+  return (
+    <div className="relative">
+      <div
+        className="overflow-hidden"
+        onMouseEnter={() => setIsPaused(true)}
+        onMouseLeave={() => setIsPaused(false)}
+      >
+        <div
+          className="flex transition-transform duration-400 ease-out"
+          style={{ transform: translateX, willChange: "transform" }}
+        >
+          {cards.map((card, index) => (
+            <div
+              key={index}
+              className="shrink-0 box-border"
+              style={{
+                flex: `0 0 ${cardWidthPercent}%`,
+                maxWidth: `${cardWidthPercent}%`,
+                boxSizing: "border-box",
+                padding: "0 12px",
+              }}
+            >
+              <div className="bg-white dark:bg-gray-900 p-8 rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 border border-gray-100 dark:border-gray-800 hover:border-teal-200 dark:hover:border-teal-700 group h-full">
+                <div
+                  className={`${card.color} w-16 h-16 rounded-lg flex items-center justify-center mb-5 group-hover:scale-110 transition-transform`}
+                >
+                  {card.icon}
+                </div>
+                <h3 className="font-bold text-xl mb-3 text-gray-900 dark:text-white">
+                  {card.title}
+                </h3>
+                <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
+                  {card.description}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="mt-6 flex items-center justify-center gap-2">
+        {Array.from({ length: indicatorCount }, (_, idx) => (
+          <button
+            key={idx}
+            type="button"
+            onClick={() => setActiveSlide(idx)}
+            className={`h-2 rounded-full transition-all ${
+              activeSlide === idx
+                ? "w-8 bg-teal-500"
+                : "w-2 bg-gray-300 dark:bg-gray-700"
+            }`}
+            aria-label={`Show slide ${idx + 1}`}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
 
 export default function Home() {
   return (
@@ -69,7 +229,7 @@ export default function Home() {
 
                 <Link
                   to="/destinations"
-                  className="px-8 py-3.5 bg-white/5 border border-white/10 backdrop-blur-md text-white hover:bg-white/10 rounded-xl font-bold transition-all duration-300 active:scale-95 text-md flex items-center justify-center min-w-[180px]"
+                  className="px-8 py-3.5 border bg-white border-black/80 text-black dark:bg-black dark:border-white/80 dark:text-white rounded-xl font-bold transition-all duration-500 hover:scale-105 flex items-center justify-center min-w-[180px]"
                 >
                   Explore Features
                 </Link>
@@ -110,7 +270,7 @@ export default function Home() {
 
                     <div className="absolute bottom-6 left-6 bg-white/70 dark:bg-white/10 backdrop-blur-xl px-4 py-2 rounded-2xl border border-white/40 dark:border-white/20 shadow-xl">
                       <div className="flex items-center gap-2">
-                        <span className="text-teal-500">✦</span>
+                        <Sparkles className="text-teal-500 w-3 h-3" />
                         <p className="text-gray-900 dark:text-white text-[10px] font-bold uppercase tracking-wider">
                           Top Rated Experience
                         </p>
@@ -144,62 +304,8 @@ export default function Home() {
           simplify every step of your journey
         </p>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-          <FeatureCard
-            icon={<Globe className="w-10 h-10" />}
-            title="AI Travel Planner"
-            description="Smart itinerary builder tailored to your interests, budget, and time. Get personalized recommendations instantly."
-            color="bg-blue-100 text-blue-600"
-          />
-
-          <FeatureCard
-            icon={<Shield className="w-10 h-10" />}
-            title="Local Advice & Support"
-            description="Get real-time tips from locals and travelers. Know what to do, where to go, and what to avoid."
-            color="bg-teal-100 text-teal-600"
-          />
-
-          <FeatureCard
-            icon={<Smartphone className="w-10 h-10" />}
-            title="Smart Accommodation"
-            description="Find the perfect stay with AI-driven suggestions based on reviews, location, and price."
-            color="bg-purple-100 text-purple-600"
-          />
-
-          <FeatureCard
-            icon={<Video className="w-10 h-10" />}
-            title="Online Translation"
-            description="Break language barriers with instant AI-powered translation for over 100 languages."
-            color="bg-green-100 text-green-600"
-          />
-
-          <FeatureCard
-            icon={<Calendar className="w-10 h-10" />}
-            title="Offline Accessibility"
-            description="Access your itinerary, maps & guides without internet. Travel worry-free anywhere."
-            color="bg-orange-100 text-orange-600"
-          />
-
-          <FeatureCard
-            icon={<Headphones className="w-10 h-10" />}
-            title="24/7 Live Support"
-            description="Get instant help anytime, anywhere. Our travel experts are always ready to assist you."
-            color="bg-pink-100 text-pink-600"
-          />
-
-          <FeatureCard
-            icon={<Users className="w-10 h-10" />}
-            title="Group Trip Planner"
-            description="Coordinate with friends easily. Share itineraries, split costs, and vote on activities."
-            color="bg-indigo-100 text-indigo-600"
-          />
-
-          <FeatureCard
-            icon={<DollarSign className="w-10 h-10" />}
-            title="Budget Tracker"
-            description="Stay on budget with smart expense tracking and cost predictions for your entire trip."
-            color="bg-yellow-100 text-yellow-600"
-          />
+        <div className="relative">
+          <FeatureCarousel cards={featureCards} />
         </div>
       </div>
 
@@ -334,7 +440,10 @@ export default function Home() {
             >
               Get Started Free
             </Link>
-            <Link to="/demo" className="bg-white text-teal-600 hover:bg-gray-100 px-10 py-4 rounded-lg font-semibold transition text-lg">
+            <Link
+              to="/demo"
+              className="bg-white text-teal-600 hover:bg-gray-100 px-10 py-4 rounded-lg font-semibold transition text-lg"
+            >
               Watch Demo
             </Link>
           </div>
@@ -359,8 +468,6 @@ export default function Home() {
           </div>
         </div>
       </div>
-    {/* ================= CHATBOT ================= */}
-      <ChatbotLauncher />
     </div>
   );
 }
@@ -430,3 +537,25 @@ function CommunityCard({ name, location, quote, trips }) {
     </div>
   );
 }
+
+FeatureCard.propTypes = {
+  icon: PropTypes.node.isRequired,
+  title: PropTypes.string.isRequired,
+  description: PropTypes.string.isRequired,
+  color: PropTypes.string.isRequired,
+};
+
+StepCard.propTypes = {
+  number: PropTypes.string.isRequired,
+  icon: PropTypes.node.isRequired,
+  title: PropTypes.string.isRequired,
+  description: PropTypes.string.isRequired,
+  color: PropTypes.string.isRequired,
+};
+
+CommunityCard.propTypes = {
+  name: PropTypes.string.isRequired,
+  location: PropTypes.string.isRequired,
+  quote: PropTypes.string.isRequired,
+  trips: PropTypes.string.isRequired,
+};

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 const testimonials = [
   {
@@ -18,7 +18,7 @@ const testimonials = [
   {
     name: "Rohan Verma",
     review:
-      "One of the best travel planning platforms I’ve used so far.",
+      "One of the best travel planning platforms I've used so far.",
     image: "https://i.pravatar.cc/150?img=45",
     rating: 5,
   },
@@ -32,15 +32,7 @@ const testimonials = [
 ];
 
 export default function Testimonials() {
-  const [offset, setOffset] = useState(0);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setOffset((prev) => prev - 1);
-    }, 20);
-
-    return () => clearInterval(interval);
-  }, []);
+  const [isPaused, setIsPaused] = useState(false);
 
   return (
     <section className="py-20 bg-gray-50 dark:bg-gray-950 overflow-hidden">
@@ -49,13 +41,12 @@ export default function Testimonials() {
           What Travelers Say
         </h2>
 
-        <div className="relative w-full">
+        <div className="relative w-full overflow-hidden">
           <div
-            className="flex gap-6 w-max"
-            style={{
-              transform: `translateX(${offset}px)`,
-              transition: "transform 0.02s linear",
-            }}
+            className="marquee-track flex gap-6 w-max"
+            style={{ animationPlayState: isPaused ? "paused" : "running" }}
+            onMouseEnter={() => setIsPaused(true)}
+            onMouseLeave={() => setIsPaused(false)}
           >
             {[...testimonials, ...testimonials].map((t, i) => (
               <div
@@ -81,24 +72,19 @@ export default function Testimonials() {
                     alt={t.name}
                     className="w-14 h-14 rounded-full object-cover"
                   />
-
                   <div>
                     <h4 className="font-semibold text-gray-900 dark:text-white">
                       {t.name}
                     </h4>
-
                     <div className="text-yellow-400 text-sm">
                       {[...Array(5)].map((_, j) => (
-                        <span key={j}>
-                          {j < t.rating ? "★" : "☆"}
-                        </span>
+                        <span key={j}>{j < t.rating ? "★" : "☆"}</span>
                       ))}
                     </div>
                   </div>
                 </div>
-
                 <p className="text-sm italic text-gray-600 dark:text-gray-400">
-                  “{t.review}”
+                  "{t.review}"
                 </p>
               </div>
             ))}
