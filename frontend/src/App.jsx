@@ -43,6 +43,7 @@ import DynamicPlannerPage from './pages/DynamicPlannerPage';
 import { ScrollToTop } from "./components/common/ScrollToTop";
 import SplitExpense from "./pages/SplitExpense";
 import CurrencyConverter from "./pages/CurrencyConverter";
+import TravelLocker from "./pages/TravelLocker";
 import Contributors from "./pages/Contributors";
 
 function ProtectedRoute({ children }) {
@@ -113,6 +114,14 @@ function AppRoutes() {
             <Route
               path="/currency-converter"
               element={<PageTransition><CurrencyConverter /></PageTransition>}
+            />
+            <Route
+              path="/travel-locker"
+              element={
+                <ProtectedRoute>
+                  <PageTransition><TravelLocker /></PageTransition>
+                </ProtectedRoute>
+              }
             />
           </Routes>
         </AnimatePresence>

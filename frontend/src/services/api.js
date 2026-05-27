@@ -200,6 +200,22 @@ export const api = {
     });
   },
 
+  // --- Travel Locker ---
+  async getLockerDocuments() {
+    return this.request('/locker');
+  },
+  async addLockerDocument(data) {
+    return this.request('/locker', {
+      method: 'POST',
+      body: data,
+    });
+  },
+  async deleteLockerDocument(id) {
+    return this.request(`/locker/${id}`, {
+      method: 'DELETE',
+    });
+  },
+
   // --- Currency Converter (external API, no backend proxy) ---
   async getExchangeRates(base = 'USD') {
     const res = await fetch(`https://open.er-api.com/v6/latest/${base}`);
