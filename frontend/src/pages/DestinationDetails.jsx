@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { ArrowLeft, MapPin, Star, Clock, TrendingUp } from "lucide-react";
 import { destinations } from "../utils/destinationsData";
 import { useFavorites } from "../hooks/useFavorites";
 import ReviewPanel from "../components/features/reviews/ReviewPanel";
+import { getCoordinates } from "../utils/geocoder";
+import DestinationMap from "../components/DestinationMap";
 
 export default function DestinationDetails() {
   const { id } = useParams();
@@ -18,6 +20,35 @@ export default function DestinationDetails() {
   const [liveReviewsCount, setLiveReviewsCount] = useState(
     destination?.reviews || 0,
   );
+
+  // ---  ADDITIONS START HERE ---
+  const [cityCenter, setCityCenter] = useState(null);
+  const [mapPins, setMapPins] = useState([]);
+  const [loadingMap, setLoadingMap] = useState(true);
+
+  useEffect(() => {
+    async function loadMapLocations() {
+      if (!destination) return;
+      setLoadingMap(true);
+
+      const centerCoords = await getCoordinates(destination.name);
+      setCityCenter(centerCoords);
+
+      const generatedPins = [];
+      for (const highlightText of destination.highlights) {
+        const coords = await getCoordinates(highlightText, destination.name);
+        if (coords) {
+          generatedPins.push({ name: highlightText, coordinates: coords });
+        }
+      }
+
+      setMapPins(generatedPins);
+      setLoadingMap(false);
+    }
+
+    loadMapLocations();
+  }, [destination]);
+  // ---  ADDITIONS END HERE ---
 
   if (!destination) {
     return (
@@ -93,14 +124,45 @@ export default function DestinationDetails() {
             )}
 
             {/* Highlights */}
+            {/* Highlights */}
             {destination.highlights && (
               <div className="mt-6 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-6">
-                <h2 className="text-2xl font-bold mb-3">Highlights</h2>
-                <ul className="list-disc list-inside space-y-1 text-gray-700 dark:text-gray-300">
-                  {destination.highlights.map((item, index) => (
-                    <li key={index}>{item}</li>
-                  ))}
-                </ul>
+                <h2 className="text-2xl font-bold mb-4">Highlights</h2>
+                
+                {/* Side-by-side layout layout split */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
+                  
+                  {/* Left Column: List with interactive indicator dots */}
+                  <div className="md:col-span-1">
+                    <ul className="space-y-2.5">
+                      {destination.highlights.map((item, index) => (
+                        <li 
+                          key={index} 
+                          className="flex items-center gap-3 text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-950 p-3 rounded-xl border border-gray-100 dark:border-gray-800/80 hover:border-orange-500/30 dark:hover:border-orange-500/30 transition-colors"
+                        >
+                          <span className="w-2.5 h-2.5 rounded-full bg-orange-500 shadow-[0_0_8px_#f97316] inline-block shrink-0" />
+                          <span className="text-sm font-semibold">{item}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  {/* Right Column: Live Interactive Leaflet Map */}
+                  <div className="md:col-span-2 w-full">
+                    {loadingMap ? (
+                      <div className="w-full h-[350px] bg-gray-100 dark:bg-gray-950 animate-pulse rounded-xl flex items-center justify-center text-gray-400 dark:text-gray-500 border border-gray-200 dark:border-gray-800">
+                        Plotting interactive points of interest...
+                      </div>
+                    ) : (
+                      <DestinationMap 
+                        center={cityCenter}
+                        destinationName={destination.name}
+                        attractions={mapPins}
+                      />
+                    )}
+                  </div>
+
+                </div>
               </div>
             )}
 
@@ -132,7 +194,7 @@ export default function DestinationDetails() {
           {/* <--- END OF LEFT SECTION */}
           {/* Right Section */}
           <div className="lg:col-span-4">
-            <div className="sticky top-6 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl p-6">
+            <div className="sticky top-20 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl p-6">
               <p className="text-xl font-bold mb-4">Quick actions</p>
 
               <button

@@ -8,6 +8,8 @@ import {
   useLocation,
   Navigate,
 } from "react-router-dom";
+import { AnimatePresence } from "framer-motion";
+import PageTransition from "./components/common/PageTransition";
 
 import { FavoritesProvider } from "./context/FavoritesContext";
 import { ThemeProvider } from "./context/ThemeContext";
@@ -19,6 +21,7 @@ import About from "./pages/About";
 import Features from "./pages/Features";
 import Destinations from "./pages/Destinations";
 import Contact from "./pages/Contact";
+import Auth from "./pages/Auth";
 import Signup from "./pages/signup";
 import Login from "./pages/Login";
 import AddFavorite from "./pages/AddFavorite";
@@ -38,12 +41,15 @@ import Footer from "./components/Footer";
 import WatchDemoPage from './pages/DemoSection';
 import ScrollToTopOnNavigate from "./components/common/ScrollToTopOnNavigate";
 import DynamicPlannerPage from './pages/DynamicPlannerPage';
+import { ScrollToTop } from "./components/common/ScrollToTop";
+import SplitExpense from "./pages/SplitExpense";
+import Contributors from "./pages/Contributors";
 
 function ProtectedRoute({ children }) {
   const isAuthenticated = Boolean(localStorage.getItem("token"));
 
   if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
+    return <Navigate to="/auth?mode=login" replace />;
   }
 
   return children;
@@ -55,7 +61,7 @@ ProtectedRoute.propTypes = {
 
 function AppRoutes() {
   const location = useLocation();
-  const hideNavigationPaths = ["/signup", "/login"];
+  const hideNavigationPaths = ["/auth", "/signup", "/login"];
   const showNavigation = !hideNavigationPaths.includes(location.pathname);
 
   return (
@@ -113,11 +119,7 @@ export default function App() {
   const [isLoading, setIsLoading] = React.useState(true);
 
   React.useEffect(() => {
-    // This simulates the app "loading" data for 2 seconds
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 2000);
-    return () => clearTimeout(timer);
+    setIsLoading(false);
   }, []);
 
   if (isLoading) {
@@ -129,6 +131,7 @@ export default function App() {
       <ToastProvider>
         <FavoritesProvider>
           <Router>
+            <ScrollToTop />
             <AppRoutes />
           </Router>
         </FavoritesProvider>

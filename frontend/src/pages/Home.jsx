@@ -1,5 +1,5 @@
-import React from "react";
-import PropTypes from 'prop-types';
+import React, { useEffect, useMemo, useState } from "react";
+import PropTypes from "prop-types";
 import Testimonials from "../pages/Testimonials";
 import { Link } from "react-router-dom";
 import {
@@ -18,14 +18,172 @@ import {
   Sparkles,
 } from "lucide-react";
 import CountUp from "../components/CountUp";
-import ThreeBackground from "../components/ThreeBackground";
+
+//Carousel feature data
+const featureCards = [
+  {
+    icon: <Globe className="w-10 h-10" />,
+    title: "AI Travel Planner",
+    description:
+      "Smart itinerary builder tailored to your interests, budget, and time. Get personalized recommendations instantly.",
+    color: "bg-blue-100 text-blue-600",
+  },
+  {
+    icon: <Shield className="w-10 h-10" />,
+    title: "Local Advice & Support",
+    description:
+      "Get real-time tips from locals and travelers. Know what to do, where to go, and what to avoid.",
+    color: "bg-teal-100 text-teal-600",
+  },
+  {
+    icon: <Smartphone className="w-10 h-10" />,
+    title: "Smart Accommodation",
+    description:
+      "Find the perfect stay with AI-driven suggestions based on reviews, location, and price.",
+    color: "bg-purple-100 text-purple-600",
+  },
+  {
+    icon: <Video className="w-10 h-10" />,
+    title: "Online Translation",
+    description:
+      "Break language barriers with instant AI-powered translation for over 100 languages.",
+    color: "bg-green-100 text-green-600",
+  },
+  {
+    icon: <Calendar className="w-10 h-10" />,
+    title: "Offline Accessibility",
+    description:
+      "Access your itinerary, maps & guides without internet. Travel worry-free anywhere.",
+    color: "bg-orange-100 text-orange-600",
+  },
+  {
+    icon: <Headphones className="w-10 h-10" />,
+    title: "24/7 Live Support",
+    description:
+      "Get instant help anytime, anywhere. Our travel experts are always ready to assist you.",
+    color: "bg-pink-100 text-pink-600",
+  },
+  {
+    icon: <Users className="w-10 h-10" />,
+    title: "Group Trip Planner",
+    description:
+      "Coordinate with friends easily. Share itineraries, split costs, and vote on activities.",
+    color: "bg-indigo-100 text-indigo-600",
+  },
+  {
+    icon: <DollarSign className="w-10 h-10" />,
+    title: "Budget Tracker",
+    description:
+      "Stay on budget with smart expense tracking and cost predictions for your entire trip.",
+    color: "bg-yellow-100 text-yellow-600",
+  },
+];
+
+function FeatureCarousel({ cards }) {
+  const [activeSlide, setActiveSlide] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
+  const [viewportWidth, setViewportWidth] = useState(
+    typeof window !== "undefined" ? window.innerWidth : 1280,
+  );
+
+  useEffect(() => {
+    const handleResize = () => setViewportWidth(window.innerWidth);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const slidesToShow = useMemo(() => {
+    if (viewportWidth < 768) return 1;
+    if (viewportWidth < 1024) return 2;
+    if (viewportWidth < 1280) return 3;
+    return 4;
+  }, [viewportWidth]);
+
+  const maxSlideIndex = Math.max(0, cards.length - slidesToShow);
+
+  useEffect(() => {
+    if (activeSlide > maxSlideIndex) {
+      setActiveSlide(maxSlideIndex);
+    }
+  }, [maxSlideIndex, activeSlide]);
+
+  useEffect(() => {
+    if (isPaused || maxSlideIndex <= 0) return undefined;
+    const timer = window.setInterval(() => {
+      setActiveSlide((current) => (current >= maxSlideIndex ? 0 : current + 1));
+    }, 3200);
+    return () => window.clearInterval(timer);
+  }, [isPaused, maxSlideIndex]);
+
+  const cardWidthPercent = 100 / slidesToShow;
+  const translateX = `translateX(-${activeSlide * cardWidthPercent}%)`;
+
+  const indicatorCount = maxSlideIndex + 1;
+
+  return (
+    <div className="relative">
+      <div
+        className="overflow-hidden"
+        onMouseEnter={() => setIsPaused(true)}
+        onMouseLeave={() => setIsPaused(false)}
+      >
+        <div
+          className="flex transition-transform duration-400 ease-out"
+          style={{ transform: translateX, willChange: "transform" }}
+        >
+          {cards.map((card, index) => (
+            <div
+              key={index}
+              className="shrink-0 box-border"
+              style={{
+                flex: `0 0 ${cardWidthPercent}%`,
+                maxWidth: `${cardWidthPercent}%`,
+                boxSizing: "border-box",
+                padding: "0 12px",
+              }}
+            >
+              <div className="bg-white dark:bg-gray-900 p-8 rounded-xl shadow-sm hover:shadow-lg dark:hover:shadow-[0_0_25px_rgba(45,212,191,0.35)] transition-all duration-300 hover:-translate-y-2 border border-gray-100 dark:border-gray-800 hover:border-teal-200 dark:hover:border-teal-500 group h-full">
+                <div
+  className={`${card.color} w-16 h-16 rounded-lg flex items-center justify-center mb-5 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300`}
+>
+                  {card.icon}
+                </div>
+                <h3 className="font-bold text-xl mb-3 text-gray-900 dark:text-white">
+                  {card.title}
+                </h3>
+                <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
+                  {card.description}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="mt-6 flex items-center justify-center gap-2">
+        {Array.from({ length: indicatorCount }, (_, idx) => (
+          <button
+            key={idx}
+            type="button"
+            onClick={() => setActiveSlide(idx)}
+            className={`h-2 rounded-full transition-all ${
+              activeSlide === idx
+                ? "w-8 bg-teal-500"
+                : "w-2 bg-gray-300 dark:bg-gray-700"
+            }`}
+            aria-label={`Show slide ${idx + 1}`}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
 
 export default function Home() {
   return (
     <div className="min-h-screen bg-white dark:bg-gray-950">
       {/* ================= HERO SECTION ================= */}
-      <div className="relative min-h-screen w-full bg-gradient-to-b from-teal-100/60 via-cyan-50/30 to-transparent dark:from-transparent dark:via-transparent dark:to-transparent overflow-hidden flex items-center py-12 lg:py-0 font-sans">
-        <ThreeBackground />
+      <div className="relative min-h-screen w-full bg-white dark:bg-[#030712] overflow-hidden flex items-center py-12 lg:py-0 font-sans">
         {/* Background Glows */}
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-teal-500/10 blur-[100px] rounded-full"></div>
@@ -49,7 +207,7 @@ export default function Home() {
               <h1 className="text-5xl md:text-6xl lg:text-7xl font-black text-gray-900 dark:text-white leading-[1.1] tracking-tighter">
                 Your Smart Travel
                 <br />
-                <span className="text-transparent bg-clip-text bg-linear-to-r from-teal-500 to-cyan-600 dark:from-indigo-400 dark:to-purple-500">
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-400 via-emerald-500 to-cyan-500">
                   Assistant Awaits
                 </span>
               </h1>
@@ -61,8 +219,9 @@ export default function Home() {
               </p>
 
               <div className="flex flex-wrap gap-4">
+                {/* CHANGED: Direct link to Trip Planner */}
                 <Link
-                  to="/login"
+                  to="/trip-planner"
                   className="px-8 py-3.5 bg-orange-600 hover:bg-orange-500 text-white rounded-xl font-bold transition-all duration-300 shadow-lg shadow-orange-900/20 active:scale-95 text-md flex items-center justify-center min-w-[180px]"
                 >
                   Start Your Journey
@@ -70,7 +229,7 @@ export default function Home() {
 
                 <Link
                   to="/destinations"
-                  className="px-8 py-3.5 bg-white/5 border border-white/10 backdrop-blur-md text-white hover:bg-white/20 rounded-xl font-bold transition-all duration-300 active:scale-95 text-md flex items-center justify-center min-w-[180px]"
+                  className="px-8 py-3.5 border bg-white border-black/80 text-black dark:bg-black dark:border-white/80 dark:text-white rounded-xl font-bold transition-all duration-500 hover:scale-105 flex items-center justify-center min-w-[180px]"
                 >
                   Explore Features
                 </Link>
@@ -101,7 +260,23 @@ export default function Home() {
             <div className="relative w-full flex justify-center lg:justify-end">
               <div className="relative z-20 animate-float-slow max-w-[420px] lg:max-w-[480px] w-full">
                 <div className="rounded-[2.5rem] p-2 bg-gray-100 dark:bg-white/5 border border-gray-200 dark:border-white/10 backdrop-blur-sm shadow-2xl overflow-hidden">
-                  <ImageCarousel />
+                  <div className="rounded-[2rem] overflow-hidden relative group">
+                    <img
+                      src="https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?q=80&w=2070&auto=format&fit=crop"
+                      alt="Luxury Tourism"
+                      className="w-full h-[300px] md:h-[380px] lg:h-[480px] object-cover transition-transform duration-[3s] group-hover:scale-105"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+
+                    <div className="absolute bottom-6 left-6 bg-white/70 dark:bg-white/10 backdrop-blur-xl px-4 py-2 rounded-2xl border border-white/40 dark:border-white/20 shadow-xl">
+                      <div className="flex items-center gap-2">
+                        <Sparkles className="text-teal-500 w-3 h-3" />
+                        <p className="text-gray-900 dark:text-white text-[10px] font-bold uppercase tracking-wider">
+                          Top Rated Experience
+                        </p>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -129,62 +304,8 @@ export default function Home() {
           simplify every step of your journey
         </p>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-          <FeatureCard
-            icon={<Globe className="w-10 h-10" />}
-            title="AI Travel Planner"
-            description="Smart itinerary builder tailored to your interests, budget, and time. Get personalized recommendations instantly."
-            color="bg-blue-100 text-blue-600"
-          />
-
-          <FeatureCard
-            icon={<Shield className="w-10 h-10" />}
-            title="Local Advice & Support"
-            description="Get real-time tips from locals and travelers. Know what to do, where to go, and what to avoid."
-            color="bg-teal-100 text-teal-600"
-          />
-
-          <FeatureCard
-            icon={<Smartphone className="w-10 h-10" />}
-            title="Smart Accommodation"
-            description="Find the perfect stay with AI-driven suggestions based on reviews, location, and price."
-            color="bg-purple-100 text-purple-600"
-          />
-
-          <FeatureCard
-            icon={<Video className="w-10 h-10" />}
-            title="Online Translation"
-            description="Break language barriers with instant AI-powered translation for over 100 languages."
-            color="bg-green-100 text-green-600"
-          />
-
-          <FeatureCard
-            icon={<Calendar className="w-10 h-10" />}
-            title="Offline Accessibility"
-            description="Access your itinerary, maps & guides without internet. Travel worry-free anywhere."
-            color="bg-orange-100 text-orange-600"
-          />
-
-          <FeatureCard
-            icon={<Headphones className="w-10 h-10" />}
-            title="24/7 Live Support"
-            description="Get instant help anytime, anywhere. Our travel experts are always ready to assist you."
-            color="bg-pink-100 text-pink-600"
-          />
-
-          <FeatureCard
-            icon={<Users className="w-10 h-10" />}
-            title="Group Trip Planner"
-            description="Coordinate with friends easily. Share itineraries, split costs, and vote on activities."
-            color="bg-indigo-100 text-indigo-600"
-          />
-
-          <FeatureCard
-            icon={<DollarSign className="w-10 h-10" />}
-            title="Budget Tracker"
-            description="Stay on budget with smart expense tracking and cost predictions for your entire trip."
-            color="bg-yellow-100 text-yellow-600"
-          />
+        <div className="relative">
+          <FeatureCarousel cards={featureCards} />
         </div>
       </div>
 
@@ -193,7 +314,7 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-4xl md:text-5xl font-bold text-center mb-6 text-gray-900 dark:text-white">
             How{" "}
-            <span className="bg-linear-to-r from-teal-500 to-cyan-600 dark:from-indigo-400 dark:to-purple-500 bg-clip-text text-transparent">TourEase</span>{" "}
+            <span className="text-teal-600 dark:text-teal-400">TourEase</span>{" "}
             Works
           </h2>
           <p className="text-center text-gray-600 dark:text-gray-300 text-lg mb-16">
@@ -203,15 +324,15 @@ export default function Home() {
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             <StepCard
               number="1"
-              icon={<MapPin className="w-8 h-8 text-teal-600 dark:text-indigo-600" />}
+              icon={<MapPin className="w-8 h-8" />}
               title="Tell Us Your Destination"
               description="Simply enter where you want to go and when. Our AI understands your preferences."
-              color="bg-gradient-to-br from-teal-400 via-teal-500 to-cyan-600 dark:from-purple-700 dark:via-indigo-700 dark:to-purple-800"
+              color="bg-teal-500"
             />
 
             <StepCard
               number="2"
-              icon={<Star className="w-8 h-8 text-teal-600 dark:text-indigo-600" />}
+              icon={<Star className="w-8 h-8" />}
               title="Get Personalized Suggestions"
               description="Receive custom itineraries based on your interests, budget, and travel style."
               color="bg-orange-500"
@@ -219,15 +340,15 @@ export default function Home() {
 
             <StepCard
               number="3"
-              icon={<Clock className="w-8 h-8 text-teal-600 dark:text-indigo-600" />}
+              icon={<Clock className="w-8 h-8" />}
               title="Travel with Confidence"
               description="Access your plans offline, get real-time updates, and enjoy 24/7 support."
-              color="bg-gradient-to-br from-teal-400 via-teal-500 to-cyan-600 dark:from-purple-700 dark:via-indigo-700 dark:to-purple-800"
+              color="bg-teal-500"
             />
 
             <StepCard
               number="4"
-              icon={<Award className="w-8 h-8 text-teal-600 dark:text-indigo-600" />}
+              icon={<Award className="w-8 h-8" />}
               title="Share Your Story"
               description="Document memories, share tips with community, and earn rewards for contributions."
               color="bg-orange-500"
@@ -240,59 +361,38 @@ export default function Home() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
         <h2 className="text-4xl md:text-5xl font-bold text-center mb-6 text-gray-900 dark:text-white">
           Join Our Global Travel{" "}
-          <span className="bg-linear-to-r from-teal-500 to-cyan-600 dark:from-indigo-400 dark:to-purple-500 bg-clip-text text-transparent">Community</span>
+          <span className="text-teal-600 dark:text-teal-400">Community</span>
         </h2>
         <p className="text-center text-gray-600 dark:text-gray-300 text-lg mb-16 max-w-3xl mx-auto">
           Connect with fellow travelers, share experiences, and get inspired for
           your next adventure
         </p>
 
-        <div className="community-marquee-wrapper">
-          <div className="community-marquee-track">
-            {/* Original set */}
-            <CommunityCard
-              name="Emily Chen"
-              location="New York, USA"
-              quote="TourEase made planning my Europe trip so easy! The AI suggestions were spot-on, and I discovered hidden gems I never would have found."
-              trips="23 Trips"
-            />
-            <CommunityCard
-              name="Marco Rossi"
-              location="Rome, Italy"
-              quote="As a frequent traveler, this app has become essential. The offline features saved me countless times, and the community is incredibly helpful."
-              trips="47 Trips"
-            />
-            <CommunityCard
-              name="Priya Patel"
-              location="Mumbai, India"
-              quote="The budget tracker helped me travel more while spending less. I love how it suggests alternatives and helps optimize my expenses!"
-              trips="15 Trips"
-            />
+        <div className="grid md:grid-cols-3 gap-8 mb-16">
+          <CommunityCard
+            name="Emily Chen"
+            location="New York, USA"
+            quote="TourEase made planning my Europe trip so easy! The AI suggestions were spot-on, and I discovered hidden gems I never would have found."
+            trips="23 Trips"
+          />
 
-            {/* Duplicate set for seamless loop */}
-            <CommunityCard
-              name="Emily Chen"
-              location="New York, USA"
-              quote="TourEase made planning my Europe trip so easy! The AI suggestions were spot-on, and I discovered hidden gems I never would have found."
-              trips="23 Trips"
-            />
-            <CommunityCard
-              name="Marco Rossi"
-              location="Rome, Italy"
-              quote="As a frequent traveler, this app has become essential. The offline features saved me countless times, and the community is incredibly helpful."
-              trips="47 Trips"
-            />
-            <CommunityCard
-              name="Priya Patel"
-              location="Mumbai, India"
-              quote="The budget tracker helped me travel more while spending less. I love how it suggests alternatives and helps optimize my expenses!"
-              trips="15 Trips"
-            />
-          </div>
+          <CommunityCard
+            name="Marco Rossi"
+            location="Rome, Italy"
+            quote="As a frequent traveler, this app has become essential. The offline features saved me countless times, and the community is incredibly helpful."
+            trips="47 Trips"
+          />
+
+          <CommunityCard
+            name="Priya Patel"
+            location="Mumbai, India"
+            quote="The budget tracker helped me travel more while spending less. I love how it suggests alternatives and helps optimize my expenses!"
+            trips="15 Trips"
+          />
         </div>
 
         <div className="relative h-80 rounded-2xl overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-teal-400 via-teal-500 to-cyan-600 dark:from-purple-700 dark:via-indigo-700 dark:to-purple-800"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-teal-400 to-cyan-500 opacity-90"></div>
           <div className="absolute inset-0 flex items-center justify-center">
             <div className="text-center text-white px-4">
               <Users className="w-20 h-20 mx-auto mb-6 opacity-80" />
@@ -302,8 +402,9 @@ export default function Home() {
               <p className="text-lg mb-6 opacity-90">
                 Start your journey with the smartest travel assistant
               </p>
+              {/* CHANGED: Direct link to Trip Planner */}
               <Link
-                to="/login"
+                to="/trip-planner"
                 className="bg-orange-500 hover:bg-orange-600 text-white px-10 py-4 rounded-lg font-semibold transition text-lg inline-block"
               >
                 Get Started Free
@@ -314,7 +415,7 @@ export default function Home() {
       </div>
       <Testimonials />
       {/* ================= CTA SECTION ================= */}
-      <div className="bg-gradient-to-br from-teal-400 via-teal-500 to-cyan-600 dark:from-purple-700 dark:via-indigo-700 dark:to-purple-800 text-white py-20">
+      <div className="bg-gradient-to-br from-teal-400 via-teal-500 to-cyan-600 text-white py-20">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="inline-block bg-orange-500 text-white px-4 py-1 rounded-full text-sm font-semibold mb-6">
             Ready to Explore the World?
@@ -332,13 +433,17 @@ export default function Home() {
           </p>
 
           <div className="flex flex-wrap justify-center gap-4 mb-16">
+            {/* CHANGED: Direct link to Trip Planner */}
             <Link
-              to="/login"
+              to="/trip-planner"
               className="bg-orange-500 hover:bg-orange-600 text-white px-10 py-4 rounded-lg font-semibold transition text-lg"
             >
               Get Started Free
             </Link>
-            <Link to="/demo" className="bg-white text-teal-600 dark:text-indigo-600 hover:bg-gray-100 px-10 py-4 rounded-lg font-semibold transition text-lg">
+            <Link
+              to="/demo"
+              className="bg-white text-teal-600 hover:bg-gray-100 px-10 py-4 rounded-lg font-semibold transition text-lg"
+            >
               Watch Demo
             </Link>
           </div>
@@ -363,8 +468,7 @@ export default function Home() {
           </div>
         </div>
       </div>
-      </div>
-
+    </div>
   );
 }
 
@@ -394,7 +498,7 @@ function StepCard({ number, icon, title, description, color }) {
       >
         {number}
       </div>
-      <div className="bg-white dark:bg-gray-900 p-8 rounded-xl shadow-sm hover:shadow-md transition-all h-full border border-gray-100 dark:border-gray-800">
+      <div className="bg-white dark:bg-gray-900 p-8 rounded-xl shadow-sm hover:shadow-md dark:hover:shadow-[0_0_20px_rgba(45,212,191,0.3)] hover:-translate-y-2 transition-all duration-300 h-full border border-gray-100 dark:border-gray-800 dark:hover:border-teal-500">
         <div className="bg-teal-100 dark:bg-teal-900/40 text-teal-600 dark:text-teal-300 w-14 h-14 rounded-lg flex items-center justify-center mx-auto mb-5">
           {icon}
         </div>
@@ -411,9 +515,9 @@ function StepCard({ number, icon, title, description, color }) {
 
 function CommunityCard({ name, location, quote, trips }) {
   return (
-    <div className="bg-white dark:bg-gray-900 p-8 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 hover:shadow-md transition-all">
+    <div className="bg-white dark:bg-gray-900 p-8 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 hover:shadow-md dark:hover:shadow-[0_0_20px_rgba(45,212,191,0.3)] hover:-translate-y-2 transition-all duration-300 dark:hover:border-teal-500">
       <div className="flex items-center mb-6">
-        <div className="w-14 h-14 bg-gradient-to-br from-teal-400 via-teal-500 to-cyan-600 dark:from-purple-700 dark:via-indigo-700 dark:to-purple-800 rounded-full flex items-center justify-center text-white font-bold text-xl mr-4">
+        <div className="w-14 h-14 bg-gradient-to-br from-teal-400 to-cyan-500 rounded-full flex items-center justify-center text-white font-bold text-xl mr-4">
           {name.charAt(0)}
         </div>
         <div>
@@ -426,61 +530,9 @@ function CommunityCard({ name, location, quote, trips }) {
       <p className="text-gray-600 dark:text-gray-300 mb-6 italic leading-relaxed">
         "{quote}"
       </p>
-      <div className="flex items-center text-sm text-teal-600 dark:text-indigo-400 font-semibold">
+      <div className="flex items-center text-sm text-teal-600 dark:text-teal-400 font-semibold">
         <MapPin className="w-5 h-5 mr-2" />
         {trips}
-      </div>
-    </div>
-  );
-}
-
-const carouselImages = [
-  "https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?q=80&w=2070&auto=format&fit=crop",
-  "/images/tropical_beach_travel_1778697569059.png",
-  "/images/mountain_lake_travel_1778698082955.png",
-  "/images/city_skyline_travel_1778698104519.png",
-  "/images/ancient_temple_travel_1778698184523.png",
-  "/images/european_street_travel_1778698461926.png"
-];
-
-function ImageCarousel() {
-  const [currentIndex, setCurrentIndex] = React.useState(0);
-
-  React.useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % carouselImages.length);
-    }, 2500);
-    return () => clearInterval(interval);
-  }, []);
-
-  return (
-    <div 
-      className="rounded-[2rem] overflow-hidden relative group w-full h-[300px] md:h-[380px] lg:h-[480px] transition-all duration-500 hover:shadow-2xl hover:shadow-teal-500/20"
-    >
-      {carouselImages.map((src, index) => (
-        <img
-          key={src}
-          src={src}
-          alt={`Travel destination ${index + 1}`}
-          className={`absolute inset-0 w-full h-full object-cover transition-all duration-1000 ${
-            index === currentIndex 
-              ? "opacity-100 scale-100" 
-              : "opacity-0 scale-100"
-          }`}
-        />
-      ))}
-      
-      {/* Gradient & Highlight Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent z-10 pointer-events-none"></div>
-      <div className="absolute inset-0 bg-white/0 group-hover:bg-white/10 transition-colors duration-500 z-10 pointer-events-none"></div>
-
-      <div className="absolute bottom-6 left-6 bg-white/70 dark:bg-white/10 backdrop-blur-xl px-4 py-2 rounded-2xl border border-white/40 dark:border-white/20 shadow-xl z-20 pointer-events-none transition-transform duration-500 group-hover:-translate-y-2">
-        <div className="flex items-center gap-2">
-          <span className="text-teal-500">✦</span>
-          <p className="text-gray-900 dark:text-white text-[10px] font-bold uppercase tracking-wider">
-            Top Rated Experience
-          </p>
-        </div>
       </div>
     </div>
   );
@@ -507,4 +559,3 @@ CommunityCard.propTypes = {
   quote: PropTypes.string.isRequired,
   trips: PropTypes.string.isRequired,
 };
-

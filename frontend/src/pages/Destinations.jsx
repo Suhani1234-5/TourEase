@@ -1,12 +1,5 @@
 import React, { useMemo, useState, useEffect } from "react";
-import {
-  MapPin,
-  Star,
-  Heart,
-  Clock,
-  TrendingUp,
-  Search,
-} from "lucide-react";
+import { MapPin, Star, Heart, Clock, TrendingUp, Search } from "lucide-react";
 
 import { useFavorites } from "../hooks/useFavorites";
 import { destinations } from "../utils/destinationsData";
@@ -16,9 +9,7 @@ import { fetchReviews } from "../services/reviewService";
 export default function Destinations() {
   const { toggleFavorite, isFavorite } = useFavorites();
 
-  const [activeFilter, setActiveFilter] = useState(
-    "All Destinations",
-  );
+  const [activeFilter, setActiveFilter] = useState("All Destinations");
 
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -43,19 +34,13 @@ export default function Destinations() {
     let result = destinations;
 
     if (activeFilter !== "All Destinations") {
-      const filter = filters.find(
-        (f) => f.label === activeFilter,
-      );
+      const filter = filters.find((f) => f.label === activeFilter);
 
       if (filter && filter.keywords.length) {
         result = result.filter((d) => {
-          const bestFor = (
-            d.bestFor || ""
-          ).toLowerCase();
+          const bestFor = (d.bestFor || "").toLowerCase();
 
-          return filter.keywords.some((kw) =>
-            bestFor.includes(kw),
-          );
+          return filter.keywords.some((kw) => bestFor.includes(kw));
         });
       }
     }
@@ -66,12 +51,8 @@ export default function Destinations() {
       result = result.filter(
         (d) =>
           d.name.toLowerCase().includes(query) ||
-          (d.bestFor || "")
-            .toLowerCase()
-            .includes(query) ||
-          (d.season || "")
-            .toLowerCase()
-            .includes(query),
+          (d.bestFor || "").toLowerCase().includes(query) ||
+          (d.season || "").toLowerCase().includes(query),
       );
     }
 
@@ -88,8 +69,8 @@ export default function Destinations() {
           </h1>
 
           <p className="text-xl md:text-2xl opacity-90 max-w-3xl">
-            Discover amazing places around the world,
-            carefully curated for every type of traveler.
+            Discover amazing places around the world, carefully curated for
+            every type of traveler.
           </p>
         </div>
       </div>
@@ -105,9 +86,8 @@ export default function Destinations() {
               type="text"
               placeholder="Search destinations by name, type, or season..."
               value={searchQuery}
-              onChange={(e) =>
-                setSearchQuery(e.target.value)
-              }
+              onChange={(e) => setSearchQuery(e.target.value)}
+              autoFocus
               className="w-full pl-12 pr-4 py-4 rounded-full border-2 border-gray-200 dark:border-slate-700 focus:border-teal-500 dark:focus:border-teal-400 focus:outline-none text-lg bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 placeholder-gray-400 dark:placeholder-slate-500"
             />
           </div>
@@ -120,9 +100,7 @@ export default function Destinations() {
               key={filter.label}
               label={filter.label}
               active={activeFilter === filter.label}
-              onClick={() =>
-                setActiveFilter(filter.label)
-              }
+              onClick={() => setActiveFilter(filter.label)}
             />
           ))}
         </div>
@@ -160,9 +138,7 @@ export default function Destinations() {
                 key={destination.id}
                 destination={destination}
                 isFavorite={isFavorite(destination.id)}
-                onToggleFavorite={() =>
-                  toggleFavorite(destination.id)
-                }
+                onToggleFavorite={() => toggleFavorite(destination.id)}
               />
             ))}
           </div>
@@ -177,8 +153,7 @@ export default function Destinations() {
           </h2>
 
           <p className="text-xl mb-10 opacity-90">
-            Start planning your next adventure with
-            TourEase
+            Start planning your next adventure with TourEase
           </p>
 
           <button
@@ -194,11 +169,7 @@ export default function Destinations() {
   );
 }
 
-function FilterButton({
-  label,
-  active,
-  onClick,
-}) {
+function FilterButton({ label, active, onClick }) {
   return (
     <button
       type="button"
@@ -214,46 +185,32 @@ function FilterButton({
   );
 }
 
-function DestinationCard({
-  destination,
-  isFavorite,
-  onToggleFavorite,
-}) {
+function DestinationCard({ destination, isFavorite, onToggleFavorite }) {
   const navigate = useNavigate();
 
-  const [liveRating, setLiveRating] = useState(
-    destination.rating || 0,
-  );
+  const [liveRating, setLiveRating] = useState(destination.rating || 0);
 
-  const [liveReviewsCount, setLiveReviewsCount] =
-    useState(destination.reviews || 0);
+  const [liveReviewsCount, setLiveReviewsCount] = useState(
+    destination.reviews || 0,
+  );
 
   useEffect(() => {
     const getLiveStats = async () => {
       try {
-        const data = await fetchReviews(
-          destination.id || destination._id,
-        );
+        const data = await fetchReviews(destination.id || destination._id);
 
-        const baseRating =
-          destination.rating || 4.8;
+        const baseRating = destination.rating || 4.8;
 
-        const baseCount =
-          destination.reviews || 1200;
+        const baseCount = destination.reviews || 1200;
 
         if (data && data.totalReviews > 0) {
-          const combinedCount =
-            baseCount + data.totalReviews;
+          const combinedCount = baseCount + data.totalReviews;
 
           const combinedRating =
-            (baseRating * baseCount +
-              data.averageRating *
-                data.totalReviews) /
+            (baseRating * baseCount + data.averageRating * data.totalReviews) /
             combinedCount;
 
-          setLiveRating(
-            combinedRating.toFixed(1),
-          );
+          setLiveRating(combinedRating.toFixed(1));
 
           setLiveReviewsCount(combinedCount);
         } else {
@@ -261,10 +218,7 @@ function DestinationCard({
           setLiveReviewsCount(baseCount);
         }
       } catch (error) {
-        console.error(
-          `Failed to fetch stats for ${destination.name}:`,
-          error,
-        );
+        console.error(`Failed to fetch stats for ${destination.name}:`, error);
       }
     };
 
@@ -273,11 +227,7 @@ function DestinationCard({
 
   return (
     <div
-      onClick={() =>
-        navigate(
-          `/destinations/${destination.id}`,
-        )
-      }
+      onClick={() => navigate(`/destinations/${destination.id}`)}
       className="h-full flex flex-col bg-white dark:bg-slate-900 rounded-xl shadow-sm hover:shadow-xl transition-all overflow-hidden group cursor-pointer border border-gray-100 dark:border-slate-800"
     >
       {/* Image */}
@@ -317,9 +267,7 @@ function DestinationCard({
           <div className="flex items-center mb-4">
             <Star className="w-5 h-5 text-yellow-400 fill-yellow-400" />
 
-            <span className="ml-2 font-semibold">
-              {liveRating}
-            </span>
+            <span className="ml-2 font-semibold">{liveRating}</span>
 
             <span className="text-gray-500 dark:text-slate-400 text-sm ml-2">
               ({liveReviewsCount})
@@ -350,9 +298,7 @@ function DestinationCard({
           onClick={(e) => {
             e.stopPropagation();
 
-            navigate(
-              `/destinations/${destination.id}`,
-            );
+            navigate(`/destinations/${destination.id}`);
           }}
           className="mt-auto w-full bg-teal-500 hover:bg-teal-600 text-white py-2 rounded-lg font-semibold transition dark:bg-indigo-600 dark:hover:bg-indigo-800"
         >

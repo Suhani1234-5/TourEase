@@ -10,7 +10,8 @@ const languages = [
 
 function getStoredLanguage() {
   const saved = localStorage.getItem(LANGUAGE_STORAGE_KEY);
-  return saved === "hi" ? "hi" : "en";
+  // Default to English — only switch if user explicitly chose Hindi
+  return saved === 'hi' ? 'hi' : 'en';
 }
 
 // Clear / set the googtrans cookie that Google Translate reads on load
@@ -78,12 +79,16 @@ function applyLanguage(language) {
 }
 
 export default function LanguageSelector() {
-  const [activeLanguage, setActiveLanguage] = useState(getStoredLanguage);
+  const [activeLanguage, setActiveLanguage] = useState('en');
 
-  // On mount: apply the saved language after Google Translate loads
+  // On mount: always reset to English — clear any stale Hindi stored state/cookies
   useEffect(() => {
+    // Reset storage and cookie to English on every page load
+    localStorage.setItem(LANGUAGE_STORAGE_KEY, 'en');
+    setGoogTransCookie('en');
+
     const timer = setTimeout(() => {
-      applyLanguage(activeLanguage);
+      applyLanguage('en');
     }, 1000);
     return () => clearTimeout(timer);
     // eslint-disable-next-line react-hooks/exhaustive-deps

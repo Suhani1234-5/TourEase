@@ -1,0 +1,280 @@
+/* ─── Auth Page: No Scroll ──────────────────────────────────── */
+.auth-page {
+  height: 100dvh;          /* dynamic viewport height */
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.auth-content-area {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding: 1rem;
+}
+
+/* ─── Card Flip Scene ───────────────────────────────────────── */
+/*
+  Technique: We keep ONE card in the DOM at a time and animate it
+  in/out with a smooth rotateY flip so it feels like a physical
+  card turning over.
+*/
+
+/* Scene wrapper — provides the 3D perspective */
+.auth-card-scene {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  perspective: 1000px;
+  perspective-origin: 50% 48%;
+}
+
+/*
+  Swivel technique:
+  Both cards share the same rotateY axis.
+  Exiting card sweeps  0deg → -60deg (going behind to the left)
+  Entering card sweeps 60deg → 0deg  (coming in from the right)
+  Same duration + easing = perfectly matched swivel.
+*/
+@keyframes swivelIn {
+  0%   { opacity: 0;   transform: rotateY(55deg)  scale(0.97); }
+  35%  { opacity: 1; }
+  100% { opacity: 1;   transform: rotateY(0deg)   scale(1);    }
+}
+
+@keyframes swivelOut {
+  0%   { opacity: 1;   transform: rotateY(0deg)   scale(1);    }
+  65%  { opacity: 0.4; }
+  100% { opacity: 0;   transform: rotateY(-55deg) scale(0.97); }
+}
+
+/* Shared smooth easing: gentle start, natural mid, soft land */
+:root {
+  --swivel-ease: cubic-bezier(0.4, 0.0, 0.2, 1);
+  --swivel-dur:  0.6s;
+}
+
+.auth-form-enter {
+  animation: swivelIn var(--swivel-dur) var(--swivel-ease) forwards;
+  backface-visibility: hidden;
+  transform-origin: center center;
+  will-change: transform, opacity;
+}
+
+.auth-form-exit {
+  animation: swivelOut var(--swivel-dur) var(--swivel-ease) forwards;
+  position: absolute;
+  width: 100%;
+  backface-visibility: hidden;
+  transform-origin: center center;
+  will-change: transform, opacity;
+  pointer-events: none;
+}
+
+/* Auth card container */
+.auth-card-container {
+  width: 100%;
+  position: relative;
+}
+
+/* ─── Signup / Login card box ───────────────────────────────── */
+.auth-card-box {
+  width: 100%;
+  max-width: 36rem;           /* slightly narrower — comfortable not overwhelming */
+  background: rgba(255, 255, 255, 0.97);
+  border-radius: 1.25rem;
+  box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.15),
+              0 8px 24px -4px rgba(0, 0, 0, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 1.5rem 2rem 1.75rem;  /* tighter top/bottom, comfortable sides */
+  overflow-y: auto;           /* fallback scroll only if viewport too short */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.auth-card-box::-webkit-scrollbar {
+  display: none;              /* Chrome/Safari: hide scrollbar */
+}
+
+.dark .auth-card-box {
+  background: rgba(17, 24, 39, 0.97);
+  border-color: rgba(55, 65, 81, 0.5);
+  box-shadow: 0 25px 60px -10px rgba(0, 0, 0, 0.5),
+              0 10px 30px -5px rgba(0, 0, 0, 0.3);
+}
+
+/* ─── Form field spacing ────────────────────────────────────── */
+.auth-form-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;               /* 12px — slightly tighter than before */
+}
+
+.auth-field-label {
+  display: block;
+  font-size: 0.78rem;         /* 12.5px — slightly smaller label */
+  font-weight: 600;
+  margin-bottom: 0.3rem;
+  color: #374151;
+  letter-spacing: 0.01em;
+}
+
+.dark .auth-field-label {
+  color: #f9fafb;
+}
+
+/* ─── Input Styling ─────────────────────────────────────────── */
+.auth-input {
+  width: 100%;
+  padding: 0.5rem 0.75rem 0.5rem 2.5rem;
+  font-size: 0.875rem;
+  border: 1.5px solid #d1d5db;
+  border-radius: 0.625rem;
+  background: #ffffff;
+  color: #111827;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
+}
+
+.auth-input::placeholder {
+  color: #9ca3af;
+  font-weight: 400;
+}
+
+.auth-input:focus {
+  border-color: #0d9488;
+  box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.12);
+  transform: translateY(-1px);
+}
+
+.dark .auth-input {
+  background: #1f2937;
+  border-color: #374151;
+  color: #f9fafb;
+}
+
+.dark .auth-input::placeholder {
+  color: #6b7280;
+}
+
+.dark .auth-input:focus {
+  border-color: #818cf8;
+  box-shadow: 0 0 0 3px rgba(129, 140, 248, 0.15);
+}
+
+.auth-input--error {
+  border-color: #f87171;
+  background: #fef2f2;
+}
+
+.dark .auth-input--error {
+  border-color: #991b1b;
+  background: rgba(127, 29, 29, 0.2);
+}
+
+/* ─── Password strength bar ─────────────────────────────────── */
+.strength-bar-track {
+  height: 4px;
+  border-radius: 99px;
+  background: #e5e7eb;
+  overflow: hidden;
+  flex: 1;
+}
+
+.dark .strength-bar-track {
+  background: #374151;
+}
+
+.strength-bar-fill {
+  height: 100%;
+  border-radius: 99px;
+  transition: width 0.45s cubic-bezier(0.4, 0, 0.2, 1),
+              background-color 0.3s ease;
+}
+
+/* ─── Bottom utilities ──────────────────────────────────────── */
+.auth-bottom-utilities {
+  position: relative;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1.5rem 3rem; /* larger bottom padding = icons sit lower */
+  backdrop-filter: blur(6px);
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+  flex-shrink: 0;
+}
+
+.dark .auth-bottom-utilities {
+  border-top-color: rgba(255, 255, 255, 0.05);
+}
+
+/* ─── Google button hover ───────────────────────────────────── */
+.google-btn {
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.google-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+}
+
+.dark .google-btn:hover {
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+}
+
+/* ─── Divider ───────────────────────────────────────────────── */
+.auth-divider {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0.5rem 0;
+}
+
+.auth-divider::before,
+.auth-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: #e5e7eb;
+}
+
+.dark .auth-divider::before,
+.dark .auth-divider::after {
+  background: #374151;
+}
+
+.auth-divider span {
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: #9ca3af;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+/* ─── Submit button ─────────────────────────────────────────── */
+.auth-submit-btn {
+  transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+}
+
+.auth-submit-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(13, 148, 136, 0.35);
+}
+
+.dark .auth-submit-btn:hover:not(:disabled) {
+  box-shadow: 0 8px 20px rgba(99, 102, 241, 0.4);
+}
+
+/* ─── Fade in utility ───────────────────────────────────────── */
+@keyframes fadeSlideIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.fade-slide-in {
+  animation: fadeSlideIn 0.3s ease-out forwards;
+}

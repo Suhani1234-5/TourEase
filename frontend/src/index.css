@@ -1,6 +1,21 @@
 @import "tailwindcss";
 @custom-variant dark (&:where(.dark, .dark *));
 
+/* Page transition overlay color — matches site background per theme */
+:root {
+  --transition-overlay-color: #ffffff;
+  --page-bg: #ffffff;
+}
+:root.dark {
+  --transition-overlay-color: #0b1220;
+  --page-bg: #030712;
+}
+
+/* Prevent bare white body flash during page transitions */
+body {
+  background-color: var(--page-bg, #ffffff);
+}
+
 @keyframes marquee {
   from { transform: translateX(0); }
   to { transform: translateX(-50%); }

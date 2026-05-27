@@ -169,4 +169,34 @@ export const api = {
   async getUserItineraries() {
     return this.request('/itinerary/user');
   },
+
+  // --- Split & Expense Tracker ---
+  async getExpenseGroups() {
+    return this.request('/expenses');
+  },
+  async createExpenseGroup(data) {
+    return this.request('/expenses', {
+      method: 'POST',
+      body: data,
+    });
+  },
+  async getExpenseGroup(id) {
+    return this.request(`/expenses/${id}`);
+  },
+  async deleteExpenseGroup(id) {
+    return this.request(`/expenses/${id}`, {
+      method: 'DELETE',
+    });
+  },
+  async addExpense(groupId, data) {
+    return this.request(`/expenses/${groupId}/expense`, {
+      method: 'POST',
+      body: data,
+    });
+  },
+  async deleteExpense(groupId, expenseId) {
+    return this.request(`/expenses/${groupId}/expense/${expenseId}`, {
+      method: 'DELETE',
+    });
+  },
 };

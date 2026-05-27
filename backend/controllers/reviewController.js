@@ -34,7 +34,14 @@ const getReviewsByDestination = async (req, res) => {
 
 const createReview = async (req, res) => {
   try {
-    const review = await Review.create(req.body);
+    // Attach the authenticated user's ID to the review
+    const userId = req.user?.userId || req.user?.id;
+    if (!userId) {
+      return res.status(401).json({ message: "Authentication required to create a review" });
+    }
+
+    const reviewData = { ...req.body, userId };
+    const review = await Review.create(reviewData);
 
     res.status(201).json(review);
   } catch (error) {
@@ -45,6 +52,19 @@ const createReview = async (req, res) => {
 const deleteReview = async (req, res) => {
   try {
     const { reviewId } = req.params; // Grab the ID from the URL
+
+    // Fetch the review to check ownership
+    const review = await Review.findById(reviewId);
+    if (!review) {
+      return res.status(404).json({ message: "Review not found" });
+    }
+
+    // Only the review owner or an admin can delete it
+    const currentUserId = req.user?.userId || req.user?.id;
+    const isAdmin = req.user?.role === "admin";
+    if (!isAdmin && review.userId && review.userId !== currentUserId) {
+      return res.status(403).json({ message: "You can only delete your own reviews" });
+    }
 
     await Review.findByIdAndDelete(reviewId);
 
