@@ -44,6 +44,7 @@ import DynamicPlannerPage from './pages/DynamicPlannerPage';
 import { ScrollToTop } from "./components/common/ScrollToTop";
 import SplitExpense from "./pages/SplitExpense";
 import Contributors from "./pages/Contributors";
+import Community from "./pages/Community";
 
 function ProtectedRoute({ children }) {
   const isAuthenticated = Boolean(localStorage.getItem("token"));
@@ -112,6 +113,7 @@ function AppRoutes() {
                 </ProtectedRoute>
               }
             />
+            <Route path="/community" element={<PageTransition><Community /></PageTransition>} />
           </Routes>
         </AnimatePresence>
       </div>
