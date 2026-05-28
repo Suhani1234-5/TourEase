@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const dotenv = require("dotenv");
 
+const connectDB = require("./config/db");
 const reviewRoutes = require("./routes/reviewRoutes");
 const authRoutes = require("./routes/authRoutes");
 const contactRoutes = require("./routes/contactRoutes");
@@ -19,6 +20,9 @@ const morgan = require("morgan");
 
 
 dotenv.config();
+
+// Connect to Database
+connectDB();
 
 const app = express();
 
@@ -39,6 +43,9 @@ app.use('/api/itinerary', itineraryRoutes);
 app.use('/api/events', eventRoutes);
 app.use('/api/weather', weatherRoutes);
 app.use('/api/smart-planner', smartPlannerRoutes);
+app.use('/api/reviews', reviewRoutes);
+app.use('/api/chat', chatRoutes);
+app.use('/api/expenses', expenseRoutes);
 
 // Health check route
 app.get("/api/health", (req, res) => {
