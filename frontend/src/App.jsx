@@ -26,7 +26,6 @@ import Signup from "./pages/signup";
 import Login from "./pages/Login";
 import AddFavorite from "./pages/AddFavorite";
 import ScrollToTopButton from "./components/common/ScrollToTop";
-import LanguageSelector from "./components/LanguageSelector";
 import ChatbotLauncher from "./components/chatbot/ChatbotLauncher";
 import DestinationDetails from "./pages/DestinationDetails";
 import PlanTrip from "./pages/PlanTrip";
@@ -69,8 +68,6 @@ function AppRoutes() {
       <ScrollToTopOnNavigate /> 
       {showNavigation && <Navigation />}
       <ScrollToTopButton />
-      {/* Only show global floating widgets on non-auth pages — Auth.jsx renders its own */}
-      {showNavigation && <LanguageSelector />}
       {showNavigation && <ChatbotLauncher />}
       <div className={showNavigation ? "pt-16" : ""} style={{ minHeight: "100vh", backgroundColor: "var(--page-bg, #ffffff)" }}>
         <AnimatePresence mode="popLayout" initial={false}>
