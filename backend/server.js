@@ -2,6 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const dotenv = require("dotenv");
+const helmet = require("helmet");
 
 const reviewRoutes = require("./routes/reviewRoutes");
 const authRoutes = require("./routes/authRoutes");
@@ -13,10 +14,8 @@ const smartPlannerRoutes = require("./routes/smartPlannerRoutes");
 const tripRoutes = require("./routes/tripRoutes");
 const chatRoutes = require("./routes/chatroutes");
 const expenseRoutes = require("./routes/expenseRoutes");
-const helmet = require("helmet");
 const morgan = require("morgan");
-
-
+const travelLockerRoutes = require("./routes/travelLockerRoutes");
 
 dotenv.config();
 
@@ -39,6 +38,8 @@ app.use('/api/itinerary', itineraryRoutes);
 app.use('/api/events', eventRoutes);
 app.use('/api/weather', weatherRoutes);
 app.use('/api/smart-planner', smartPlannerRoutes);
+app.use('/api/expenses', expenseRoutes);
+app.use('/api/locker', travelLockerRoutes);
 
 // Health check route
 app.get("/api/health", (req, res) => {

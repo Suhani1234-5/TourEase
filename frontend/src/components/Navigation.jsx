@@ -6,7 +6,7 @@ import { useTheme } from "../context/useTheme";
 import LanguageSelector from "./LanguageSelector";
 
 export default function Navigation() {
-  const [isOpen, setIsOpen] = useState(false);a
+  const [isOpen, setIsOpen] = useState(false);
   const { theme, toggleTheme } = useTheme();
 
   const location = useLocation();
@@ -24,6 +24,7 @@ export default function Navigation() {
     { path: "/smart-trip-planner", label: "Smart Planner" },
     { path: "/split-expense", label: "Expense Splitter" },
     { path: "/currency-converter", label: "Currency" },
+    { path: "/travel-locker", label: "Travel Locker" },
   ];
 
   const isActive = (path) => location.pathname === path;
