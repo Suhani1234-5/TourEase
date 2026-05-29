@@ -141,6 +141,47 @@ function StepSection({
   );
 }
 
+const parseDateToLocalMidnight = (dateStr) => {
+  if (!dateStr) return null;
+  if (dateStr instanceof Date) {
+    const d = new Date(dateStr);
+    d.setHours(0, 0, 0, 0);
+    return d;
+  }
+  
+  // Try YYYY-MM-DD
+  const ymdMatch = String(dateStr).match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
+  if (ymdMatch) {
+    const year = parseInt(ymdMatch[1], 10);
+    const month = parseInt(ymdMatch[2], 10) - 1; // 0-indexed
+    const day = parseInt(ymdMatch[3], 10);
+    return new Date(year, month, day, 0, 0, 0, 0);
+  }
+
+  // Try DD/MM/YYYY or DD-MM-YYYY
+  const dmyMatch = String(dateStr).match(/^(\d{1,2})[/-](\d{1,2})[/-](\d{4})$/);
+  if (dmyMatch) {
+    const day = parseInt(dmyMatch[1], 10);
+    const month = parseInt(dmyMatch[2], 10) - 1; // 0-indexed
+    const year = parseInt(dmyMatch[3], 10);
+    return new Date(year, month, day, 0, 0, 0, 0);
+  }
+
+  // Fallback to default Date parsing
+  const d = new Date(dateStr);
+  if (isNaN(d.getTime())) return null;
+  d.setHours(0, 0, 0, 0);
+  return d;
+};
+
+const formatDateToYMD = (date) => {
+  if (!date) return "";
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+};
+
 export default function TripPlanner() {
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
@@ -159,10 +200,20 @@ export default function TripPlanner() {
   const [isRefining, setIsRefining] = useState(false);
   const [showResetConfirm, setShowResetConfirm] = useState(false);
 
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const todayDate = formatDateToYMD(today);
+
+  const parsedStartDate = parseDateToLocalMidnight(formData.startDate);
+  const parsedEndDate = parseDateToLocalMidnight(formData.endDate);
+
+  const isStartDateValid = parsedStartDate && parsedStartDate >= today;
+  const isEndDateValid = parsedEndDate && parsedEndDate >= (parsedStartDate || today);
+
   const isStep1Valid =
     formData.destination.trim() !== "" &&
-    formData.startDate !== "" &&
-    formData.endDate !== "";
+    isStartDateValid &&
+    isEndDateValid;
   const isStep3Valid = formData.interests.length > 0;
 
   useEffect(() => {
@@ -204,11 +255,16 @@ export default function TripPlanner() {
   };
 
   const handleStartDateChange = (value) => {
-    setFormData((prev) => ({
-      ...prev,
-      startDate: value,
-      endDate: prev.endDate && prev.endDate < value ? value : prev.endDate,
-    }));
+    setFormData((prev) => {
+      const parsedStart = parseDateToLocalMidnight(value);
+      const parsedEnd = parseDateToLocalMidnight(prev.endDate);
+      const isEndBeforeStart = parsedStart && parsedEnd && parsedEnd < parsedStart;
+      return {
+        ...prev,
+        startDate: value,
+        endDate: isEndBeforeStart ? value : prev.endDate,
+      };
+    });
   };
 
   const handleEndDateChange = (value) => {
@@ -534,9 +590,19 @@ export default function TripPlanner() {
                   <input
                     type="date"
                     value={formData.startDate}
+                    min={todayDate}
                     onChange={(e) => handleStartDateChange(e.target.value)}
-                    className="w-full bg-gray-50 dark:bg-gray-800 border dark:border-gray-700 rounded-xl px-6 py-4 outline-none text-gray-900 dark:text-white"
+                    className={`w-full bg-gray-50 dark:bg-gray-800 border rounded-xl px-6 py-4 outline-none text-gray-900 dark:text-white transition-all focus:ring-2 focus:ring-teal-500/20 ${
+                      formData.startDate && parsedStartDate && parsedStartDate < today
+                        ? "border-red-500 dark:border-red-500"
+                        : "dark:border-gray-700"
+                    }`}
                   />
+                  {formData.startDate && parsedStartDate && parsedStartDate < today && (
+                    <p className="mt-2 text-sm text-red-500 font-semibold">
+                      Start date cannot be in the past.
+                    </p>
+                  )}
                 </div>
                 <div className="bg-white dark:bg-gray-900 rounded-2xl p-8 shadow-xl border dark:border-gray-800">
                   <label className="flex items-center text-sm font-bold text-gray-700 dark:text-gray-300 mb-3 uppercase tracking-wider">
@@ -546,14 +612,26 @@ export default function TripPlanner() {
                   <input
                     type="date"
                     value={formData.endDate}
-                    min={formData.startDate || undefined}
+                    min={formData.startDate || todayDate}
                     onChange={(e) => handleEndDateChange(e.target.value)}
-                    className="w-full bg-gray-50 dark:bg-gray-800 border dark:border-gray-700 rounded-xl px-6 py-4 outline-none text-gray-900 dark:text-white transition-all focus:ring-2 focus:ring-teal-500/20"
+                    className={`w-full bg-gray-50 dark:bg-gray-800 border rounded-xl px-6 py-4 outline-none text-gray-900 dark:text-white transition-all focus:ring-2 focus:ring-teal-500/20 ${
+                      formData.endDate && parsedEndDate && parsedEndDate < (parsedStartDate || today)
+                        ? "border-red-500 dark:border-red-500"
+                        : "dark:border-gray-700"
+                    }`}
                   />
-                  {formData.startDate && (
-                    <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
-                      Dates before {formData.startDate} are unavailable.
+                  {formData.endDate && parsedEndDate && parsedEndDate < (parsedStartDate || today) ? (
+                    <p className="mt-2 text-sm text-red-500 font-semibold">
+                      {parsedStartDate
+                        ? "End date cannot be before start date."
+                        : "End date cannot be in the past."}
                     </p>
+                  ) : (
+                    formData.startDate && (
+                      <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+                        Dates before {formData.startDate} are unavailable.
+                      </p>
+                    )
                   )}
                 </div>
               </div>
