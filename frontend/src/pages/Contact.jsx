@@ -428,7 +428,7 @@ export default function Contact() {
                     <p className="text-base sm:text-lg md:text-xl mb-10 text-white/90 max-w-xl mx-auto leading-relaxed drop-shadow-md">
                         Check out our help center or reach out to our support team
                     </p>
-                    <Link to="/help" className="bg-white hover:bg-gray-50 text-teal-600 dark:text-indigo-600 px-10 py-4 rounded-xl font-bold transition-all duration-200 text-base shadow-2xl hover:shadow-3xl hover:scale-105 active:scale-95">
+                    <Link to="/help" className="group inline-flex items-center gap-2 bg-white text-teal-600 dark:text-indigo-600 px-10 py-4 rounded-xl font-bold transition-all duration-300 ease-out shadow-lg hover:-translate-y-1 hover:scale-105 hover:bg-gray-50 hover:shadow-[0_10px_30px_rgba(20,184,166,0.35)] dark:hover:shadow-[0_10px_30px_rgba(99,102,241,0.35)]">
                         Visit Help Center
                     </Link>
                 </div>
