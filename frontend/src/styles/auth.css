@@ -1,7 +1,9 @@
-/* ─── Auth Page: No Scroll ──────────────────────────────────── */
+/* ─── Auth Page: Fixed Scroll ──────────────────────────────────── */
 .auth-page {
-  height: 100dvh;          /* dynamic viewport height */
-  overflow: hidden;
+  min-height: 100dvh;          /* dynamic viewport height */
+  height: auto;
+  overflow-y: auto;
+  overflow-x: hidden;
   display: flex;
   flex-direction: column;
 }
@@ -9,20 +11,14 @@
 .auth-content-area {
   flex: 1;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  overflow: hidden;
+  overflow: visible;
   padding: 1rem;
 }
 
 /* ─── Card Flip Scene ───────────────────────────────────────── */
-/*
-  Technique: We keep ONE card in the DOM at a time and animate it
-  in/out with a smooth rotateY flip so it feels like a physical
-  card turning over.
-*/
-
-/* Scene wrapper — provides the 3D perspective */
 .auth-card-scene {
   width: 100%;
   display: flex;
@@ -78,25 +74,24 @@
 .auth-card-container {
   width: 100%;
   position: relative;
+  overflow: visible;
 }
 
 /* ─── Signup / Login card box ───────────────────────────────── */
 .auth-card-box {
   width: 100%;
-  max-width: 36rem;           /* slightly narrower — comfortable not overwhelming */
+  max-width: 36rem;
   background: rgba(255, 255, 255, 0.97);
   border-radius: 1.25rem;
   box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.15),
               0 8px 24px -4px rgba(0, 0, 0, 0.07);
   border: 1px solid rgba(255, 255, 255, 0.3);
-  padding: 1.5rem 2rem 1.75rem;  /* tighter top/bottom, comfortable sides */
-  overflow-y: auto;           /* fallback scroll only if viewport too short */
-  scrollbar-width: none;
-  -ms-overflow-style: none;
+  padding: 1.5rem 2rem 1.75rem;
+  overflow: visible;
 }
 
 .auth-card-box::-webkit-scrollbar {
-  display: none;              /* Chrome/Safari: hide scrollbar */
+  display: none;
 }
 
 .dark .auth-card-box {
@@ -110,12 +105,12 @@
 .auth-form-fields {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;               /* 12px — slightly tighter than before */
+  gap: 0.75rem;
 }
 
 .auth-field-label {
   display: block;
-  font-size: 0.78rem;         /* 12.5px — slightly smaller label */
+  font-size: 0.78rem;
   font-weight: 600;
   margin-bottom: 0.3rem;
   color: #374151;
@@ -202,7 +197,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0.75rem 1.5rem 3rem; /* larger bottom padding = icons sit lower */
+  padding: 0.75rem 1.5rem 3rem;
   backdrop-filter: blur(6px);
   border-top: 1px solid rgba(0, 0, 0, 0.06);
   flex-shrink: 0;

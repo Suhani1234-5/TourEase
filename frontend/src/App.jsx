@@ -26,7 +26,6 @@ import Signup from "./pages/signup";
 import Login from "./pages/Login";
 import AddFavorite from "./pages/AddFavorite";
 import ScrollToTopButton from "./components/common/ScrollToTop";
-import LanguageSelector from "./components/LanguageSelector";
 import ChatbotLauncher from "./components/chatbot/ChatbotLauncher";
 import DestinationDetails from "./pages/DestinationDetails";
 import PlanTrip from "./pages/PlanTrip";
@@ -43,6 +42,7 @@ import ScrollToTopOnNavigate from "./components/common/ScrollToTopOnNavigate";
 import DynamicPlannerPage from './pages/DynamicPlannerPage';
 import { ScrollToTop } from "./components/common/ScrollToTop";
 import SplitExpense from "./pages/SplitExpense";
+import CurrencyConverter from "./pages/CurrencyConverter";
 import Contributors from "./pages/Contributors";
 
 function ProtectedRoute({ children }) {
@@ -69,8 +69,6 @@ function AppRoutes() {
       <ScrollToTopOnNavigate /> 
       {showNavigation && <Navigation />}
       <ScrollToTopButton />
-      {/* Only show global floating widgets on non-auth pages — Auth.jsx renders its own */}
-      {showNavigation && <LanguageSelector />}
       {showNavigation && <ChatbotLauncher />}
       <div className={showNavigation ? "pt-16" : ""} style={{ minHeight: "100vh", backgroundColor: "var(--page-bg, #ffffff)" }}>
         <AnimatePresence mode="popLayout" initial={false}>
@@ -96,7 +94,7 @@ function AppRoutes() {
             <Route path="/auth" element={<PageTransition><Auth /></PageTransition>} />
             <Route path="/signup" element={<Navigate to="/auth?mode=signup" replace />} />
             <Route path="/login" element={<Navigate to="/auth?mode=login" replace />} />
-            <Route path="/favorites" element={<PageTransition><AddFavorite /></PageTransition>} />
+            <Route path="/favorites" element={<ProtectedRoute><PageTransition><AddFavorite /></PageTransition></ProtectedRoute>} />
             <Route path="/destinations/:id" element={<PageTransition><DestinationDetails /></PageTransition>} />
             <Route path="/plan-trip" element={<PageTransition><PlanTrip /></PageTransition>} />
             <Route path="/dynamic-planner" element={<PageTransition><DynamicPlannerPage /></PageTransition>} />
@@ -111,6 +109,10 @@ function AppRoutes() {
                   <PageTransition><SplitExpense /></PageTransition>
                 </ProtectedRoute>
               }
+            />
+            <Route
+              path="/currency-converter"
+              element={<PageTransition><CurrencyConverter /></PageTransition>}
             />
           </Routes>
         </AnimatePresence>

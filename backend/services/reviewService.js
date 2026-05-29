@@ -1,7 +1,7 @@
 import axios from "axios";
 
-// This pulls http://127.0.0.1:5000/api directly from your .env file!
-const API_URL = `${import.meta.env.VITE_API_URL}/reviews`;
+// Change import.meta.env to process.env for Node.js
+const API_URL = `${process.env.VITE_API_URL || 'http://localhost:3000'}/api/reviews`;
 
 export const fetchReviews = async (destinationId) => {
   const response = await axios.get(`${API_URL}/${destinationId}`);

@@ -1,16 +1,19 @@
 services:
-    backend:
-        build: ./backend 
-        env_file: 
-         -  ./backend/.env
-        environment:
-         -  NODE_ENV=development
-        ports:
-         - "4000:3000"
-    frontend:
-        build: ./frontend
-        ports:
-            - 7000:80
-        depends_on:
-            - backend 
-    
+  backend:
+    build: ./backend 
+    env_file: 
+      - ./backend/.env
+    environment:
+      - NODE_ENV=development
+    ports:
+      - "4000:3000"
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        - VITE_API_URL=http://localhost:4000/api
+    ports:
+      - "7000:80"
+    depends_on:
+      - backend
