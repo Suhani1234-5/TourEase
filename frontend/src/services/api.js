@@ -166,10 +166,6 @@ export const api = {
     });
   },
 
-  async getUserItineraries() {
-    return this.request('/itinerary/user');
-  },
-
   // --- Split & Expense Tracker ---
   async getExpenseGroups() {
     return this.request('/expenses');
