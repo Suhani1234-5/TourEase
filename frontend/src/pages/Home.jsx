@@ -2,82 +2,327 @@ import React, { useEffect, useMemo, useState } from "react";
 import PropTypes from "prop-types";
 import Testimonials from "../pages/Testimonials";
 import { Link } from "react-router-dom";
+import { AnimatePresence, motion, useInView, useReducedMotion } from "framer-motion";
 import {
-  Globe,
-  Shield,
-  Smartphone,
-  Video,
+  ArrowRight,
+  Award,
   Calendar,
-  Headphones,
-  Users,
-  MapPin,
+  ChevronLeft,
+  ChevronRight,
   Clock,
   DollarSign,
-  Award,
-  Star,
+  Globe,
+  Headphones,
+  Map,
+  MapPin,
+  Play,
+  Shield,
+  Smartphone,
   Sparkles,
+  Star,
+  Users,
+  Video,
 } from "lucide-react";
 import CountUp from "../components/CountUp";
 
-//Carousel feature data
+const heroSlides = [
+  {
+    image:
+      "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?q=80&w=2070&auto=format&fit=crop",
+    title: "Alpine escape",
+    location: "Lauterbrunnen, Switzerland",
+  },
+  {
+    image:
+      "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=2070&auto=format&fit=crop",
+    title: "Coastal reset",
+    location: "Nusa Penida, Indonesia",
+  },
+  {
+    image:
+      "https://images.unsplash.com/photo-1491555103944-7c647fd857e6?q=80&w=2070&auto=format&fit=crop",
+    title: "City discovery",
+    location: "Prague, Czech Republic",
+  },
+];
+
+const heroMetrics = [
+  { end: 50, suffix: "K+", label: "Adventurers" },
+  { end: 150, suffix: "+", label: "Destinations" },
+  { end: 4.9, suffix: "/5", label: "Average rating", decimals: 1 },
+];
+
 const featureCards = [
   {
     icon: <Globe className="w-10 h-10" />,
     title: "AI Travel Planner",
     description:
-      "Smart itinerary builder tailored to your interests, budget, and time. Get personalized recommendations instantly.",
-    color: "bg-blue-100 text-blue-600",
+      "Smart itinerary builder tailored to your interests, budget, and time.",
+    color: "bg-cyan-100 text-cyan-700 dark:bg-cyan-500/15 dark:text-cyan-300",
   },
   {
     icon: <Shield className="w-10 h-10" />,
-    title: "Local Advice & Support",
+    title: "Local Advice",
     description:
-      "Get real-time tips from locals and travelers. Know what to do, where to go, and what to avoid.",
-    color: "bg-teal-100 text-teal-600",
+      "Get real-time tips from locals and travelers before every decision.",
+    color: "bg-teal-100 text-teal-700 dark:bg-teal-500/15 dark:text-teal-300",
   },
   {
     icon: <Smartphone className="w-10 h-10" />,
-    title: "Smart Accommodation",
+    title: "Smart Stays",
     description:
-      "Find the perfect stay with AI-driven suggestions based on reviews, location, and price.",
-    color: "bg-purple-100 text-purple-600",
+      "Find stays matched to reviews, transport, vibe, and nightly budget.",
+    color: "bg-violet-100 text-violet-700 dark:bg-violet-500/15 dark:text-violet-300",
   },
   {
     icon: <Video className="w-10 h-10" />,
-    title: "Online Translation",
+    title: "Live Translation",
     description:
-      "Break language barriers with instant AI-powered translation for over 100 languages.",
-    color: "bg-green-100 text-green-600",
+      "Move through new places with instant support for 100+ languages.",
+    color: "bg-emerald-100 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300",
   },
   {
     icon: <Calendar className="w-10 h-10" />,
-    title: "Offline Accessibility",
+    title: "Offline Access",
     description:
-      "Access your itinerary, maps & guides without internet. Travel worry-free anywhere.",
-    color: "bg-orange-100 text-orange-600",
+      "Keep maps, routes, bookings, and plans available without internet.",
+    color: "bg-orange-100 text-orange-700 dark:bg-orange-500/15 dark:text-orange-300",
   },
   {
     icon: <Headphones className="w-10 h-10" />,
-    title: "24/7 Live Support",
+    title: "24/7 Support",
     description:
-      "Get instant help anytime, anywhere. Our travel experts are always ready to assist you.",
-    color: "bg-pink-100 text-pink-600",
+      "Get quick help from travel experts whenever plans suddenly shift.",
+    color: "bg-rose-100 text-rose-700 dark:bg-rose-500/15 dark:text-rose-300",
   },
   {
     icon: <Users className="w-10 h-10" />,
-    title: "Group Trip Planner",
+    title: "Group Planner",
     description:
-      "Coordinate with friends easily. Share itineraries, split costs, and vote on activities.",
-    color: "bg-indigo-100 text-indigo-600",
+      "Vote on activities, sync schedules, and keep friends aligned.",
+    color: "bg-indigo-100 text-indigo-700 dark:bg-indigo-500/15 dark:text-indigo-300",
   },
   {
     icon: <DollarSign className="w-10 h-10" />,
     title: "Budget Tracker",
     description:
-      "Stay on budget with smart expense tracking and cost predictions for your entire trip.",
-    color: "bg-yellow-100 text-yellow-600",
+      "Track shared costs and get smarter alternatives while planning.",
+    color: "bg-amber-100 text-amber-700 dark:bg-amber-500/15 dark:text-amber-300",
   },
 ];
+
+const journeySteps = [
+  {
+    number: "01",
+    icon: <MapPin className="w-7 h-7" />,
+    title: "Choose the vibe",
+    description: "Share dates, pace, interests, budget, and must-see places.",
+    color: "from-teal-500 to-cyan-500",
+  },
+  {
+    number: "02",
+    icon: <Sparkles className="w-7 h-7" />,
+    title: "Shape the route",
+    description: "TourEase balances landmarks, food, rest, and travel time.",
+    color: "from-orange-500 to-amber-500",
+  },
+  {
+    number: "03",
+    icon: <Clock className="w-7 h-7" />,
+    title: "Adapt on the go",
+    description: "Plans stay flexible with weather, delays, and local tips.",
+    color: "from-indigo-500 to-violet-500",
+  },
+  {
+    number: "04",
+    icon: <Award className="w-7 h-7" />,
+    title: "Share the story",
+    description: "Save memories, recommend gems, and help other travelers.",
+    color: "from-emerald-500 to-teal-500",
+  },
+];
+
+const communityCards = [
+  {
+    name: "Emily Chen",
+    location: "New York, USA",
+    quote:
+      "TourEase made planning my Europe trip easy. The AI suggestions were spot-on, and I found hidden gems I would have missed.",
+    trips: "23 Trips",
+  },
+  {
+    name: "Marco Rossi",
+    location: "Rome, Italy",
+    quote:
+      "The offline access and local notes made every city feel manageable, even when plans changed at the last minute.",
+    trips: "47 Trips",
+  },
+  {
+    name: "Priya Patel",
+    location: "Mumbai, India",
+    quote:
+      "The budget tracker helped me travel more while spending less. It made the whole group trip calmer.",
+    trips: "15 Trips",
+  },
+];
+
+const revealVariants = {
+  hidden: { opacity: 0, y: 36 },
+  visible: { opacity: 1, y: 0 },
+};
+
+function Reveal({ children, className = "", delay = 0 }) {
+  const reduceMotion = useReducedMotion();
+
+  return (
+    <motion.div
+      className={className}
+      initial={reduceMotion ? false : "hidden"}
+      whileInView="visible"
+      viewport={{ once: true, amount: 0.22 }}
+      variants={revealVariants}
+      transition={{ duration: 0.65, delay, ease: [0.22, 1, 0.36, 1] }}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
+function AnimatedMetric({ end, suffix, label, decimals = 0 }) {
+  const ref = React.useRef(null);
+  const inView = useInView(ref, { once: true, amount: 0.7 });
+  const [value, setValue] = useState(0);
+
+  useEffect(() => {
+    if (!inView) return undefined;
+    let frameId;
+    const duration = 1400;
+    const startedAt = performance.now();
+
+    const tick = (timestamp) => {
+      const progress = Math.min((timestamp - startedAt) / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      setValue(end * eased);
+      if (progress < 1) frameId = requestAnimationFrame(tick);
+    };
+
+    frameId = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(frameId);
+  }, [end, inView]);
+
+  return (
+    <div ref={ref} className="min-w-[92px]">
+      <p className="text-3xl font-black text-gray-950 dark:text-white">
+        {value.toFixed(decimals)}
+        <span className="text-orange-500">{suffix}</span>
+      </p>
+      <p className="mt-1 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-500 dark:text-gray-400">
+        {label}
+      </p>
+    </div>
+  );
+}
+
+function HeroShowcase() {
+  const [activeSlide, setActiveSlide] = useState(0);
+  const reduceMotion = useReducedMotion();
+
+  useEffect(() => {
+    if (reduceMotion) return undefined;
+    const timer = window.setInterval(() => {
+      setActiveSlide((current) => (current + 1) % heroSlides.length);
+    }, 4200);
+    return () => window.clearInterval(timer);
+  }, [reduceMotion]);
+
+  const currentSlide = heroSlides[activeSlide];
+
+  return (
+    <motion.div
+      className="relative w-full max-w-[560px] lg:ml-auto"
+      initial={reduceMotion ? false : { opacity: 0, x: 42 }}
+      animate={reduceMotion ? undefined : { opacity: 1, x: 0 }}
+      transition={{ duration: 0.8, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+    >
+      <div className="absolute -left-4 top-12 z-20 hidden rounded-2xl border border-white/70 bg-white/80 p-4 shadow-xl backdrop-blur-xl dark:border-white/10 dark:bg-gray-950/70 sm:block">
+        <div className="flex items-center gap-3">
+          <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-teal-100 text-teal-700 dark:bg-teal-400/15 dark:text-teal-300">
+            <Map className="h-5 w-5" />
+          </div>
+          <div>
+            <p className="text-xs font-bold uppercase tracking-[0.18em] text-gray-500 dark:text-gray-400">
+              Smart route
+            </p>
+            <p className="text-sm font-black text-gray-950 dark:text-white">
+              7 days planned
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <motion.div
+        className="relative overflow-hidden rounded-[2rem] border border-white/70 bg-white/60 p-2 shadow-2xl backdrop-blur dark:border-white/10 dark:bg-white/5"
+        animate={reduceMotion ? undefined : { y: [0, -12, 0] }}
+        transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
+      >
+        <div className="relative min-h-[360px] overflow-hidden rounded-[1.5rem] sm:min-h-[460px]">
+          <AnimatePresence mode="wait">
+            <motion.img
+              key={currentSlide.image}
+              src={currentSlide.image}
+              alt={currentSlide.title}
+              className="absolute inset-0 h-full w-full object-cover"
+              initial={reduceMotion ? false : { opacity: 0, scale: 1.08 }}
+              animate={reduceMotion ? undefined : { opacity: 1, scale: 1 }}
+              exit={reduceMotion ? undefined : { opacity: 0, scale: 1.03 }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
+            />
+          </AnimatePresence>
+          <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-transparent" />
+
+          <div className="absolute bottom-5 left-5 right-5">
+            <div className="rounded-2xl border border-white/25 bg-white/15 p-4 text-white shadow-xl backdrop-blur-xl">
+              <p className="text-xs font-bold uppercase tracking-[0.2em] text-cyan-100">
+                Featured journey
+              </p>
+              <div className="mt-2 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+                <div>
+                  <h3 className="text-2xl font-black">{currentSlide.title}</h3>
+                  <p className="mt-1 flex items-center gap-2 text-sm text-white/80">
+                    <MapPin className="h-4 w-4" />
+                    {currentSlide.location}
+                  </p>
+                </div>
+                <div className="flex gap-2">
+                  {heroSlides.map((slide, index) => (
+                    <button
+                      key={slide.title}
+                      type="button"
+                      onClick={() => setActiveSlide(index)}
+                      className={`h-2 rounded-full transition-all ${
+                        index === activeSlide ? "w-8 bg-orange-400" : "w-2 bg-white/60"
+                      }`}
+                      aria-label={`Show ${slide.title}`}
+                    />
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </motion.div>
+
+      <div className="absolute -bottom-5 right-3 z-20 rounded-2xl border border-white/70 bg-white/85 px-4 py-3 shadow-xl backdrop-blur-xl dark:border-white/10 dark:bg-gray-950/80 sm:right-8">
+        <div className="flex items-center gap-2">
+          <Sparkles className="h-4 w-4 text-orange-500" />
+          <p className="text-xs font-bold uppercase tracking-[0.16em] text-gray-700 dark:text-gray-200">
+            Live trip ideas
+          </p>
+        </div>
+      </div>
+    </motion.div>
+  );
+}
 
 function FeatureCarousel({ cards }) {
   const [activeSlide, setActiveSlide] = useState(0);
@@ -102,9 +347,7 @@ function FeatureCarousel({ cards }) {
   const maxSlideIndex = Math.max(0, cards.length - slidesToShow);
 
   useEffect(() => {
-    if (activeSlide > maxSlideIndex) {
-      setActiveSlide(maxSlideIndex);
-    }
+    if (activeSlide > maxSlideIndex) setActiveSlide(maxSlideIndex);
   }, [maxSlideIndex, activeSlide]);
 
   useEffect(() => {
@@ -116,62 +359,81 @@ function FeatureCarousel({ cards }) {
   }, [isPaused, maxSlideIndex]);
 
   const cardWidthPercent = 100 / slidesToShow;
-  const translateX = `translateX(-${activeSlide * cardWidthPercent}%)`;
-
   const indicatorCount = maxSlideIndex + 1;
 
   return (
     <div className="relative">
+      <div className="mb-6 flex justify-end gap-3">
+        <button
+          type="button"
+          onClick={() => setActiveSlide((current) => Math.max(0, current - 1))}
+          className="flex h-11 w-11 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-700 shadow-sm transition hover:-translate-y-0.5 hover:border-teal-300 hover:text-teal-700 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-200 dark:hover:border-teal-500"
+          aria-label="Previous features"
+        >
+          <ChevronLeft className="h-5 w-5" />
+        </button>
+        <button
+          type="button"
+          onClick={() => setActiveSlide((current) => Math.min(maxSlideIndex, current + 1))}
+          className="flex h-11 w-11 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-700 shadow-sm transition hover:-translate-y-0.5 hover:border-teal-300 hover:text-teal-700 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-200 dark:hover:border-teal-500"
+          aria-label="Next features"
+        >
+          <ChevronRight className="h-5 w-5" />
+        </button>
+      </div>
+
       <div
         className="overflow-hidden"
         onMouseEnter={() => setIsPaused(true)}
         onMouseLeave={() => setIsPaused(false)}
       >
         <div
-          className="flex transition-transform duration-400 ease-out"
-          style={{ transform: translateX, willChange: "transform" }}
+          className="flex transition-transform duration-500 ease-out"
+          style={{
+            transform: `translateX(-${activeSlide * cardWidthPercent}%)`,
+            willChange: "transform",
+          }}
         >
-          {cards.map((card, index) => (
+          {cards.map((card) => (
             <div
-              key={index}
-              className="shrink-0 box-border"
+              key={card.title}
+              className="box-border shrink-0 px-3"
               style={{
                 flex: `0 0 ${cardWidthPercent}%`,
                 maxWidth: `${cardWidthPercent}%`,
-                boxSizing: "border-box",
-                padding: "0 12px",
               }}
             >
-              <div className="bg-white dark:bg-gray-900 p-8 rounded-xl shadow-sm hover:shadow-lg dark:hover:shadow-[0_0_25px_rgba(45,212,191,0.35)] transition-all duration-300 hover:-translate-y-2 border border-gray-100 dark:border-gray-800 hover:border-teal-200 dark:hover:border-teal-500 group h-full">
+              <motion.div
+                className="group h-full rounded-2xl border border-gray-100 bg-white p-7 shadow-sm transition-all duration-300 hover:-translate-y-2 hover:border-teal-200 hover:shadow-xl dark:border-gray-800 dark:bg-gray-900 dark:hover:border-teal-500 dark:hover:shadow-[0_0_25px_rgba(45,212,191,0.25)]"
+                whileHover={{ rotate: -0.5 }}
+              >
                 <div
-  className={`${card.color} w-16 h-16 rounded-lg flex items-center justify-center mb-5 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300`}
->
+                  className={`${card.color} mb-5 flex h-16 w-16 items-center justify-center rounded-2xl transition-all duration-300 group-hover:scale-110 group-hover:rotate-3`}
+                >
                   {card.icon}
                 </div>
-                <h3 className="font-bold text-xl mb-3 text-gray-900 dark:text-white">
+                <h3 className="mb-3 text-xl font-bold text-gray-950 dark:text-white">
                   {card.title}
                 </h3>
-                <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
+                <p className="leading-relaxed text-gray-600 dark:text-gray-300">
                   {card.description}
                 </p>
-              </div>
+              </motion.div>
             </div>
           ))}
         </div>
       </div>
 
-      <div className="mt-6 flex items-center justify-center gap-2">
+      <div className="mt-7 flex items-center justify-center gap-2">
         {Array.from({ length: indicatorCount }, (_, idx) => (
           <button
             key={idx}
             type="button"
             onClick={() => setActiveSlide(idx)}
             className={`h-2 rounded-full transition-all ${
-              activeSlide === idx
-                ? "w-8 bg-teal-500"
-                : "w-2 bg-gray-300 dark:bg-gray-700"
+              activeSlide === idx ? "w-9 bg-teal-500" : "w-2 bg-gray-300 dark:bg-gray-700"
             }`}
-            aria-label={`Show slide ${idx + 1}`}
+            aria-label={`Show feature slide ${idx + 1}`}
           />
         ))}
       </div>
@@ -181,368 +443,279 @@ function FeatureCarousel({ cards }) {
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-950">
-      {/* ================= HERO SECTION ================= */}
-      <div className="relative min-h-screen w-full bg-white dark:bg-[#030712] overflow-hidden flex items-center py-12 lg:py-0 font-sans">
-        {/* Background Glows */}
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-teal-500/10 blur-[100px] rounded-full"></div>
-          <div className="absolute bottom-[-5%] right-[-5%] w-[40%] h-[40%] bg-orange-500/5 blur-[100px] rounded-full"></div>
-        </div>
-
-        <div className="relative max-w-7xl mx-auto px-6 lg:px-12 w-full z-10">
-          <div className="flex flex-col lg:grid lg:grid-cols-2 gap-12 items-center">
-            {/* LEFT */}
-            <div className="space-y-6 text-left animate-in fade-in slide-in-from-left duration-700">
-              <div className="inline-flex items-center space-x-2 bg-gray-100 dark:bg-white/5 border border-gray-200 dark:border-white/10 backdrop-blur-xl px-4 py-1.5 rounded-full">
-                <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-orange-500"></span>
-                </span>
-                <span className="text-orange-500 text-[10px] font-bold uppercase tracking-[0.2em]">
-                  Explore the World!
-                </span>
-              </div>
-
-              <h1 className="text-5xl md:text-6xl lg:text-7xl font-black text-gray-900 dark:text-white leading-[1.1] tracking-tighter">
-                Your Smart Travel
-                <br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-400 via-emerald-500 to-cyan-500">
-                  Assistant Awaits
-                </span>
-              </h1>
-
-              <p className="text-base md:text-lg text-gray-600 dark:text-gray-400 max-w-md leading-relaxed font-medium">
-                Plan smarter, travel better! Whether you're exploring nearby or
-                venturing abroad, our intelligent assistant has everything
-                covered — from itineraries to bookings, all in one place.
-              </p>
-
-              <div className="flex flex-wrap gap-4">
-                {/* CHANGED: Direct link to Trip Planner */}
-                <Link
-                  to="/trip-planner"
-                  className="px-8 py-3.5 bg-orange-600 hover:bg-orange-500 text-white rounded-xl font-bold transition-all duration-300 shadow-lg shadow-orange-900/20 active:scale-95 text-md flex items-center justify-center min-w-[180px]"
-                >
-                  Start Your Journey
-                </Link>
-
-                <Link
-                  to="/destinations"
-                  className="px-8 py-3.5 border bg-white border-black/80 text-black dark:bg-black dark:border-white/80 dark:text-white rounded-xl font-bold transition-all duration-500 hover:scale-105 flex items-center justify-center min-w-[180px]"
-                >
-                  Explore Features
-                </Link>
-              </div>
-
-              <div className="flex items-center gap-8 pt-4">
-                <div>
-                  <p className="text-3xl font-black text-gray-900 dark:text-white">
-                    50K<span className="text-orange-500">+</span>
-                  </p>
-                  <p className="text-[9px] uppercase tracking-widest text-gray-500 font-bold">
-                    Adventurers
-                  </p>
-                </div>
-                <div className="h-8 w-[1px] bg-gray-300 dark:bg-white/10"></div>
-                <div>
-                  <p className="text-3xl font-black text-gray-900 dark:text-white">
-                    150<span className="text-teal-400">+</span>
-                  </p>
-                  <p className="text-[9px] uppercase tracking-widest text-gray-500 font-bold">
-                    Destinations
-                  </p>
-                </div>
-              </div>
+    <div className="min-h-screen bg-white text-gray-950 dark:bg-gray-950 dark:text-white">
+      <section className="relative overflow-hidden bg-[linear-gradient(180deg,#ecfeff_0%,#ffffff_58%)] py-16 dark:bg-[linear-gradient(180deg,#07111f_0%,#030712_62%)] lg:py-24">
+        <div className="absolute inset-x-0 top-0 h-32 bg-[linear-gradient(90deg,rgba(20,184,166,0.12),rgba(249,115,22,0.1),rgba(14,165,233,0.12))]" />
+        <div className="relative mx-auto grid max-w-7xl items-center gap-12 px-6 lg:grid-cols-[1fr_0.9fr] lg:px-12">
+          <motion.div
+            className="max-w-2xl"
+            initial={{ opacity: 0, y: 32 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-teal-200 bg-white/80 px-4 py-2 shadow-sm backdrop-blur dark:border-white/10 dark:bg-white/5">
+              <span className="relative flex h-2 w-2">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-orange-400 opacity-75" />
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-orange-500" />
+              </span>
+              <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-teal-700 dark:text-cyan-300">
+                Explore the world
+              </span>
             </div>
 
-            {/* RIGHT IMAGE */}
-            <div className="relative w-full flex justify-center lg:justify-end">
-              <div className="relative z-20 animate-float-slow max-w-[420px] lg:max-w-[480px] w-full">
-                <div className="rounded-[2.5rem] p-2 bg-gray-100 dark:bg-white/5 border border-gray-200 dark:border-white/10 backdrop-blur-sm shadow-2xl overflow-hidden">
-                  <div className="rounded-[2rem] overflow-hidden relative group">
-                    <img
-                      src="https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?q=80&w=2070&auto=format&fit=crop"
-                      alt="Luxury Tourism"
-                      className="w-full h-[300px] md:h-[380px] lg:h-[480px] object-cover transition-transform duration-[3s] group-hover:scale-105"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+            <h1 className="text-5xl font-black leading-[1.05] tracking-tight text-gray-950 dark:text-white md:text-6xl lg:text-7xl">
+              Plan trips that feel{" "}
+              <span className="bg-gradient-to-r from-teal-500 via-cyan-500 to-orange-500 bg-clip-text text-transparent">
+                effortless
+              </span>
+            </h1>
 
-                    <div className="absolute bottom-6 left-6 bg-white/70 dark:bg-white/10 backdrop-blur-xl px-4 py-2 rounded-2xl border border-white/40 dark:border-white/20 shadow-xl">
-                      <div className="flex items-center gap-2">
-                        <Sparkles className="text-teal-500 w-3 h-3" />
-                        <p className="text-gray-900 dark:text-white text-[10px] font-bold uppercase tracking-wider">
-                          Top Rated Experience
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+            <p className="mt-6 max-w-xl text-base font-medium leading-8 text-gray-600 dark:text-gray-300 md:text-lg">
+              TourEase blends smart itineraries, local advice, budgets, and
+              live support into one immersive travel planning experience.
+            </p>
 
-        <style>{`
-          @keyframes float-slow {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-12px); }
-          }
-          .animate-float-slow { animation: float-slow 6s ease-in-out infinite; }
-        `}</style>
-      </div>
-
-      {/* ================= FEATURES SECTION ================= */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-        <h2 className="text-4xl md:text-5xl font-bold text-center mb-6 text-gray-900 dark:text-white">
-          Everything You Need to Travel
-          <br />
-          Smart
-        </h2>
-        <p className="text-center text-gray-600 dark:text-gray-300 text-lg mb-16 max-w-3xl mx-auto">
-          Your all-in-one travel companion powered by smart features designed to
-          simplify every step of your journey
-        </p>
-
-        <div className="relative">
-          <FeatureCarousel cards={featureCards} />
-        </div>
-      </div>
-
-      {/* ================= HOW IT WORKS ================= */}
-      <div className="bg-gradient-to-br from-teal-50 to-cyan-50 dark:from-gray-900 dark:to-gray-950 py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-4xl md:text-5xl font-bold text-center mb-6 text-gray-900 dark:text-white">
-            How{" "}
-            <span className="text-teal-600 dark:text-teal-400">TourEase</span>{" "}
-            Works
-          </h2>
-          <p className="text-center text-gray-600 dark:text-gray-300 text-lg mb-16">
-            Four simple steps to planning your perfect trip with AI assistance
-          </p>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <StepCard
-              number="1"
-              icon={<MapPin className="w-8 h-8" />}
-              title="Tell Us Your Destination"
-              description="Simply enter where you want to go and when. Our AI understands your preferences."
-              color="bg-teal-500"
-            />
-
-            <StepCard
-              number="2"
-              icon={<Star className="w-8 h-8" />}
-              title="Get Personalized Suggestions"
-              description="Receive custom itineraries based on your interests, budget, and travel style."
-              color="bg-orange-500"
-            />
-
-            <StepCard
-              number="3"
-              icon={<Clock className="w-8 h-8" />}
-              title="Travel with Confidence"
-              description="Access your plans offline, get real-time updates, and enjoy 24/7 support."
-              color="bg-teal-500"
-            />
-
-            <StepCard
-              number="4"
-              icon={<Award className="w-8 h-8" />}
-              title="Share Your Story"
-              description="Document memories, share tips with community, and earn rewards for contributions."
-              color="bg-orange-500"
-            />
-          </div>
-        </div>
-      </div>
-
-      {/* ================= COMMUNITY ================= */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-        <h2 className="text-4xl md:text-5xl font-bold text-center mb-6 text-gray-900 dark:text-white">
-          Join Our Global Travel{" "}
-          <span className="text-teal-600 dark:text-teal-400">Community</span>
-        </h2>
-        <p className="text-center text-gray-600 dark:text-gray-300 text-lg mb-16 max-w-3xl mx-auto">
-          Connect with fellow travelers, share experiences, and get inspired for
-          your next adventure
-        </p>
-
-        <div className="grid md:grid-cols-3 gap-8 mb-16">
-          <CommunityCard
-            name="Emily Chen"
-            location="New York, USA"
-            quote="TourEase made planning my Europe trip so easy! The AI suggestions were spot-on, and I discovered hidden gems I never would have found."
-            trips="23 Trips"
-          />
-
-          <CommunityCard
-            name="Marco Rossi"
-            location="Rome, Italy"
-            quote="As a frequent traveler, this app has become essential. The offline features saved me countless times, and the community is incredibly helpful."
-            trips="47 Trips"
-          />
-
-          <CommunityCard
-            name="Priya Patel"
-            location="Mumbai, India"
-            quote="The budget tracker helped me travel more while spending less. I love how it suggests alternatives and helps optimize my expenses!"
-            trips="15 Trips"
-          />
-        </div>
-
-        <div className="relative h-80 rounded-2xl overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-r from-teal-400 to-cyan-500 opacity-90"></div>
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div className="text-center text-white px-4">
-              <Users className="w-20 h-20 mx-auto mb-6 opacity-80" />
-              <h3 className="text-3xl md:text-4xl font-bold mb-4">
-                Join <CountUp /> Travelers
-              </h3>
-              <p className="text-lg mb-6 opacity-90">
-                Start your journey with the smartest travel assistant
-              </p>
-              {/* CHANGED: Direct link to Trip Planner */}
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <Link
                 to="/trip-planner"
-                className="bg-orange-500 hover:bg-orange-600 text-white px-10 py-4 rounded-lg font-semibold transition text-lg inline-block"
+                className="group inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-orange-500 px-7 py-3 font-bold text-white shadow-lg shadow-orange-500/25 transition hover:-translate-y-1 hover:bg-orange-600 hover:shadow-xl active:scale-95"
+              >
+                Start Your Journey
+                <ArrowRight className="h-5 w-5 transition group-hover:translate-x-1" />
+              </Link>
+              <Link
+                to="/demo"
+                className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border border-gray-200 bg-white/80 px-7 py-3 font-bold text-gray-950 shadow-sm backdrop-blur transition hover:-translate-y-1 hover:border-teal-300 hover:text-teal-700 dark:border-white/10 dark:bg-white/5 dark:text-white dark:hover:border-teal-400"
+              >
+                <Play className="h-5 w-5" />
+                Watch Demo
+              </Link>
+            </div>
+
+            <div className="mt-10 grid grid-cols-3 gap-4 border-t border-gray-200 pt-6 dark:border-white/10">
+              {heroMetrics.map((metric) => (
+                <AnimatedMetric key={metric.label} {...metric} />
+              ))}
+            </div>
+          </motion.div>
+
+          <HeroShowcase />
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
+        <Reveal className="mx-auto mb-12 max-w-3xl text-center">
+          <p className="mb-3 text-sm font-bold uppercase tracking-[0.25em] text-orange-500">
+            Smart travel toolkit
+          </p>
+          <h2 className="text-4xl font-black tracking-tight text-gray-950 dark:text-white md:text-5xl">
+            Everything you need to travel smarter
+          </h2>
+          <p className="mt-5 text-lg leading-8 text-gray-600 dark:text-gray-300">
+            Interactive planning tools, animated guidance, and practical travel
+            support designed for every step of the journey.
+          </p>
+        </Reveal>
+
+        <Reveal>
+          <FeatureCarousel cards={featureCards} />
+        </Reveal>
+      </section>
+
+      <section className="overflow-hidden bg-gray-50 py-20 dark:bg-gray-900">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <Reveal className="mb-14 grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-end">
+            <div>
+              <p className="mb-3 text-sm font-bold uppercase tracking-[0.25em] text-teal-600 dark:text-teal-300">
+                Explore the world
+              </p>
+              <h2 className="text-4xl font-black tracking-tight text-gray-950 dark:text-white md:text-5xl">
+                A smoother way from idea to itinerary
+              </h2>
+            </div>
+            <p className="text-lg leading-8 text-gray-600 dark:text-gray-300">
+              The landing flow now tells a clearer travel story: choose the vibe,
+              shape a route, adapt during the trip, and share the experience.
+            </p>
+          </Reveal>
+
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+            {journeySteps.map((step, index) => (
+              <Reveal key={step.title} delay={index * 0.08}>
+                <StepCard {...step} />
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
+        <Reveal className="mx-auto mb-12 max-w-3xl text-center">
+          <h2 className="text-4xl font-black tracking-tight text-gray-950 dark:text-white md:text-5xl">
+            Join our global travel community
+          </h2>
+          <p className="mt-5 text-lg leading-8 text-gray-600 dark:text-gray-300">
+            Real stories, practical inspiration, and shared plans from travelers
+            building better trips with TourEase.
+          </p>
+        </Reveal>
+
+        <div className="grid gap-8 md:grid-cols-3">
+          {communityCards.map((card, index) => (
+            <Reveal key={card.name} delay={index * 0.08}>
+              <CommunityCard {...card} />
+            </Reveal>
+          ))}
+        </div>
+
+        <Reveal className="mt-16 overflow-hidden rounded-[2rem] bg-[linear-gradient(135deg,#0f766e,#0891b2_48%,#f97316)] p-[1px] shadow-2xl shadow-cyan-900/10">
+          <div className="relative overflow-hidden rounded-[calc(2rem-1px)] bg-gray-950 px-6 py-12 text-center text-white sm:px-10">
+            <div className="absolute inset-0 opacity-20 [background-image:linear-gradient(90deg,rgba(255,255,255,.18)_1px,transparent_1px),linear-gradient(rgba(255,255,255,.18)_1px,transparent_1px)] [background-size:42px_42px]" />
+            <div className="relative mx-auto max-w-3xl">
+              <Users className="mx-auto mb-5 h-16 w-16 text-cyan-200" />
+              <h3 className="text-3xl font-black md:text-4xl">
+                Join <CountUp /> travelers building smarter trips
+              </h3>
+              <p className="mx-auto mt-4 max-w-2xl text-lg text-white/75">
+                Start with a destination, get a flexible plan, and keep every
+                travel detail close.
+              </p>
+              <Link
+                to="/trip-planner"
+                className="mt-8 inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-orange-500 px-8 py-3 font-bold text-white shadow-lg shadow-orange-500/25 transition hover:-translate-y-1 hover:bg-orange-600"
               >
                 Get Started Free
+                <ArrowRight className="h-5 w-5" />
               </Link>
             </div>
           </div>
-        </div>
-      </div>
+        </Reveal>
+      </section>
+
       <Testimonials />
-      {/* ================= CTA SECTION ================= */}
-      <div className="bg-gradient-to-br from-teal-400 via-teal-500 to-cyan-600 text-white py-20">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="inline-block bg-orange-500 text-white px-4 py-1 rounded-full text-sm font-semibold mb-6">
-            Ready to Explore the World?
+
+      <section className="bg-gradient-to-br from-teal-500 via-cyan-600 to-sky-700 py-20 text-white dark:from-gray-900 dark:via-teal-950 dark:to-gray-950">
+        <Reveal className="mx-auto max-w-5xl px-4 text-center sm:px-6 lg:px-8">
+          <div className="mb-6 inline-flex rounded-full bg-white/15 px-4 py-2 text-sm font-bold uppercase tracking-[0.18em] backdrop-blur">
+            Ready to explore?
           </div>
-
-          <h2 className="text-4xl md:text-6xl font-bold mb-6">
-            Ready to Experience Travel
-            <br />
-            Like Never Before?
+          <h2 className="text-4xl font-black tracking-tight md:text-6xl">
+            Experience travel planning with more motion and less friction
           </h2>
-
-          <p className="text-xl mb-10 opacity-90">
-            Join thousands of smart travelers who plan better and explore more
-            with TourEase
+          <p className="mx-auto mt-6 max-w-3xl text-xl text-white/85">
+            Plan better, coordinate faster, and explore more confidently with
+            TourEase.
           </p>
 
-          <div className="flex flex-wrap justify-center gap-4 mb-16">
-            {/* CHANGED: Direct link to Trip Planner */}
+          <div className="mt-10 flex flex-col justify-center gap-4 sm:flex-row">
             <Link
               to="/trip-planner"
-              className="bg-orange-500 hover:bg-orange-600 text-white px-10 py-4 rounded-lg font-semibold transition text-lg"
+              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-orange-500 px-8 py-3 font-bold text-white shadow-lg shadow-orange-900/20 transition hover:-translate-y-1 hover:bg-orange-600"
             >
               Get Started Free
+              <ArrowRight className="h-5 w-5" />
             </Link>
             <Link
-              to="/demo"
-              className="bg-white text-teal-600 hover:bg-gray-100 px-10 py-4 rounded-lg font-semibold transition text-lg"
+              to="/destinations"
+              className="inline-flex min-h-12 items-center justify-center rounded-xl bg-white px-8 py-3 font-bold text-teal-700 shadow-lg transition hover:-translate-y-1 hover:bg-gray-100"
             >
-              Watch Demo
+              Browse Destinations
             </Link>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto">
-            <div className="text-center">
-              <div className="text-3xl md:text-4xl font-bold mb-2">Free</div>
-              <div className="text-base opacity-80">Forever Plan</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl md:text-4xl font-bold mb-2">5 Min</div>
-              <div className="text-base opacity-80">Setup Time</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl md:text-4xl font-bold mb-2">4.9★</div>
-              <div className="text-base opacity-80">User Rating</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl md:text-4xl font-bold mb-2">150+</div>
-              <div className="text-base opacity-80">Countries</div>
-            </div>
+          <div className="mt-14 grid grid-cols-2 gap-5 md:grid-cols-4">
+            {["Free plan", "5 min setup", "4.9 rating", "150+ countries"].map(
+              (item) => (
+                <div
+                  key={item}
+                  className="rounded-2xl border border-white/20 bg-white/10 p-5 backdrop-blur"
+                >
+                  <p className="text-lg font-black">{item.split(" ")[0]}</p>
+                  <p className="mt-1 text-sm text-white/75">
+                    {item.split(" ").slice(1).join(" ")}
+                  </p>
+                </div>
+              ),
+            )}
           </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function FeatureCard({ icon, title, description, color }) {
-  return (
-    <div className="bg-white dark:bg-gray-900 p-8 rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 border border-gray-100 dark:border-gray-800 hover:border-teal-200 dark:hover:border-teal-700 group">
-      <div
-        className={`${color} w-16 h-16 rounded-lg flex items-center justify-center mb-5 group-hover:scale-110 transition-transform`}
-      >
-        {icon}
-      </div>
-      <h3 className="font-bold text-xl mb-3 text-gray-900 dark:text-white">
-        {title}
-      </h3>
-      <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
-        {description}
-      </p>
+        </Reveal>
+      </section>
     </div>
   );
 }
 
 function StepCard({ number, icon, title, description, color }) {
   return (
-    <div className="text-center">
-      <div
-        className={`${color} text-white w-14 h-14 rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-6`}
-      >
-        {number}
-      </div>
-      <div className="bg-white dark:bg-gray-900 p-8 rounded-xl shadow-sm hover:shadow-md dark:hover:shadow-[0_0_20px_rgba(45,212,191,0.3)] hover:-translate-y-2 transition-all duration-300 h-full border border-gray-100 dark:border-gray-800 dark:hover:border-teal-500">
-        <div className="bg-teal-100 dark:bg-teal-900/40 text-teal-600 dark:text-teal-300 w-14 h-14 rounded-lg flex items-center justify-center mx-auto mb-5">
+    <motion.div
+      className="group h-full rounded-2xl border border-gray-200 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-xl dark:border-gray-800 dark:bg-gray-950"
+      whileHover={{ rotate: 0.5 }}
+    >
+      <div className="mb-6 flex items-center justify-between">
+        <div
+          className={`flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br ${color} text-white shadow-lg`}
+        >
           {icon}
         </div>
-        <h3 className="font-bold text-lg mb-3 text-gray-900 dark:text-white">
-          {title}
-        </h3>
-        <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
-          {description}
-        </p>
+        <span className="text-3xl font-black text-gray-100 transition group-hover:text-teal-100 dark:text-gray-800 dark:group-hover:text-teal-900/60">
+          {number}
+        </span>
       </div>
-    </div>
+      <h3 className="text-xl font-bold text-gray-950 dark:text-white">{title}</h3>
+      <p className="mt-3 leading-7 text-gray-600 dark:text-gray-300">
+        {description}
+      </p>
+    </motion.div>
   );
 }
 
 function CommunityCard({ name, location, quote, trips }) {
   return (
-    <div className="bg-white dark:bg-gray-900 p-8 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 hover:shadow-md dark:hover:shadow-[0_0_20px_rgba(45,212,191,0.3)] hover:-translate-y-2 transition-all duration-300 dark:hover:border-teal-500">
-      <div className="flex items-center mb-6">
-        <div className="w-14 h-14 bg-gradient-to-br from-teal-400 to-cyan-500 rounded-full flex items-center justify-center text-white font-bold text-xl mr-4">
+    <motion.div
+      className="group h-full rounded-2xl border border-gray-100 bg-white p-7 shadow-sm transition-all duration-300 hover:-translate-y-2 hover:border-teal-200 hover:shadow-xl dark:border-gray-800 dark:bg-gray-900 dark:hover:border-teal-500"
+      whileHover={{ rotate: -0.4 }}
+    >
+      <div className="mb-6 flex items-center">
+        <div className="mr-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-teal-500 to-cyan-500 text-xl font-black text-white shadow-lg shadow-teal-500/20">
           {name.charAt(0)}
         </div>
         <div>
-          <h4 className="font-semibold text-lg text-gray-900 dark:text-white">
-            {name}
-          </h4>
+          <h4 className="text-lg font-bold text-gray-950 dark:text-white">{name}</h4>
           <p className="text-sm text-gray-500 dark:text-gray-400">{location}</p>
         </div>
       </div>
-      <p className="text-gray-600 dark:text-gray-300 mb-6 italic leading-relaxed">
+      <p className="mb-6 leading-7 text-gray-600 dark:text-gray-300">
         "{quote}"
       </p>
-      <div className="flex items-center text-sm text-teal-600 dark:text-teal-400 font-semibold">
-        <MapPin className="w-5 h-5 mr-2" />
+      <div className="flex items-center text-sm font-bold text-teal-600 dark:text-teal-300">
+        <MapPin className="mr-2 h-5 w-5" />
         {trips}
       </div>
-    </div>
+    </motion.div>
   );
 }
 
-FeatureCard.propTypes = {
-  icon: PropTypes.node.isRequired,
-  title: PropTypes.string.isRequired,
-  description: PropTypes.string.isRequired,
-  color: PropTypes.string.isRequired,
+Reveal.propTypes = {
+  children: PropTypes.node.isRequired,
+  className: PropTypes.string,
+  delay: PropTypes.number,
+};
+
+AnimatedMetric.propTypes = {
+  end: PropTypes.number.isRequired,
+  suffix: PropTypes.string.isRequired,
+  label: PropTypes.string.isRequired,
+  decimals: PropTypes.number,
+};
+
+FeatureCarousel.propTypes = {
+  cards: PropTypes.arrayOf(
+    PropTypes.shape({
+      icon: PropTypes.node.isRequired,
+      title: PropTypes.string.isRequired,
+      description: PropTypes.string.isRequired,
+      color: PropTypes.string.isRequired,
+    }),
+  ).isRequired,
 };
 
 StepCard.propTypes = {
