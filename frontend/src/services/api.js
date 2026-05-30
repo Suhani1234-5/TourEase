@@ -199,4 +199,14 @@ export const api = {
       method: 'DELETE',
     });
   },
+
+  // --- Currency Converter (external API, no backend proxy) ---
+  async getExchangeRates(base = 'USD') {
+    const res = await fetch(`https://open.er-api.com/v6/latest/${base}`);
+    const data = await res.json();
+    if (!res.ok || data.result !== 'success') {
+      throw new Error('Could not fetch exchange rates. Please try again.');
+    }
+    return data;
+  },
 };

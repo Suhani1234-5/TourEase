@@ -314,7 +314,7 @@ export default function Features() {
         <div className="relative max-w-8xl mx-auto px-1 sm:px-3 lg:px-6 py-[-15] flex flex-col items-center text-center">
           <div className="max-w-6xl">
             <h1 className="mt-8 text-5xl md:text-6xl font-black font-semibold tracking-tight leading-tight">
-              Explore TourEase with a modern Bento-style feature showcase
+              Explore TourEase and our premium travel ecosystem
             </h1>
           </div>
         </div>
@@ -360,31 +360,22 @@ export default function Features() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-6 feature-grid">
+        <div className="feature-grid">
           {filteredFeatures.length === 0 ? (
-            <div className="col-span-12 rounded-3xl border border-slate-200 bg-slate-50 p-10 text-center text-slate-700 shadow-sm dark:border-slate-800 dark:bg-slate-900 dark:text-slate-200">
+            <div className="col-span-full rounded-3xl border border-slate-200 bg-slate-50 p-10 text-center text-slate-700 shadow-sm dark:border-slate-800 dark:bg-slate-900 dark:text-slate-200">
               No features match your search or selected category. Try a
               different keyword or select another category.
             </div>
           ) : (
-            filteredFeatures.map((feature, index) => {
-              const spanClass =
-                feature.size === "large"
-                  ? "lg:col-span-6"
-                  : feature.size === "medium"
-                    ? "lg:col-span-4"
-                    : "lg:col-span-3";
-
-              return (
-                <div
-                  key={feature.title}
-                  className={`col-span-12 md:col-span-6 ${spanClass} feature-card-wrapper`}
-                  style={{ transitionDelay: `${index * 60}ms` }}
-                >
-                  <FeatureCard {...feature} />
-                </div>
-              );
-            })
+            filteredFeatures.map((feature, index) => (
+              <div
+                key={feature.title}
+                className="feature-card-wrapper"
+                style={{ transitionDelay: `${index * 60}ms` }}
+              >
+                <FeatureCard {...feature} />
+              </div>
+            ))
           )}
         </div>
       </section>
@@ -445,6 +436,12 @@ export default function Features() {
       </section>
 
       <style>{`
+        .feature-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+          gap: 2rem;
+          width: 100%;
+        }
         .category-pill {
           transition: all 0.28s ease;
         }
@@ -452,6 +449,7 @@ export default function Features() {
           opacity: 0;
           transform: translateY(28px) scale(0.98);
           transition: opacity 0.55s ease, transform 0.55s ease;
+          height: 100%;
         }
         .feature-card-wrapper.reveal {
           opacity: 1;
@@ -460,7 +458,8 @@ export default function Features() {
         .feature-card {
           position: relative;
           overflow: hidden;
-          transition: transform 0.28s ease, box-shadow 0.28s ease, border-color 0.28s ease;
+          transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.3s ease;
+          height: 100%;
         }
         .feature-card::before {
           content: '';
@@ -469,14 +468,16 @@ export default function Features() {
           opacity: 0;
           transition: opacity 0.35s ease;
           pointer-events: none;
-          background: radial-gradient(circle at top left, rgba(56,189,248,0.12), transparent 24%), radial-gradient(circle at bottom right, rgba(236,72,153,0.12), transparent 20%);
-        }
-        .feature-card--featured::before {
-          opacity: 1;
+          background: radial-gradient(circle at top left, rgba(20, 184, 166, 0.08), transparent 30%), radial-gradient(circle at bottom right, rgba(56, 189, 248, 0.08), transparent 25%);
         }
         .feature-card:hover {
-          transform: translateY(-6px) scale(1.01);
+          transform: translateY(-6px);
+          box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
           z-index: 5;
+        }
+        .dark .feature-card:hover {
+          border-color: rgba(20, 184, 166, 0.3) !important;
+          box-shadow: 0 25px 30px -10px rgba(0, 0, 0, 0.6), 0 10px 15px -8px rgba(0, 0, 0, 0.5);
         }
         .feature-card:hover::before {
           opacity: 1;
@@ -499,31 +500,33 @@ function FeatureCard({
   description,
   color,
   highlights,
-  featured,
 }) {
   return (
     <div
-      className={`feature-card rounded-[2rem] p-6 border border-slate-200 dark:border-slate-800 bg-white dark:bg-gray-950`}
+      className="feature-card h-full flex flex-col justify-between rounded-[2.25rem] p-6 md:p-8 border border-slate-200 dark:border-slate-800/80 bg-white dark:bg-slate-950 shadow-sm transition-all duration-300 hover:border-teal-500/20"
     >
-      <div
-        className={`feature-card-icon ${color} w-16 h-16 rounded-3xl flex items-center justify-center mb-6 `}
-      >
-        {icon}
+      <div className="flex flex-col flex-grow">
+        <div
+          className={`feature-card-icon ${color} w-16 h-16 rounded-3xl flex items-center justify-center mb-6 shadow-sm`}
+        >
+          {icon}
+        </div>
+        <h3 className="text-2xl font-semibold mb-4 text-slate-900 dark:text-white tracking-tight">
+          {title}
+        </h3>
+        <p className="text-slate-600 dark:text-slate-300 leading-relaxed mb-6 text-sm md:text-base flex-grow">
+          {description}
+        </p>
       </div>
-      <h3 className="text-2xl font-medium mb-4 text-slate-900 dark:text-white tracking-tight">
-        {title}
-      </h3>
-      <p className="text-slate-600 dark:text-slate-300 leading-7 mb-6">
-        {description}
-      </p>
-      <div className="grid gap-3">
+
+      <div className="grid gap-3 pt-6 border-t border-slate-100 dark:border-slate-900/60 mt-auto">
         {highlights.map((highlight, index) => (
           <div
             key={index}
-            className="flex items-center gap-3 text-sm text-slate-600 dark:text-slate-300"
+            className="flex items-start gap-3 text-sm text-slate-600 dark:text-slate-300"
           >
-            <span className="w-2 h-2 rounded-full bg-teal-500 dark:bg-teal-400 mt-1" />
-            {highlight}
+            <span className="w-1.5 h-1.5 rounded-full bg-teal-500 dark:bg-teal-400 mt-2 shrink-0" />
+            <span className="leading-relaxed">{highlight}</span>
           </div>
         ))}
       </div>

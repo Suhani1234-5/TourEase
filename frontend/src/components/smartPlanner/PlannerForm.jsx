@@ -158,10 +158,10 @@ export default function PlannerForm({
                 key={interest}
                 type="button"
                 onClick={() => onToggleInterest(interest)}
-                className={`px-3 py-1.5 rounded-full text-sm font-medium border transition ${
+                className={`px-3 py-1.5 rounded-full text-sm font-medium border transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-500/70 dark:focus-visible:ring-teal-300 ${
                   selected
-                    ? 'bg-orange-500 text-white border-orange-500'
-                    : 'border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:border-teal-400'
+                    ? 'bg-orange-500 text-white border-orange-400 shadow-md shadow-orange-500/25 hover:bg-orange-400'
+                    : 'bg-white dark:bg-gray-800/90 border-gray-300 dark:border-gray-400 text-gray-700 dark:text-gray-100 hover:border-teal-400 dark:hover:border-teal-300 hover:text-gray-900 dark:hover:text-white'
                 }`}
               >
                 {interest}
