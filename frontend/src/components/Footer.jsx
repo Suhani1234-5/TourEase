@@ -11,8 +11,25 @@ import {
 
 export default function Footer() {
   return (
-    <footer className="bg-gray-50 text-gray-600 dark:bg-[#0b1120] dark:text-gray-400 py-16 relative overflow-hidden border-t border-gray-200 dark:border-transparent">
-      <div className="absolute top-0 left-0 w-full h-px bg-linear-to-r from-transparent via-teal-500/40 to-transparent dark:via-orange-500/40"></div>
+    <footer className="bg-gray-50 text-gray-600 dark:text-gray-400 py-16 relative overflow-hidden border-t border-gray-200 dark:border-transparent">
+      {/* Top shimmer line */}
+      <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-teal-500/40 to-transparent dark:via-orange-500/40" />
+
+      {/* Travel-themed gradient + subtle pattern (dark mode focused) */}
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 pointer-events-none dark:bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] dark:from-indigo-500/20 dark:via-cyan-500/10 dark:to-transparent"
+        style={{
+          backgroundImage:
+            "radial-gradient(circle at top left, rgba(20,184,166,0.22), transparent 55%), radial-gradient(circle at top right, rgba(249,115,22,0.16), transparent 55%), repeating-linear-gradient(45deg, rgba(255,255,255,0.06) 0 1px, transparent 1px 10px)",
+          mixBlendMode: "normal",
+        }}
+      />
+
+      {/* Optional “glow blobs” */}
+      <div aria-hidden="true" className="absolute -left-24 top-24 h-64 w-64 rounded-full bg-teal-400/20 blur-3xl dark:bg-orange-500/20" />
+      <div aria-hidden="true" className="absolute -right-24 top-10 h-56 w-56 rounded-full bg-cyan-500/15 blur-3xl dark:bg-indigo-500/15" />
+
 
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 mb-16">
