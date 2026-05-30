@@ -157,6 +157,7 @@ export default function TripPlanner() {
   const [generatedPlan, setGeneratedPlan] = useState(null);
   const [refinementInput, setRefinementInput] = useState("");
   const [isRefining, setIsRefining] = useState(false);
+  const [showResetConfirm, setShowResetConfirm] = useState(false);
 
   const isStep1Valid =
     formData.destination.trim() !== "" &&
@@ -260,7 +261,8 @@ export default function TripPlanner() {
   };
 
   const handleStartOver = () => {
-    setGeneratedPlan(null);
+    setShowResetConfirm(false);
+    setGeneratedPlane(null);
     setStep(1);
     setFormData({
       destination: "",
@@ -377,7 +379,7 @@ export default function TripPlanner() {
 
           <div className="flex flex-wrap gap-4 justify-center">
             <button
-              onClick={handleStartOver}
+              onClick={() => setShowResetConfirm(true)}
               className="px-8 py-4 bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white rounded-xl font-bold flex items-center"
             >
               <ArrowLeft className="w-5 h-5 mr-2" /> Plan Another Trip
@@ -394,6 +396,40 @@ export default function TripPlanner() {
             itinerary.
           </p>
         </div>
+        {showResetConfirm && (
+  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+    <div className="bg-white dark:bg-gray-900 rounded-2xl p-8 shadow-2xl border border-gray-200 dark:border-gray-700 max-w-md w-full mx-4">
+      <div className="flex items-center justify-between mb-4">
+        <h3 className="text-xl font-bold text-gray-900 dark:text-white">
+          Reset Trip Plan?
+        </h3>
+        <button
+          onClick={() => setShowResetConfirm(false)}
+          className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200"
+        >
+          <X className="w-5 h-5" />
+        </button>
+      </div>
+      <p className="text-gray-600 dark:text-gray-400 mb-6">
+        Are you sure you want to reset your trip plan? Your current itinerary will be lost and cannot be recovered.
+      </p>
+      <div className="flex gap-3">
+        <button
+          onClick={() => setShowResetConfirm(false)}
+          className="flex-1 px-6 py-3 bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white rounded-xl font-bold hover:bg-gray-200 dark:hover:bg-gray-700 transition-all"
+        >
+          Cancel
+        </button>
+        <button
+          onClick={handleStartOver}
+          className="flex-1 px-6 py-3 bg-red-500 hover:bg-red-600 text-white rounded-xl font-bold transition-all"
+        >
+          Yes, Reset
+        </button>
+      </div>
+    </div>
+  </div>
+)}
       </div>
     );
   }

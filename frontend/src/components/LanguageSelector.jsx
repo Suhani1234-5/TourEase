@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { Languages } from "lucide-react";
+import React, { useEffect, useRef, useState } from "react";
+import { ChevronDown, Languages } from "lucide-react";
 
 const LANGUAGE_STORAGE_KEY = "tourease_language";
 
@@ -7,12 +7,6 @@ const languages = [
   { code: "en", label: "EN", name: "English" },
   { code: "hi", label: "HI", name: "Hindi" },
 ];
-
-function getStoredLanguage() {
-  const saved = localStorage.getItem(LANGUAGE_STORAGE_KEY);
-  // Default to English — only switch if user explicitly chose Hindi
-  return saved === 'hi' ? 'hi' : 'en';
-}
 
 // Clear / set the googtrans cookie that Google Translate reads on load
 function setGoogTransCookie(language) {
@@ -78,20 +72,52 @@ function applyLanguage(language) {
   applyViaSelect(language);
 }
 
-export default function LanguageSelector() {
+export default function LanguageSelector({ variant = "floating", className = "" }) {
   const [activeLanguage, setActiveLanguage] = useState('en');
+  const [isOpen, setIsOpen] = useState(false);
+  const rootRef = useRef(null);
+  const isInline = variant === "inline";
 
-  // On mount: always reset to English — clear any stale Hindi stored state/cookies
   useEffect(() => {
-    // Reset storage and cookie to English on every page load
-    localStorage.setItem(LANGUAGE_STORAGE_KEY, 'en');
-    setGoogTransCookie('en');
+    localStorage.setItem(LANGUAGE_STORAGE_KEY, activeLanguage);
+    applyLanguage(activeLanguage);
+  }, [activeLanguage]);
+
+  // Reset to English on every page load before Google Translate can restore Hindi
+  useEffect(() => {
+    localStorage.setItem(LANGUAGE_STORAGE_KEY, "en");
+    setActiveLanguage("en");
+    setGoogTransCookie("en");
 
     const timer = setTimeout(() => {
-      applyLanguage('en');
+      applyLanguage("en");
     }, 1000);
     return () => clearTimeout(timer);
     // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    const handleDocumentClick = (event) => {
+      if (rootRef.current && !rootRef.current.contains(event.target)) {
+        setIsOpen(false);
+      }
+    };
+
+    const handleEscape = (event) => {
+      if (event.key === "Escape") {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleDocumentClick);
+    document.addEventListener("touchstart", handleDocumentClick);
+    document.addEventListener("keydown", handleEscape);
+
+    return () => {
+      document.removeEventListener("mousedown", handleDocumentClick);
+      document.removeEventListener("touchstart", handleDocumentClick);
+      document.removeEventListener("keydown", handleEscape);
+    };
   }, []);
 
   const handleLanguageChange = (language) => {
@@ -99,19 +125,61 @@ export default function LanguageSelector() {
     setActiveLanguage(language);
     localStorage.setItem(LANGUAGE_STORAGE_KEY, language);
     applyLanguage(language);
+    setIsOpen(false);
   };
 
+  if (isInline) {
+    return (
+      <div ref={rootRef} className={`relative ${className}`} translate="no">
+        <button
+          type="button"
+          onClick={() => setIsOpen((current) => !current)}
+          className="inline-flex items-center gap-1.5 rounded-lg border border-gray-200 dark:border-gray-700 bg-white/90 dark:bg-gray-900/90 px-2.5 py-2 text-sm font-semibold text-gray-700 dark:text-gray-200 shadow-sm backdrop-blur-sm transition-all hover:border-teal-400 hover:text-teal-700 dark:hover:text-teal-300 hover:shadow-md"
+          aria-haspopup="menu"
+          aria-expanded={isOpen}
+        >
+          <Languages className="h-4 w-4 shrink-0" aria-hidden="true" />
+          <span className="hidden 2xl:inline">{activeLanguage.toUpperCase()}</span>
+          <ChevronDown className={`h-4 w-4 shrink-0 transition-transform ${isOpen ? "rotate-180" : ""}`} aria-hidden="true" />
+          <span className="sr-only">Change language</span>
+        </button>
+
+        {isOpen && (
+          <div className="absolute right-0 top-full z-50 mt-2 w-36 overflow-hidden rounded-xl border border-gray-200 bg-white shadow-xl dark:border-gray-700 dark:bg-gray-900" translate="no">
+            <div className="p-1">
+              {languages.map((language) => (
+                <button
+                  key={language.code}
+                  type="button"
+                  onClick={() => handleLanguageChange(language.code)}
+                  translate="no"
+                  className={`notranslate flex w-full items-center justify-between rounded-lg px-3 py-2 text-sm font-semibold transition-colors ${activeLanguage === language.code ? "bg-teal-50 text-teal-700 dark:bg-teal-500/20 dark:text-teal-200" : "text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800"}`}
+                  role="menuitemradio"
+                  aria-checked={activeLanguage === language.code}
+                >
+                  <span>{language.name}</span>
+                  <span className="text-xs tracking-[0.2em] text-gray-500 dark:text-gray-400">{language.label}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  }
+
   return (
-    <div className="lang-fab-wrapper">
+    <div className="lang-fab-wrapper" translate="no">
       <Languages className="lang-fab-icon" aria-hidden="true" />
       {languages.map((language) => (
         <button
           key={language.code}
           type="button"
           onClick={() => handleLanguageChange(language.code)}
+          translate="no"
+          className={`notranslate lang-fab-btn ${activeLanguage === language.code ? "lang-fab-btn--active" : ""}`}
           title={language.name}
           aria-pressed={activeLanguage === language.code}
-          className={`lang-fab-btn ${activeLanguage === language.code ? "lang-fab-btn--active" : ""}`}
         >
           {language.label}
         </button>

@@ -6,23 +6,28 @@ const dotenv = require("dotenv");
 const reviewRoutes = require("./routes/reviewRoutes");
 const authRoutes = require("./routes/authRoutes");
 const contactRoutes = require("./routes/contactRoutes");
-const tripRoutes = require("./routes/tripRoutes");
 const itineraryRoutes = require("./routes/itineraryRoutes");
 const eventRoutes = require("./routes/eventRoutes");
 const weatherRoutes = require("./routes/weatherRoutes");
 const smartPlannerRoutes = require("./routes/smartPlannerRoutes");
 const tripRoutes = require("./routes/tripRoutes");
-const weatherRoutes = require("./routes/weatherRoutes");
 const chatRoutes = require("./routes/chatroutes");
 const expenseRoutes = require("./routes/expenseRoutes");
+const helmet = require("helmet");
+const morgan = require("morgan");
+
+
 
 dotenv.config();
 
 const app = express();
 
 app.use(helmet());
-
-app.use(cors());
+app.use(morgan("dev")); // use "combined" in production
+app.use(cors({
+  origin: process.env.CLIENT_URL || "http://localhost:3000",
+  credentials: true,
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
