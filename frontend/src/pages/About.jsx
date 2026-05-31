@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { Users, Globe, Award, Heart, Zap, Target } from 'lucide-react';
 
 export default function About() {
@@ -37,12 +38,19 @@ export default function About() {
             {/* Buttons */}
             <div className="flex flex-wrap gap-5">
 
-              <a
-                href="/destinations"
+              <Link
+                to="/destinations"
                 className="bg-cyan-500 hover:bg-cyan-400 text-black font-semibold px-8 py-4 rounded-2xl transition-all duration-300 hover:scale-105 shadow-2xl"
               >
                 Explore Destinations
-              </a>
+              </Link>
+
+              <Link
+                to="/about"
+                className="border border-gray-400 hover:border-cyan-400 hover:text-cyan-300 px-8 py-4 rounded-2xl transition-all duration-300"
+              >
+                Learn More
+              </Link>
             </div>
           </div>
 
