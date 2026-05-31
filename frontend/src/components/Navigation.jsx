@@ -6,7 +6,7 @@ import { useTheme } from "../context/useTheme";
 import LanguageSelector from "./LanguageSelector";
 
 export default function Navigation() {
-  const [isOpen, setIsOpen] = useState(false);a
+  const [isOpen, setIsOpen] = useState(false);
   const { theme, toggleTheme } = useTheme();
 
   const location = useLocation();

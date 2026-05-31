@@ -79,12 +79,6 @@ const deleteReview = async (req, res) => {
       return res.status(403).json({ message: "You are not authorized to delete this review" });
     }
 
-    // Fetch the review to check ownership
-    const review = await Review.findById(reviewId);
-    if (!review) {
-      return res.status(404).json({ message: "Review not found" });
-    }
-
     // Only the review owner or an admin can delete it
     const currentUserId = req.user?.userId || req.user?.id;
     const isAdmin = req.user?.role === "admin";

@@ -118,6 +118,8 @@ function AppRoutes() {
                   <PageTransition><TravelLocker /></PageTransition>
                 </ProtectedRoute>
               }
+            />
+            <Route
               path="/currency-converter"
               element={<PageTransition><CurrencyConverter /></PageTransition>}
             />
