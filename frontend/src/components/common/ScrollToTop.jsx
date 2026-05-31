@@ -1,5 +1,18 @@
 import { useEffect, useState } from "react";
 import { ArrowUp } from "lucide-react";
+import { useLocation } from "react-router-dom";
+
+export const ScrollToTop = () => {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+
+  return null;
+};
+
+export default ScrollToTop;
 
 const ScrollToTopButton = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -37,4 +50,3 @@ const ScrollToTopButton = () => {
   );
 };
 
-export default ScrollToTopButton;

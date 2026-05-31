@@ -42,28 +42,24 @@ class WeatherService {
     }
 
     // Convert location name to coordinates
+        // Convert location name to coordinates
     async _geocodeLocation(location) {
-        try {
-            const response = await axios.get(`${this.baseURL}/../geo/1.0/direct`, {
-                params: {
-                    q: location,
-                    limit: 1,
-                    appid: this.apiKey
-                }
-            });
-
-            if (response.data.length > 0) {
-                return {
-                    lat: response.data[0].lat,
-                    lon: response.data[0].lon
-                };
+        const response = await axios.get(`${this.baseURL}/../geo/1.0/direct`, {
+            params: {
+                q: location,
+                limit: 1,
+                appid: this.apiKey
             }
+        });
 
-            throw new Error('Location not found');
-        } catch (error) {
-            // Return default coords if geocoding fails
-            return { lat: 0, lon: 0 };
+        if (response.data.length > 0) {
+            return {
+                lat: response.data[0].lat,
+                lon: response.data[0].lon
+            };
         }
+
+        throw new Error('Location not found');
     }
 
     // Process raw forecast data into our format
@@ -227,12 +223,16 @@ class WeatherService {
         return alternatives;
     }
 
-    // Mock weather data for testing
+    // Mock weather data for testing; return only the requested date range
     _getMockWeather(location, dates) {
         const forecasts = [];
-        const startDate = new Date(dates.start || dates[0]);
+        const startStr = dates.start || (Array.isArray(dates) ? dates[0] : null);
+        const endStr = dates.end || (Array.isArray(dates) ? dates[dates.length - 1] : null);
+        const startDate = startStr ? new Date(startStr) : new Date();
+        const endDate = endStr ? new Date(endStr) : new Date(startDate);
+        const dayCount = Math.max(1, Math.round((endDate - startDate) / (1000 * 60 * 60 * 24)) + 1);
 
-        for (let i = 0; i < 5; i++) {
+        for (let i = 0; i < dayCount; i++) {
             const date = new Date(startDate);
             date.setDate(date.getDate() + i);
 
@@ -244,7 +244,7 @@ class WeatherService {
                     avg: 22
                 },
                 condition: i === 2 ? 'Rain' : 'Clear',
-                precipitation: i === 2 ? 80 : Math.random() * 30,
+                precipitation: i === 2 ? 80 : Math.round(Math.random() * 30),
                 description: i === 2 ? 'moderate rain' : 'clear sky',
                 icon: i === 2 ? '10d' : '01d',
                 windSpeed: 10 + Math.random() * 10,

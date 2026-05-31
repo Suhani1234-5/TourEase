@@ -22,11 +22,43 @@
     <link rel="shortcut icon" href="/favicon.ico" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />    
+
+    <script>
+      (function () {
+        var storageKey = 'tourease_language';
+        try {
+          localStorage.setItem(storageKey, 'en');
+        } catch (error) {
+          // Ignore storage failures and still clear the translate cookie.
+        }
+
+        document.documentElement.lang = 'en';
+        var hostname = location.hostname;
+        document.cookie = 'googtrans=; path=/; max-age=0';
+        document.cookie = 'googtrans=; path=/; max-age=0; domain=' + hostname;
+        document.cookie = 'googtrans=; path=/; max-age=0; domain=.' + hostname;
+      })();
+    </script>
     
     <title>TourEase - Your Smart Travel Assistant</title>
   </head>
   <body>
     <div id="root"></div>
+    <div id="google_translate_element" class="google-translate-host"></div>
     <script type="module" src="/src/main.jsx"></script>
+    <script type="text/javascript">
+      function googleTranslateElementInit() {
+        globalThis.googleTranslateElement = new google.translate.TranslateElement(
+          {
+            pageLanguage: 'en',
+            includedLanguages: 'en,hi',
+            autoDisplay: false,
+          },
+          'google_translate_element'
+        );
+      }
+    </script>
+    <!-- Google Translate script - integrity hash not applicable for dynamic resources -->
+    <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
   </body>
 </html>

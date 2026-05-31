@@ -1,128 +1,214 @@
 import { useEffect, useRef, useState } from "react";
-import { conversationFlow } from "./conversationFlow";
-import { getItinerary } from "./itineraryRules";
-import { formatItinerary } from "./itineraryFormatter";
+import { X, RotateCcw, Send, Mic } from "lucide-react";
+import "./chatbot.css"; 
 
-export default function ChatbotContainer({ onClose }) {
-  const [stepIndex, setStepIndex] = useState(0);
-  const [answers, setAnswers] = useState({});
+export default function ChatbotContainer({ onClose, lang }) {
+
   const [messages, setMessages] = useState([
     {
       sender: "bot",
-      text: "Hi 👋 I’m your TourEase assistant. Let’s plan your trip step by step."
+      text: "Hi 👋 I’m your TourEase assistant. How can I help you plan your trip?"
     }
   ]);
 
-  const chatEndRef = useRef(null);
-  const currentStep = conversationFlow[stepIndex];
+  const [input, setInput] = useState("");
+  const [isListening, setIsListening] = useState(false);
 
-  // auto-scroll
+  const chatEndRef = useRef(null);
+
+  // Auto scroll to latest message
   useEffect(() => {
-    chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    chatEndRef.current?.scrollIntoView({
+      behavior: "smooth"
+    });
   }, [messages]);
 
-  // CORE CONVERSATION ENGINE
-  useEffect(() => {
-    // Ask questions step-by-step
-    if (stepIndex < conversationFlow.length) {
-      const question = conversationFlow[stepIndex].question;
-
-      setMessages(prev => {
-        const last = prev[prev.length - 1];
-        if (last?.text === question) return prev;
-
-        return [...prev, { sender: "bot", text: question }];
-      });
+  /* ==========================================================
+     🎙️ DYNAMIC SPEECH RECOGNITION LANGUAGE LOGIC
+     ========================================================== */
+  function handleVoiceInput() {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    
+    if (!SpeechRecognition) {
+      alert("Speech recognition is not supported in this browser. Try Chrome or Brave!");
+      return;
     }
 
-    // Finished → show itinerary once
-    if (stepIndex === conversationFlow.length) {
-      setMessages(prev => {
-        // prevent duplicate itinerary message
-        if (prev.some(m => m.sender === "bot" && m.text.startsWith("✨"))) {
-          return prev;
-        }
+    const recognition = new SpeechRecognition();
+    recognition.continuous = false;
+    recognition.interimResults = false;
 
-        const itinerary = getItinerary(answers);
-        const formatted = formatItinerary(itinerary);
+    // 1. Check if a lang prop exists, or fallback to the browser's document language tag
+    const activeLanguage = lang || document.documentElement.lang || "en";
 
-        return [
-          ...prev,
-          { sender: "bot", text: formatted },
-          {
-            sender: "bot",
-            text: "You can restart and try different preferences 👇"
-          }
-        ];
-      });
+    // 2. Map the active website toggle to the correct regional speech language code
+    if (activeLanguage.toLowerCase().includes("hi")) {
+      recognition.lang = "hi-IN"; // Sets voice input to Devanagari Hindi Script
+    } else {
+      recognition.lang = "en-IN"; // Sets voice input to Latin Script (Indian English accent)
     }
-  }, [stepIndex, answers]);
 
-  // user selects an option
-  function handleOptionClick(option) {
-    setAnswers(prev => ({
-      ...prev,
-      [currentStep.id]: option.value
-    }));
+    recognition.onstart = () => {
+      setIsListening(true);
+    };
+
+    recognition.onresult = (event) => {
+      const transcript = event.results[0][0].transcript;
+      setInput(transcript); // Updates your chat text box dynamically with the voice text
+    };
+
+    recognition.onerror = (error) => {
+      console.error("Speech recognition error: ", error);
+      setIsListening(false);
+    };
+
+    recognition.onend = () => {
+      setIsListening(false);
+    };
+
+    recognition.start();
+  }
+  /* ========================================================== */
+
+  // Send message to backend
+  async function sendMessage() {
+    if (!input.trim()) return;
+
+    const userMessage = input;
 
     setMessages(prev => [
       ...prev,
-      { sender: "user", text: option.label }
+      {
+        sender: "user",
+        text: userMessage
+      }
     ]);
 
-    setStepIndex(prev => prev + 1);
+    setInput("");
+
+    try {
+      const res = await fetch("/api/chat", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          message: userMessage
+        })
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error);
+      }
+
+      setMessages(prev => [
+        ...prev,
+        {
+          sender: "bot",
+          text: data.response
+        }
+      ]);
+
+    } catch (error) {
+      console.log(error);
+      setMessages(prev => [
+        ...prev,
+        {
+          sender: "bot",
+          text: "⚠️ Something went wrong. Please try again."
+        }
+      ]);
+    }
   }
 
-  // restart flow
+  // Restart conversation
   function restartConversation() {
-    setStepIndex(0);
-    setAnswers({});
     setMessages([
       {
         sender: "bot",
-        text: "Hi 👋 I’m your TourEase assistant. Let’s plan your trip step by step."
+        text: "Hi 👋 I’m your TourEase assistant. How can I help you plan your trip?"
       }
     ]);
+    setInput("");
+  }
+
+  // Send message on Enter keypress
+  function handleKeyDown(e) {
+    if (e.key === "Enter") {
+      sendMessage();
+    }
   }
 
   return (
     <div className="chatbot-container">
+
+      {/* HEADER */}
       <div className="chatbot-header">
         <span>TourEase Assistant</span>
-        <button onClick={onClose}>✖</button>
+        <button
+          onClick={onClose}
+          className="hover:opacity-70 transition-opacity"
+        >
+          <X className="w-5 h-5" />
+        </button>
       </div>
 
+      {/* CHAT BODY */}
       <div className="chatbot-body">
         {messages.map((msg, idx) => (
-          <div key={idx} className={`chat-message ${msg.sender}`}>
+          <div
+            key={idx}
+            className={`chat-message ${msg.sender}`}
+          >
             {msg.text}
           </div>
         ))}
         <div ref={chatEndRef} />
       </div>
 
-      {/* Active conversation options */}
-      {stepIndex < conversationFlow.length && currentStep && (
-        <div className="chatbot-footer">
-          {currentStep.options.map(opt => (
-            <button
-              key={opt.value}
-              onClick={() => handleOptionClick(opt)}
-            >
-              {opt.label}
-            </button>
-          ))}
-        </div>
-      )}
+      {/* FOOTER */}
+      <div className="chatbot-footer">
 
-      {/* Restart after itinerary */}
-      {stepIndex === conversationFlow.length && (
-        <div className="chatbot-footer">
-          <button className="restart-btn" onClick={restartConversation}>
-            🔄 Restart Trip Planning
-          </button>
-        </div>
-      )}
+        {/* Microphone Button */}
+        <button
+          type="button"
+          onClick={handleVoiceInput}
+          className={`mic-btn flex items-center justify-center p-2 rounded-full transition-all ${
+            isListening ? "bg-red-500 animate-pulse text-white" : "hover:bg-gray-100 text-gray-600"
+          }`}
+          title="Speak into microphone"
+        >
+          <Mic className="w-4 h-4" />
+        </button>
+
+        <input
+          type="text"
+          placeholder={isListening ? "Listening..." : "Ask about your trip..."}
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          onKeyDown={handleKeyDown}
+          className="chat-input"
+          disabled={isListening}
+        />
+
+        <button
+          onClick={sendMessage}
+          className="send-btn"
+          disabled={isListening}
+        >
+          <Send className="w-4 h-4" />
+        </button>
+
+        <button
+          className="restart-btn flex items-center justify-center gap-2"
+          onClick={restartConversation}
+          disabled={isListening}
+        >
+          <RotateCcw className="w-4 h-4" />
+        </button>
+
+      </div>
     </div>
   );
 }

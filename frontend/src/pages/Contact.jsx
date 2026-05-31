@@ -132,9 +132,9 @@ export default function Contact() {
     const isNearLimit = messageCharCount > MESSAGE_MAX_LENGTH * 0.9;
 
     return (
-        <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white dark:from-gray-950 dark:to-gray-900">
+        <div className="min-h-screen bg-linear-to-b from-gray-50 to-white dark:from-gray-950 dark:to-gray-900">
             {/* Hero Section - Centered & Balanced */}
-            <div className="relative bg-gradient-to-br from-teal-400 via-teal-500 to-cyan-600 dark:from-purple-700 dark:via-indigo-700 dark:to-purple-800 text-white py-20 md:py-24 overflow-hidden">
+            <div className="relative bg-linear-to-br from-teal-400 via-teal-500 to-cyan-600 dark:from-purple-700 dark:via-indigo-700 dark:to-purple-800 text-white py-20 md:py-24 overflow-hidden">
                 {/* Animated Background Orbs */}
                 <div className="absolute inset-0 overflow-hidden">
                     <div className="absolute top-0 -left-4 w-72 h-72 bg-teal-300 dark:bg-purple-600 rounded-full mix-blend-multiply dark:mix-blend-soft-light filter blur-3xl opacity-30 animate-blob"></div>
@@ -146,7 +146,7 @@ export default function Contact() {
                 <div className="absolute inset-0" style={{ backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px)', backgroundSize: '30px 30px' }}></div>
 
                 {/* Gradient Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/10 dark:to-black/30"></div>
+                <div className="absolute inset-0 bg-linear-to-b from-transparent via-transparent to-black/10 dark:to-black/30"></div>
 
                 <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
                     <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold mb-4 text-white tracking-tight drop-shadow-lg">
@@ -201,8 +201,8 @@ export default function Contact() {
                 <form onSubmit={handleSubmit} className="bg-white dark:bg-gray-900 p-8 md:p-10 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-800">
                     {/* Success Message */}
                     {submitted && (
-                        <div className="mb-8 p-5 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950 dark:to-emerald-950 border-l-4 border-green-500 dark:border-green-400 text-green-800 dark:text-green-300 rounded-lg shadow-sm flex items-start gap-3">
-                            <CheckCircle2 className="w-6 h-6 flex-shrink-0 mt-0.5 text-green-600 dark:text-green-400" />
+                        <div className="mb-8 p-5 bg-linear-to-r from-green-50 to-emerald-50 dark:from-green-950 dark:to-emerald-950 border-l-4 border-green-500 dark:border-green-400 text-green-800 dark:text-green-300 rounded-lg shadow-sm flex items-start gap-3">
+                            <CheckCircle2 className="w-6 h-6 shrink-0 mt-0.5 text-green-600 dark:text-green-400" />
                             <div>
                                 <p className="font-bold text-lg mb-1">Success!</p>
                                 <p className="text-sm">Your message has been sent successfully. We'll get back to you soon.</p>
@@ -212,8 +212,8 @@ export default function Contact() {
 
                     {/* Error Message */}
                     {error && (
-                        <div className="mb-8 p-5 bg-gradient-to-r from-red-50 to-rose-50 dark:from-red-950 dark:to-rose-950 border-l-4 border-red-500 dark:border-red-400 text-red-800 dark:text-red-300 rounded-lg shadow-sm flex items-start gap-3">
-                            <AlertCircle className="w-6 h-6 flex-shrink-0 mt-0.5 text-red-600 dark:text-red-400" />
+                        <div className="mb-8 p-5 bg-linear-to-r from-red-50 to-rose-50 dark:from-red-950 dark:to-rose-950 border-l-4 border-red-500 dark:border-red-400 text-red-800 dark:text-red-300 rounded-lg shadow-sm flex items-start gap-3">
+                            <AlertCircle className="w-6 h-6 shrink-0 mt-0.5 text-red-600 dark:text-red-400" />
                             <div>
                                 <p className="font-bold text-lg mb-1">Error</p>
                                 <p className="text-sm">{error}</p>
@@ -231,7 +231,7 @@ export default function Contact() {
                             name="name"
                             value={formData.name}
                             onChange={handleChange}
-                            className="w-full px-5 py-4 border-2 border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white rounded-xl focus:outline-none focus:border-teal-500 dark:focus:border-indigo-400 focus:bg-white dark:focus:bg-gray-750 focus:ring-4 focus:ring-teal-500/10 dark:focus:ring-indigo-400/10 transition-all duration-200 placeholder:text-gray-400 dark:placeholder:text-gray-500"
+                            className="w-full px-5 py-4 border-2 border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white rounded-xl focus:outline-none focus:border-teal-500 dark:focus:border-indigo-400 focus:bg-white dark:focus:bg-gray-800 focus:ring-4 focus:ring-teal-500/10 dark:focus:ring-indigo-400/10 transition-all duration-200 placeholder:text-gray-400 dark:placeholder:text-gray-500"
                             placeholder="John Doe"
                             disabled={loading}
                             required
@@ -259,7 +259,7 @@ export default function Contact() {
                                         ? 'border-red-300 dark:border-red-700 bg-red-50 dark:bg-red-950/20 focus:border-red-500 focus:ring-red-500/10'
                                         : isEmailValid
                                             ? 'border-green-400 dark:border-green-600 bg-green-50 dark:bg-green-950/20 focus:border-green-500 focus:ring-green-500/10'
-                                            : 'border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 focus:border-teal-500 dark:focus:border-indigo-400 focus:bg-white dark:focus:bg-gray-750 focus:ring-teal-500/10 dark:focus:ring-indigo-400/10'
+                                            : 'border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 focus:border-teal-500 dark:focus:border-indigo-400 focus:bg-white dark:focus:bg-gray-800 focus:ring-teal-500/10 dark:focus:ring-indigo-400/10'
                                     } text-gray-900 dark:text-white`}
                                 placeholder="john.doe@example.com"
                                 disabled={loading}
@@ -299,7 +299,7 @@ export default function Contact() {
                             name="subject"
                             value={formData.subject}
                             onChange={handleChange}
-                            className="w-full px-5 py-4 border-2 border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white rounded-xl focus:outline-none focus:border-teal-500 dark:focus:border-indigo-400 focus:bg-white dark:focus:bg-gray-750 focus:ring-4 focus:ring-teal-500/10 dark:focus:ring-indigo-400/10 transition-all duration-200 placeholder:text-gray-400 dark:placeholder:text-gray-500"
+                            className="w-full px-5 py-4 border-2 border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white rounded-xl focus:outline-none focus:border-teal-500 dark:focus:border-indigo-400 focus:bg-white dark:focus:bg-gray-800 focus:ring-4 focus:ring-teal-500/10 dark:focus:ring-indigo-400/10 transition-all duration-200 placeholder:text-gray-400 dark:placeholder:text-gray-500"
                             placeholder="How can we help you today?"
                             disabled={loading}
                         />
@@ -325,7 +325,7 @@ export default function Contact() {
                             rows="7"
                             className={`w-full px-5 py-4 border-2 rounded-xl focus:outline-none focus:ring-4 transition-all duration-200 resize-none placeholder:text-gray-400 dark:placeholder:text-gray-500 ${isNearLimit
                                     ? 'border-orange-300 dark:border-orange-700 focus:border-orange-500 focus:ring-orange-500/10 bg-orange-50/50 dark:bg-orange-950/10'
-                                    : 'border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 focus:border-teal-500 dark:focus:border-indigo-400 focus:bg-white dark:focus:bg-gray-750 focus:ring-teal-500/10 dark:focus:ring-indigo-400/10'
+                                    : 'border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 focus:border-teal-500 dark:focus:border-indigo-400 focus:bg-white dark:focus:bg-gray-800 focus:ring-teal-500/10 dark:focus:ring-indigo-400/10'
                                 } text-gray-900 dark:text-white`}
                             placeholder="Tell us more about your inquiry... What can we help you with?"
                             disabled={loading}
@@ -343,7 +343,7 @@ export default function Contact() {
                     <button
                         type="submit"
                         disabled={loading || (formData.email && !isEmailValid)}
-                        className="w-full bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 dark:from-indigo-600 dark:to-indigo-700 dark:hover:from-indigo-500 dark:hover:to-indigo-600 disabled:from-gray-300 disabled:to-gray-400 dark:disabled:from-gray-700 dark:disabled:to-gray-800 disabled:cursor-not-allowed text-white font-bold text-lg py-5 rounded-xl transition-all duration-200 flex items-center justify-center gap-3 shadow-lg hover:shadow-xl active:scale-[0.98] disabled:opacity-60"
+                        className="w-full bg-linear-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 dark:from-indigo-600 dark:to-indigo-700 dark:hover:from-indigo-500 dark:hover:to-indigo-600 disabled:from-gray-300 disabled:to-gray-400 dark:disabled:from-gray-700 dark:disabled:to-gray-800 disabled:cursor-not-allowed text-white font-bold text-lg py-5 rounded-xl transition-all duration-200 flex items-center justify-center gap-3 shadow-lg hover:shadow-xl active:scale-[0.98] disabled:opacity-60"
                     >
                         {loading ? (
                             <>
@@ -361,7 +361,7 @@ export default function Contact() {
             </div>
 
             {/* FAQ Section - Centered & Balanced */}
-            <div className="relative bg-gradient-to-br from-teal-50 via-cyan-50 to-blue-50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-950 py-20 overflow-hidden">
+            <div className="relative bg-linear-to-br from-teal-50 via-cyan-50 to-blue-50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-950 py-20 overflow-hidden">
                 {/* Background Decorative Elements */}
                 <div className="absolute inset-0 overflow-hidden pointer-events-none">
                     <div className="absolute top-0 left-0 w-96 h-96 bg-teal-200 dark:bg-teal-950 rounded-full filter blur-3xl opacity-20 -translate-x-1/2 -translate-y-1/2"></div>
@@ -404,10 +404,10 @@ export default function Contact() {
             </div>
 
             {/* Smooth Transition Divider */}
-            <div className="h-1 bg-gradient-to-r from-transparent via-teal-200 dark:via-indigo-800 to-transparent opacity-50"></div>
+            <div className="h-1 bg-linear-to-r from-transparent via-teal-200 dark:via-indigo-800 to-transparent opacity-50"></div>
 
             {/* CTA Section - Centered & Elegant */}
-            <div className="relative bg-gradient-to-br from-teal-400 via-teal-500 to-cyan-600 dark:from-purple-700 dark:via-indigo-700 dark:to-purple-800 text-white py-20 overflow-hidden">
+            <div className="relative bg-linear-to-br from-teal-400 via-teal-500 to-cyan-600 dark:from-purple-700 dark:via-indigo-700 dark:to-purple-800 text-white py-20 overflow-hidden">
                 {/* Animated Background Orbs */}
                 <div className="absolute inset-0 overflow-hidden">
                     <div className="absolute -top-4 left-1/4 w-96 h-96 bg-teal-300 dark:bg-purple-500 rounded-full mix-blend-multiply dark:mix-blend-soft-light filter blur-3xl opacity-40 animate-blob"></div>
@@ -441,7 +441,7 @@ export default function Contact() {
 function ContactInfoCard({ icon, title, content, href }) {
     const CardContent = (
         <div className="bg-white dark:bg-gray-900 p-8 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-800 hover:shadow-xl hover:border-teal-300 dark:hover:border-indigo-700 hover:-translate-y-1 transition-all duration-300 text-center group h-full">
-            <div className="bg-gradient-to-br from-teal-50 to-cyan-50 text-teal-600 dark:from-indigo-950 dark:to-purple-950 dark:text-indigo-400 w-16 h-16 rounded-xl flex items-center justify-center mx-auto mb-5 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 shadow-md">
+            <div className="bg-linear-to-br from-teal-50 to-cyan-50 text-teal-600 dark:from-indigo-950 dark:to-purple-950 dark:text-indigo-400 w-16 h-16 rounded-xl flex items-center justify-center mx-auto mb-5 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 shadow-md">
                 {icon}
             </div>
             <h3 className="font-bold text-lg mb-2 text-gray-900 dark:text-white">{title}</h3>
@@ -481,7 +481,7 @@ function FAQItem({ question, answer }) {
                 <span className="group-hover:text-teal-600 dark:group-hover:text-indigo-400 transition-colors pr-2">
                     {question}
                 </span>
-                <div className="flex-shrink-0 bg-teal-100 dark:bg-indigo-950 p-2 rounded-lg group-hover:bg-teal-200 dark:group-hover:bg-indigo-900 transition-colors">
+                <div className="shrink-0 bg-teal-100 dark:bg-indigo-950 p-2 rounded-lg group-hover:bg-teal-200 dark:group-hover:bg-indigo-900 transition-colors">
                     <ChevronDown
                         className={`w-5 h-5 text-teal-600 dark:text-indigo-400 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''
                             }`}

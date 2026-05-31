@@ -73,7 +73,7 @@ export default function HelpCenter() {
               </div>
               <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">{card.title}</h3>
               <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">{card.description}</p>
-              <div className="flex items-center text-teal-600 dark:text-teal-400 font-medium text-sm">
+              <div className="flex items-center text-teal-600 dark:text-indigo-600 font-medium text-sm">
                 Learn more
                 <ChevronRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
               </div>
@@ -91,7 +91,7 @@ export default function HelpCenter() {
                 to={link.link}
                 className="flex flex-col items-center justify-center p-4 rounded-xl bg-gray-50 dark:bg-gray-800 hover:bg-teal-50 dark:hover:bg-teal-950/20 hover:border-teal-200 dark:hover:border-teal-800 border border-transparent transition-all group"
               >
-                <div className="text-teal-600 dark:text-teal-400 mb-2 group-hover:scale-110 transition-transform">
+                <div className="text-teal-600 dark:text-indigo-600 mb-2 group-hover:scale-110 transition-transform">
                   {link.icon}
                 </div>
                 <span className="text-sm font-medium text-gray-900 dark:text-white text-center">{link.text}</span>
@@ -103,7 +103,7 @@ export default function HelpCenter() {
         {/* Main Help Sections - Enhanced */}
         <div className="space-y-8">
           {/* 1️⃣ Getting Started */}
-          <Section icon={<Compass className="w-6 h-6 text-teal-600" />} title="Getting Started" id="getting-started">
+          <Section icon={<Compass className="w-6 h-6 text-teal-600 dark:text-indigo-600" />} title="Getting Started" id="getting-started">
             <div className="space-y-4">
               <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
                 TourEase helps you plan, organize, and enjoy your travels with ease. Here's how to begin your journey:
@@ -111,22 +111,22 @@ export default function HelpCenter() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="bg-gray-50 dark:bg-gray-800/50 p-4 rounded-xl">
                   <div className="flex items-center gap-2 mb-2">
-                    <div className="w-6 h-6 rounded-full bg-teal-100 dark:bg-teal-900 flex items-center justify-center text-teal-600 dark:text-teal-400 text-sm font-bold">1</div>
+                    <div className="w-6 h-6 rounded-full bg-teal-100 dark:bg-indigo-200 flex items-center justify-center text-teal-600 dark:text-indigo-600 text-sm font-bold">1</div>
                     <span className="font-semibold text-gray-900 dark:text-white">Account Setup</span>
                   </div>
                   <p className="text-sm text-gray-600 dark:text-gray-400">Sign up or log in to begin your travel planning journey.</p>
                 </div>
                 <div className="bg-gray-50 dark:bg-gray-800/50 p-4 rounded-xl">
                   <div className="flex items-center gap-2 mb-2">
-                    <div className="w-6 h-6 rounded-full bg-teal-100 dark:bg-teal-900 flex items-center justify-center text-teal-600 dark:text-teal-400 text-sm font-bold">2</div>
+                    <div className="w-6 h-6 rounded-full bg-teal-100 dark:bg-indigo-200 flex items-center justify-center text-teal-600 dark:text-indigo-600 text-sm font-bold">2</div>
                     <span className="font-semibold text-gray-900 dark:text-white">Plan Your Trip</span>
                   </div>
                   <p className="text-sm text-gray-600 dark:text-gray-400">Click <b>Plan Trip</b> to create or explore a new adventure.</p>
                 </div>
               </div>
               <div className="bg-teal-50 dark:bg-teal-950/20 border border-teal-100 dark:border-teal-900 rounded-xl p-4">
-                <h4 className="font-semibold text-teal-800 dark:text-teal-300 mb-2">Pro Tip</h4>
-                <p className="text-sm text-teal-700 dark:text-teal-400">
+                <h4 className="font-semibold text-teal-800 dark:text-indigo-600 mb-2">Pro Tip</h4>
+                <p className="text-sm text-teal-700 dark:text-indigo-400">
                   Use the <b>Map</b> feature to discover hidden gems and plan efficient routes between destinations.
                 </p>
               </div>
@@ -219,7 +219,7 @@ export default function HelpCenter() {
 
           {/* 5️⃣ Need More Help? */}
           <div className="bg-gradient-to-br from-teal-50 to-cyan-50 dark:from-purple-950/30 dark:to-indigo-950/30 rounded-2xl border border-teal-200 dark:border-purple-800 p-8 text-center">
-            <HelpCircle className="w-12 h-12 text-teal-600 dark:text-teal-400 mx-auto mb-4" />
+            <HelpCircle className="w-12 h-12 text-teal-600 dark:text-indigo-600 mx-auto mb-4" />
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-3">Still Need Help?</h2>
             <p className="text-gray-700 dark:text-gray-300 mb-6 max-w-2xl mx-auto">
               Our support team is here to assist you with any questions or issues you might have.
@@ -227,14 +227,14 @@ export default function HelpCenter() {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link 
                 to="/contact" 
-                className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-teal-600 to-cyan-600 text-white font-semibold hover:from-teal-700 hover:to-cyan-700 transition-all shadow-lg hover:shadow-xl"
+                className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-teal-600 to-cyan-600 dark:from-indigo-400 dark:to-purple-500 text-white font-semibold hover:from-teal-700 hover:to-cyan-700 dark:hover:from-indigo-700 dark:hover:to-purple-800 transition-all shadow-lg hover:shadow-xl"
               >
                 Contact Support
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </Link>
               <Link 
                 to="/faq" 
-                className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-white dark:bg-gray-800 text-teal-700 dark:text-teal-400 font-semibold hover:bg-gray-100 dark:hover:bg-gray-700 transition-all border border-teal-200 dark:border-teal-800"
+                className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-white dark:bg-gray-800 text-teal-700 dark:text-indigo-600 font-semibold hover:bg-gray-100 dark:hover:bg-gray-700 transition-all border border-teal-200 dark:border-indigo-600"
               >
                 Browse FAQ
                 <ExternalLink className="w-4 h-4" />

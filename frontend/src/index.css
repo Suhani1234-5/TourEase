@@ -1,6 +1,34 @@
 @import "tailwindcss";
 @custom-variant dark (&:where(.dark, .dark *));
 
+/* Page transition overlay color — matches site background per theme */
+:root {
+  --transition-overlay-color: #ffffff;
+  --page-bg: #ffffff;
+}
+:root.dark {
+  --transition-overlay-color: #0b1220;
+  --page-bg: #030712;
+}
+
+/* Prevent bare white body flash during page transitions */
+body {
+  background-color: var(--page-bg, #ffffff);
+}
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+.marquee-track {
+  animation: marquee 30s linear infinite;
+}
+
+.marquee-track:hover {
+  animation-play-state: paused;
+}
+
 * {
   transition-property: background-color, border-color, color, fill, stroke;
   transition-duration: 300ms;
@@ -54,6 +82,52 @@
   animation: fadeIn 0.3s ease-out;
 }
 
+/* Outer wrapper — clips overflow and fades edges */
+.community-marquee-wrapper {
+  overflow: hidden;
+  width: 100%;
+  position: relative;
+  margin-bottom: 4rem; 
+
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black 8%,
+    black 92%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black 8%,
+    black 92%,
+    transparent 100%
+  );
+}
+
+/* The scrolling track — holds 6 cards (3 original + 3 duplicates) */
+.community-marquee-track {
+  display: flex;
+  gap: 2rem;                    
+  width: 150rem;
+  animation: marquee-scroll 12s linear infinite;
+}
+
+/* Pause on hover for readability */
+.community-marquee-wrapper:hover .community-marquee-track {
+  animation-play-state: paused;
+}
+
+/* The keyframe: moves exactly half (the 3 original cards) then snaps back */
+@keyframes marquee-scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
 /* Scrollbar theme (site-wide) */
 :root {
   --scrollbar-track: #0b1220;
@@ -93,4 +167,126 @@
 
 *::-webkit-scrollbar-thumb:active {
   background-color: var(--scrollbar-thumb-active);
+}
+
+/* Google Translate Widget Customizations */
+/* Move the widget off-screen but allow it to fully render internally */
+.google-translate-host {
+  position: fixed;
+  top: -9999px;
+  left: -9999px;
+  z-index: -1;
+}
+
+.goog-te-gadget {
+  font-size: 0 !important;
+}
+
+.goog-te-gadget .goog-te-combo {
+  display: none !important;
+}
+
+.goog-logo-link,
+.goog-te-gadget span {
+  display: none !important;
+}
+
+.goog-te-banner-frame.skiptranslate,
+.skiptranslate iframe {
+  display: none !important;
+}
+
+body {
+  top: 0 !important;
+}
+
+body > .skiptranslate {
+  display: none !important;
+}
+
+/* ===============================
+   Floating Language FAB (bottom-left)
+   Mirrors chatbot launcher style
+   ================================ */
+
+.lang-fab-wrapper {
+  position: fixed;
+  bottom: 96px; /* same level as chatbot launcher */
+  left: 24px;
+  z-index: 1001;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: linear-gradient(135deg, #14b8a6, #6366f1);
+  border-radius: 999px;
+  padding: 8px 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+  transition: box-shadow 0.2s ease;
+}
+
+.lang-fab-wrapper:hover {
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
+}
+
+.lang-fab-icon {
+  width: 18px;
+  height: 18px;
+  color: white;
+  flex-shrink: 0;
+  margin-right: 2px;
+}
+
+.lang-fab-btn {
+  padding: 4px 10px;
+  font-size: 11px;
+  font-weight: 700;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.75);
+  background: transparent;
+  transition: background 0.2s ease, color 0.2s ease;
+  letter-spacing: 0.05em;
+}
+
+.lang-fab-btn:hover {
+  color: white;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.lang-fab-btn--active {
+  background: white !important;
+  color: #0d9488 !important; /* Teal-700 for high contrast against white */
+}
+
+@media (max-width: 640px) {
+  .lang-fab-wrapper {
+    bottom: 80px;
+    left: 16px;
+    padding: 7px 10px;
+  }
+
+  .lang-fab-icon {
+    width: 15px;
+    height: 15px;
+  }
+
+  .lang-fab-btn {
+    font-size: 10px;
+    padding: 3px 8px;
+  }
+}
+
+/* Hide browser-default native password reveal buttons in Microsoft Edge/IE */
+input::-ms-reveal,
+input::-ms-clear {
+    display: none !important;
+}
+
+/* Hide native browser validation reveal or fill buttons in WebKit browsers (Chrome, Safari, Opera) */
+input::-webkit-contacts-auto-fill-button,
+input::-webkit-credentials-auto-fill-button {
+    visibility: hidden !important;
+    display: none !important;
+    pointer-events: none !important;
 }

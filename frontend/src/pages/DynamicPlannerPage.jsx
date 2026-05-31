@@ -1,28 +1,31 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import DynamicTripPlanner from './DynamicTripPlanner';
 import { ArrowLeft } from 'lucide-react';
 
-// Wrapper to load trip data from session storage
+// Wrapper to load trip data from session storage or backend by ID
 const DynamicPlannerPage = () => {
     const navigate = useNavigate();
+    const { id } = useParams();
     const [tripData, setTripData] = useState(null);
 
     useEffect(() => {
-        // Load trip data from session storage
-        const stored = sessionStorage.getItem('currentTrip');
+        if (!id) {
+            // Load trip data from session storage
+            const stored = sessionStorage.getItem('currentTrip');
 
-        if (stored) {
-            try {
-                const data = JSON.parse(stored);
-                setTripData(data);
-            } catch (error) {
-                console.error('Error parsing trip data:', error);
+            if (stored) {
+                try {
+                    const data = JSON.parse(stored);
+                    setTripData(data);
+                } catch (error) {
+                    console.error('Error parsing trip data:', error);
+                }
             }
         }
-    }, []);
+    }, [id]);
 
-    if (!tripData) {
+    if (!id && !tripData) {
         return (
             <div className="min-h-screen bg-gray-50 flex items-center justify-center">
                 <div className="text-center">
@@ -45,7 +48,8 @@ const DynamicPlannerPage = () => {
     return (
         <DynamicTripPlanner
             tripData={tripData}
-            onBack={() => navigate('/trip-planner')}
+            initialItineraryId={id}
+            onBack={() => navigate(id ? '/my-trips' : '/trip-planner')}
         />
     );
 };

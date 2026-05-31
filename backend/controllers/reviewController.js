@@ -1,0 +1,99 @@
+const Review = require("../models/Review");
+
+const getReviewsByDestination = async (req, res) => {
+  try {
+    const { destinationId } = req.params;
+
+    const reviews = await Review.find({ destinationId }).sort({
+      createdAt: -1,
+    });
+
+    const averageRating =
+      reviews.reduce((acc, item) => acc + item.rating, 0) /
+      (reviews.length || 1);
+
+    // NEW: Calculate how many of each star rating exist
+    const distribution = { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
+    reviews.forEach((review) => {
+      // Only count valid 1-5 ratings
+      if (distribution[review.rating] !== undefined) {
+        distribution[review.rating] += 1;
+      }
+    });
+
+    res.status(200).json({
+      reviews,
+      totalReviews: reviews.length,
+      averageRating: averageRating.toFixed(1),
+      ratingDistribution: distribution, // Send it to the frontend!
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+const createReview = async (req, res) => {
+  try {
+    // Attach the authenticated user's ID to the review
+    const userId = req.user?.userId || req.user?.id;
+    if (!userId) {
+      return res.status(401).json({ message: "Authentication required to create a review" });
+    }
+
+    const reviewData = { ...req.body, userId };
+    const review = await Review.create(reviewData);
+
+    res.status(201).json(review);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+const deleteReview = async (req, res) => {
+  try {
+    const { reviewId } = req.params; // Grab the ID from the URL
+
+    // Fetch the review to check ownership
+    const review = await Review.findById(reviewId);
+    if (!review) {
+      return res.status(404).json({ message: "Review not found" });
+    }
+
+    // Only the review owner or an admin can delete it
+    const currentUserId = req.user?.userId || req.user?.id;
+    const isAdmin = req.user?.role === "admin";
+    if (!isAdmin && review.userId && review.userId !== currentUserId) {
+      return res.status(403).json({ message: "You can only delete your own reviews" });
+    }
+
+    await Review.findByIdAndDelete(reviewId);
+
+    res.status(200).json({ message: "Review deleted successfully!" });
+  } catch (error) {
+    res.status(500).json({ message: "Failed to delete review" });
+  }
+};
+
+const likeReview = async (req, res) => {
+  try {
+    const { reviewId } = req.params;
+
+    // $inc is a MongoDB command that means "increment this number by 1"
+    const updatedReview = await Review.findByIdAndUpdate(
+      reviewId,
+      { $inc: { likes: 1 } },
+      { new: true },
+    );
+
+    res.status(200).json(updatedReview);
+  } catch (error) {
+    res.status(500).json({ message: "Failed to like review" });
+  }
+};
+
+module.exports = {
+  getReviewsByDestination,
+  createReview,
+  deleteReview,
+  likeReview,
+};
