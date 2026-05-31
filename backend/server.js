@@ -2,6 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const dotenv = require("dotenv");
+const helmet = require("helmet");
 
 const reviewRoutes = require("./routes/reviewRoutes");
 const authRoutes = require("./routes/authRoutes");
@@ -10,6 +11,9 @@ const itineraryRoutes = require("./routes/itineraryRoutes");
 const eventRoutes = require("./routes/eventRoutes");
 const weatherRoutes = require("./routes/weatherRoutes");
 const smartPlannerRoutes = require("./routes/smartPlannerRoutes");
+const chatRoutes = require("./routes/chatroutes");
+const expenseRoutes = require("./routes/expenseRoutes");
+const communityRoutes = require("./routes/communityRoutes");
 const tripRoutes = require("./routes/tripRoutes");
 const chatRoutes = require("./routes/chatroutes");
 const expenseRoutes = require("./routes/expenseRoutes");
@@ -42,6 +46,7 @@ app.use('/api/itinerary', itineraryRoutes);
 app.use('/api/events', eventRoutes);
 app.use('/api/weather', weatherRoutes);
 app.use('/api/smart-planner', smartPlannerRoutes);
+app.use('/api/community', communityRoutes);
 app.use('/api/locker', lockerRoutes);
 
 // Health check route

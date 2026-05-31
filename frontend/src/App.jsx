@@ -45,6 +45,7 @@ import SplitExpense from "./pages/SplitExpense";
 import TravelLocker from "./pages/TravelLocker";
 import CurrencyConverter from "./pages/CurrencyConverter";
 import Contributors from "./pages/Contributors";
+import Community from "./pages/Community";
 
 function ProtectedRoute({ children }) {
   const isAuthenticated = Boolean(localStorage.getItem("token"));
@@ -111,6 +112,7 @@ function AppRoutes() {
                 </ProtectedRoute>
               }
             />
+            <Route path="/community" element={<PageTransition><Community /></PageTransition>} />
             <Route
               path="/travel-locker"
               element={
