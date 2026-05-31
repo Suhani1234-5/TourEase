@@ -1,4 +1,5 @@
 const Review = require("../models/Review");
+const User = require("../models/user");
 
 const getReviewsByDestination = async (req, res) => {
   try {
@@ -34,14 +35,24 @@ const getReviewsByDestination = async (req, res) => {
 
 const createReview = async (req, res) => {
   try {
-    // Attach the authenticated user's ID to the review
-    const userId = req.user?.userId || req.user?.id;
-    if (!userId) {
-      return res.status(401).json({ message: "Authentication required to create a review" });
+    const userId = req.user.id;
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
     }
 
-    const reviewData = { ...req.body, userId };
-    const review = await Review.create(reviewData);
+    const { rating, reviewText, travelerType, travelDate } = req.body;
+    const { destinationId } = req.params;
+
+    const review = await Review.create({
+      destinationId,
+      userId: user._id,
+      username: user.name, // Override username with User name from DB
+      rating,
+      reviewText,
+      travelerType,
+      travelDate: travelDate || new Date(),
+    });
 
     res.status(201).json(review);
   } catch (error) {
@@ -51,7 +62,22 @@ const createReview = async (req, res) => {
 
 const deleteReview = async (req, res) => {
   try {
-    const { reviewId } = req.params; // Grab the ID from the URL
+    const { reviewId } = req.params;
+    const userId = req.user.id;
+
+    const review = await Review.findById(reviewId);
+    if (!review) {
+      return res.status(404).json({ message: "Review not found" });
+    }
+
+    const user = await User.findById(userId);
+    // Enforce ownership: review.userId matches user's ID, or fallback to username matching for legacy/mock reviews
+    const isOwner = (review.userId && review.userId.toString() === userId.toString()) ||
+                    (!review.userId && user && review.username === user.name);
+
+    if (!isOwner) {
+      return res.status(403).json({ message: "You are not authorized to delete this review" });
+    }
 
     // Fetch the review to check ownership
     const review = await Review.findById(reviewId);

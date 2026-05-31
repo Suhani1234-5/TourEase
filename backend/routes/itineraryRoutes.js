@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const itineraryController = require('../controllers/itineraryController');
-const { verifyToken } = require('../middleware/auth');
+const { verifyToken } = require('../middleware/authMiddleware');
 
 // Routes
 router.post('/save', verifyToken, itineraryController.saveItinerary);

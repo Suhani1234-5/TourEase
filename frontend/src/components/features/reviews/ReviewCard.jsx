@@ -60,8 +60,12 @@ const ReviewCard = ({ review, refreshReviews }) => {
   const [likesCount, setLikesCount] = useState(review.likes || 0);
   const [isLiked, setIsLiked]       = useState(false);
 
-  const CURRENT_USER = "John Doe";
-  const isMock = review._id?.startsWith("mock-");
+  const storedUser = localStorage.getItem("user");
+  const currentUser = storedUser ? JSON.parse(storedUser) : null;
+  const isOwner = currentUser && (
+    (review.userId && (review.userId === currentUser.id || review.userId._id === currentUser.id)) ||
+    (!review.userId && review.username === currentUser.name)
+  );
 
   const handleDelete = async () => {
     if (!window.confirm("Delete this review?")) return;
@@ -74,7 +78,14 @@ const ReviewCard = ({ review, refreshReviews }) => {
   };
 
   const handleLike = async () => {
-    if (isLiked) return;
+    const isAuthenticated = Boolean(localStorage.getItem("token"));
+    if (!isAuthenticated) {
+      alert("Please log in to like reviews.");
+      return;
+    }
+    if (isLiked) return; // Prevent spam clicking
+
+    // Optimistic Update: Change the UI instantly before the server responds
     setIsLiked(true);
     setLikesCount((p) => p + 1);
     try {
@@ -148,7 +159,8 @@ const ReviewCard = ({ review, refreshReviews }) => {
           )}
         </button>
 
-        {review.username === CURRENT_USER && !isMock && (
+        {/* Only show the Delete Button if the current user owns this review! */}
+        {isOwner && (
           <button
             onClick={handleDelete}
             className="p-1.5 rounded-lg text-gray-300 dark:text-gray-600 hover:text-rose-500 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-900/15 transition-all duration-200"

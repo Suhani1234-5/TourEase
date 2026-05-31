@@ -89,9 +89,13 @@ function TravelerPills({ value, onChange }) {
    Main Review Form
 ────────────────────────────────────────── */
 const ReviewForm = ({ destinationId, refreshReviews }) => {
+  const storedUser = localStorage.getItem("user");
+  const currentUser = storedUser ? JSON.parse(storedUser) : null;
+  const isAuthenticated = Boolean(localStorage.getItem("token"));
+
   const [formData, setFormData] = useState({
-    username: "",
-    rating: 0,
+    username: currentUser ? currentUser.name : "",
+    rating: 5,
     travelerType: "Solo",
     reviewText: "",
   });
@@ -118,6 +122,17 @@ const ReviewForm = ({ destinationId, refreshReviews }) => {
         rating: Number(formData.rating),
         destinationId,
         travelDate: new Date().toISOString(),
+      };
+
+      // Call your backend API
+      await submitReview(destinationId, reviewPayload);
+
+      // Clear the form
+      setFormData({
+        username: currentUser ? currentUser.name : "",
+        rating: 5,
+        travelerType: "Solo",
+        reviewText: "",
       });
       setFormData({ username: "", rating: 0, travelerType: "Solo", reviewText: "" });
       setSubmitted(true);
@@ -134,6 +149,24 @@ const ReviewForm = ({ destinationId, refreshReviews }) => {
     }
   };
 
+  if (!isAuthenticated) {
+    return (
+      <div className="mt-8 bg-zinc-50 dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 rounded-xl p-8 text-center shadow-sm">
+        <h3 className="text-xl font-bold mb-2 text-zinc-800 dark:text-white">
+          Share Your Experience
+        </h3>
+        <p className="text-zinc-600 dark:text-zinc-400 mb-6 max-w-md mx-auto text-sm leading-relaxed">
+          Join TourEase to write reviews, like other travelers' feedback, and plan your perfect trip.
+        </p>
+        <a
+          href="/auth?mode=login"
+          className="inline-block bg-teal-500 hover:bg-teal-600 text-white px-6 py-2.5 rounded-lg font-semibold transition-colors shadow-md hover:shadow-lg transform active:scale-95 duration-250 text-sm"
+        >
+          Log In to Write a Review
+        </a>
+      </div>
+    );
+  }
   const inputBase =
     "w-full px-4 py-2.5 rounded-xl text-sm border bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 outline-none transition-all duration-200 border-gray-200 dark:border-gray-700 focus:border-teal-400 dark:focus:border-teal-600 focus:ring-2 focus:ring-teal-400/20 dark:focus:ring-teal-600/20";
 
@@ -173,8 +206,10 @@ const ReviewForm = ({ destinationId, refreshReviews }) => {
             name="username"
             value={formData.username}
             onChange={handleChange}
-            placeholder="e.g. Sarah Johnson"
-            className={inputBase}
+            required
+            disabled
+            className="w-full p-3 rounded-lg border border-zinc-300 dark:border-zinc-700 bg-zinc-100 dark:bg-zinc-800 dark:text-zinc-400 cursor-not-allowed outline-none font-medium"
+            placeholder="John Doe"
           />
         </div>
 
