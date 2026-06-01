@@ -54,7 +54,11 @@ function convert(amount, from, to, rates) {
 
 function formatResult(value, code) {
   if (value === null || isNaN(value)) return "—";
-  const opts = { minimumFractionDigits: 2, maximumFractionDigits: code === "JPY" || code === "KRW" || code === "IDR" ? 0 : 2 };
+  const isZeroDecimal = code === "JPY" || code === "KRW" || code === "IDR";
+  const opts = {
+    minimumFractionDigits: isZeroDecimal ? 0 : 2,
+    maximumFractionDigits: isZeroDecimal ? 0 : 2,
+  };
   return new Intl.NumberFormat("en-US", opts).format(value);
 }
 

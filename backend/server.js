@@ -6,7 +6,10 @@ const helmet = require("helmet");
 const morgan = require("morgan");
 const passport = require("./config/passport");
 
+dotenv.config();
 // Route Imports
+const connectDB = require("./config/db");
+const reviewRoutes = require("./routes/reviewRoutes");
 const authRoutes = require("./routes/authRoutes");
 const contactRoutes = require("./routes/contactRoutes");
 const tripRoutes = require("./routes/tripRoutes");
@@ -18,8 +21,9 @@ const reviewRoutes = require("./routes/reviewRoutes");
 const chatRoutes = require("./routes/chatroutes");
 const expenseRoutes = require("./routes/expenseRoutes");
 const lockerRoutes = require("./routes/lockerRoutes");
-
-dotenv.config();
+const helmet = require("helmet");
+const passport = require("./config/passport");
+const morgan = require("morgan");
 
 const app = express();
 
@@ -52,6 +56,7 @@ app.use('/api/itinerary', itineraryRoutes);
 app.use('/api/events', eventRoutes);
 app.use('/api/weather', weatherRoutes);
 app.use('/api/smart-planner', smartPlannerRoutes);
+app.use('/api/expenses', expenseRoutes);
 app.use('/api/reviews', reviewRoutes);
 app.use('/api/chat', chatRoutes);
 app.use('/api/expense', expenseRoutes);
@@ -77,8 +82,14 @@ app.use((req, res) => {
   res.status(404).json({ success: false, message: "Route not found" });
 });
 
-// Host Port Execution Configuration
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+// Start server helper
+const PORT = process.env.PORT || 5000;
+
+const startServer = async () => {
+  await connectDB();
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
+};
+
+startServer();
