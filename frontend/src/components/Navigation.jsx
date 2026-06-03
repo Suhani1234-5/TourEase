@@ -121,8 +121,8 @@ export default function Navigation() {
               </span>
             </div>
 
-            {/* DESKTOP NAV (Breaks exactly at 1200px, but shrinks dynamically before that) */}
-            <div className="hidden min-[1200px]:flex items-center gap-[clamp(4px,0.8vw,8px)] flex-1 justify-center px-2">
+            {/* DESKTOP NAV (Hidden below 1280px, fully responsive above) */}
+            <div className="hidden xl:flex items-center gap-1 2xl:gap-2 flex-1 justify-center px-1 overflow-x-auto no-scrollbar max-w-[60vw]">
               {navItems.map((item, index) => {
                 const hoverColors = [
                   "hover:bg-cyan-100 dark:hover:bg-cyan-900/30",
@@ -140,7 +140,7 @@ export default function Navigation() {
                   <Link
                     key={item.path}
                     to={item.path}
-                    className={`px-[clamp(6px,0.8vw,12px)] py-2 rounded-lg font-semibold whitespace-nowrap text-[clamp(12px,1vw,15px)] transition-all ${isActive(item.path)
+                    className={`px-2 xl:px-3 py-1.5 xl:py-2 rounded-lg font-semibold whitespace-nowrap text-[13px] xl:text-[14px] 2xl:text-[15px] shrink-0 transition-all ${isActive(item.path)
                       ? "bg-teal-500 dark:bg-indigo-600 text-white"
                       : `text-gray-700 dark:text-gray-300 ${hoverColors[index]}`
                       }`}
@@ -151,7 +151,7 @@ export default function Navigation() {
               })}
               <Link
                 to="/favorites"
-                className={`group relative px-[clamp(6px,0.8vw,12px)] py-2 rounded-lg font-semibold flex items-center gap-2 whitespace-nowrap text-[clamp(12px,1vw,15px)] transition ${isActive("/favorites")
+                className={`group relative px-2 xl:px-3 py-1.5 xl:py-2 rounded-lg font-semibold flex items-center gap-1 xl:gap-2 whitespace-nowrap text-[13px] xl:text-[14px] 2xl:text-[15px] shrink-0 transition ${isActive("/favorites")
                   ? "bg-teal-500 dark:bg-indigo-600 text-white"
                   : "text-gray-700 dark:text-gray-300 hover:bg-red-100 dark:hover:bg-red-900/30"
                   }`}
@@ -187,22 +187,21 @@ export default function Navigation() {
 
               <LanguageSelector
                 variant="inline"
-                className="hidden min-[1200px]:block"
+                className="hidden xl:block"
               />
 
-
-              {/* CTA - Uses clamp to shrink padding and text proportionally */}
+              {/* CTA */}
               {!isLoggedIn ? (
                 <Link
                   to="/login"
-                  className="bg-orange-500 hover:bg-orange-600 text-white px-[clamp(12px,1.5vw,24px)] py-2 rounded-lg font-semibold transition items-center whitespace-nowrap text-[clamp(12px,1vw,15px)]"
+                  className="bg-orange-500 hover:bg-orange-600 text-white px-3 xl:px-4 2xl:px-6 py-1.5 xl:py-2 rounded-lg font-semibold transition flex items-center whitespace-nowrap text-[13px] xl:text-[14px] 2xl:text-[15px]"
                 >
                   Get Started
                 </Link>
               ) : (
                 <button
                   onClick={handleLogout}
-                  className="bg-red-500 hover:bg-red-600 text-white px-[clamp(12px,1.5vw,20px)] py-2 rounded-lg font-semibold transition whitespace-nowrap text-[clamp(12px,1vw,15px)] shadow-lg hover:shadow-xl"
+                  className="bg-red-500 hover:bg-red-600 text-white px-3 xl:px-4 2xl:px-6 py-1.5 xl:py-2 rounded-lg font-semibold transition whitespace-nowrap text-[13px] xl:text-[14px] 2xl:text-[15px] shadow-lg hover:shadow-xl"
                 >
                   Logout
                 </button>
@@ -211,7 +210,7 @@ export default function Navigation() {
               {/* MOBILE MENU BUTTON */}
               <button
                 onClick={() => setIsOpen(!isOpen)}
-                className="min-[1200px]:hidden p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200 text-gray-900 dark:text-white"
+                className="xl:hidden p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200 text-gray-900 dark:text-white"
               >
                 {isOpen ? (
                   <X className="w-6 h-6" />
@@ -228,7 +227,7 @@ export default function Navigation() {
       {/* MOBILE MENU BACKDROP */}
       <div
         className={`
-          fixed inset-0 z-30 min-[1200px]:hidden
+          fixed inset-0 z-30 xl:hidden
           bg-black/50 backdrop-blur-sm
           ${isOpen ? "backdrop-open pointer-events-auto" : "backdrop-close pointer-events-none"}
         `}
@@ -238,7 +237,7 @@ export default function Navigation() {
       {/* MOBILE MENU DRAWER */}
       <div
         className={`
-          fixed inset-y-0 right-0 z-40 min-[1200px]:hidden
+          fixed inset-y-0 right-0 z-40 xl:hidden
           w-72 bg-white dark:bg-gray-800 shadow-2xl border-l border-gray-200 dark:border-gray-700
           ${isOpen ? "menu-open" : "menu-close"}
         `}
