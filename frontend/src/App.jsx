@@ -18,6 +18,8 @@ import Navigation from "./components/Navigation";
 import ScrollToTopButton from "./components/common/ScrollToTop";
 import ChatbotLauncher from "./components/chatbot/ChatbotLauncher";
 import Footer from "./components/Footer";
+import WatchDemoPage from './pages/DemoSection';
+import MoodPlanner from "./pages/MoodPlanner";
 import ScrollToTopOnNavigate from "./components/common/ScrollToTopOnNavigate";
 import { ScrollToTop } from "./components/common/ScrollToTop";
 import { Suspense, lazy } from "react";
@@ -68,7 +70,7 @@ function AppRoutes() {
 
   return (
     <>
-      <ScrollToTopOnNavigate />
+      <ScrollToTopOnNavigate /> 
       {showNavigation && <Navigation />}
       <ScrollToTopButton />
       {showNavigation && <ChatbotLauncher />}
@@ -128,6 +130,61 @@ function AppRoutes() {
             </Routes>
           </AnimatePresence>
         </Suspense>
+        <AnimatePresence mode="popLayout" initial={false}>
+          <Routes location={location} key={location.pathname}>
+            <Route path="/" element={<PageTransition><Home /></PageTransition>} />
+            <Route
+              path="/home2"
+              element={
+                <ProtectedRoute>
+                  <PageTransition><Home2 /></PageTransition>
+                </ProtectedRoute>
+              }
+            />
+            <Route path='/demo' element={<PageTransition><WatchDemoPage /></PageTransition>} />
+            <Route path="/contributors" element={<PageTransition><Contributors /></PageTransition>} />
+            <Route path="/about" element={<PageTransition><About /></PageTransition>} />
+            <Route path="/features" element={<PageTransition><Features /></PageTransition>} />
+            <Route path="/destinations" element={<PageTransition><Destinations /></PageTransition>} />
+            <Route path="/contact" element={<PageTransition><Contact /></PageTransition>} />
+            <Route path="/privacy" element={<PageTransition><Privacy /></PageTransition>} />
+            <Route path="/terms" element={<PageTransition><Terms /></PageTransition>} />
+            <Route path="/help" element={<PageTransition><HelpCenter /></PageTransition>} />
+            <Route path="/auth" element={<PageTransition><Auth /></PageTransition>} />
+            <Route path="/signup" element={<Navigate to="/auth?mode=signup" replace />} />
+            <Route path="/login" element={<Navigate to="/auth?mode=login" replace />} />
+            <Route path="/favorites" element={<ProtectedRoute><PageTransition><AddFavorite /></PageTransition></ProtectedRoute>} />
+            <Route path="/destinations/:id" element={<PageTransition><DestinationDetails /></PageTransition>} />
+            <Route path="/plan-trip" element={<PageTransition><PlanTrip /></PageTransition>} />
+            <Route path="/dynamic-planner" element={<PageTransition><DynamicPlannerPage /></PageTransition>} />
+            <Route path="/oauth-success" element={<PageTransition><OAuthSuccess /></PageTransition>} />
+            <Route path="*" element={<PageTransition><NotFound /></PageTransition>} />
+            <Route path="/trip-planner" element={<PageTransition><TripPlanner /></PageTransition>} />
+            <Route path="/smart-trip-planner" element={<PageTransition><SmartTripPlanner /></PageTransition>} /> feat/travel-locker
+            <Route path="/mood-planner" element={<PageTransition><MoodPlanner /></PageTransition>} />
+            main
+            <Route
+              path="/split-expense"
+              element={
+                <ProtectedRoute>
+                  <PageTransition><SplitExpense /></PageTransition>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/travel-locker"
+              element={
+                <ProtectedRoute>
+                  <PageTransition><TravelLocker /></PageTransition>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/currency-converter"
+              element={<PageTransition><CurrencyConverter /></PageTransition>}
+            />
+          </Routes>
+        </AnimatePresence>
       </div>
       {showNavigation && <Footer />}
     </>

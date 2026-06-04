@@ -22,15 +22,14 @@
     "jsonwebtoken": "^9.0.2",
     "langchain": "^1.4.2",
     "mongoose": "^8.24.0",
-    "morgan": "^1.10.0",
+    "morgan": "^1.10.1",
     "multer": "^2.1.1",
     "multer-storage-cloudinary": "^4.0.0",
     "nodemailer": "^8.0.7",
     "nodemon": "^3.1.14",
     "openai": "^6.16.0",
     "passport": "^0.7.0",
-    "passport-google-oauth20": "^2.0.0",
-    "morgan": "^1.10.0"
+    "passport-google-oauth20": "^2.0.0"
   },
   "keywords": [],
   "author": "",

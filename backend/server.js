@@ -23,9 +23,16 @@ const cors = require("cors");
 const helmet = require("helmet");
 const morgan = require("morgan");
 const passport = require("./config/passport");
+const helmet = require("helmet");
+const dotenv = require("dotenv");
+const helmet = require("helmet");
+const morgan = require("morgan");
+const passport = require("./config/passport");
+
+dotenv.config();
+
 // Route Imports
 const connectDB = require("./config/db");
-const reviewRoutes = require("./routes/reviewRoutes");
 const authRoutes = require("./routes/authRoutes");
 const contactRoutes = require("./routes/contactRoutes");
 const tripRoutes = require("./routes/tripRoutes");
@@ -41,16 +48,34 @@ const app = express();
 
 // Middleware Infrastructure
 app.use(helmet());
-app.use(morgan("dev"));
+app.use(morgan("dev")); // use "combined" in production
+
+const allowedOrigins = process.env.ALLOWED_ORIGINS
+  ? process.env.ALLOWED_ORIGINS.split(",")
+  : ["http://localhost:3000", "http://localhost:5173", "http://localhost:7000"];
+
 app.use(cors({
-  origin: process.env.CLIENT_URL || "http://localhost:7000",
-  credentials: true,
+  origin: function (origin, callback) {
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.indexOf(origin) === -1) {
+      const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
+      return callback(new Error(msg), false);
+    }
+    return callback(null, true);
+  },
+  credentials: true
 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(passport.initialize());
 
 let MONGODB_URI = process.env.MONGODB_URL;
+// 1. Connect to Database
+mongoose
+  .connect(process.env.MONGODB_URL)
+  .then(() => console.log("MongoDB Connected"))
+  .catch((err) => console.log(err));
+const MONGODB_URI = process.env.MONGODB_URL;
 
 if (!MONGODB_URI) {
   if (process.env.NODE_ENV === "development") {
@@ -74,9 +99,10 @@ app.use('/api/itinerary', itineraryRoutes);
 app.use('/api/events', eventRoutes);
 app.use('/api/weather', weatherRoutes);
 app.use('/api/smart-planner', smartPlannerRoutes);
-app.use('/api/expenses', expenseRoutes);
 app.use('/api/reviews', reviewRoutes);
 app.use('/api/chat', chatRoutes);
+app.use('/api/expenses', expenseRoutes);
+app.use('/api/expense', expenseRoutes);
 app.use('/api/locker', lockerRoutes);
 
 // Health Check Endpoint

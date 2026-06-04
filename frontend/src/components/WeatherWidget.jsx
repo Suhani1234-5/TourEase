@@ -61,10 +61,10 @@ const WeatherWidget = ({ weather }) => {
                         {/* Temperature */}
                         <div className="text-center mb-2">
                             <div className="text-2xl font-bold text-gray-900">
-                                {day.temp.max}°
+                                {Number(day.temp.max).toFixed(1)}°
                             </div>
                             <div className="text-xs text-gray-600">
-                                {day.temp.min}°
+                                {Number(day.temp.min).toFixed(1)}°
                             </div>
                         </div>
 
@@ -77,7 +77,7 @@ const WeatherWidget = ({ weather }) => {
                         {day.precipitation > 0 && (
                             <div className="flex items-center justify-center gap-1 text-xs text-blue-600">
                                 <Droplets className="w-3 h-3" />
-                                <span>{day.precipitation}%</span>
+                                <span>{Number(day.precipitation).toFixed(1)}%</span>
                             </div>
                         )}
 
@@ -85,7 +85,7 @@ const WeatherWidget = ({ weather }) => {
                         {day.windSpeed && day.windSpeed > 20 && (
                             <div className="flex items-center justify-center gap-1 text-xs text-gray-600 mt-1">
                                 <Wind className="w-3 h-3" />
-                                <span>{day.windSpeed} km/h</span>
+                                <span>{Number(day.windSpeed).toFixed(1)} km/h</span>
                             </div>
                         )}
                     </div>

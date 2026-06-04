@@ -16,6 +16,7 @@ import {
   Car,
   Calendar,
   CloudSun,
+  Heart
 } from "lucide-react";
 
 const categories = [
@@ -29,6 +30,23 @@ const categories = [
 ];
 
 const features = [
+  {
+    title: "Mood-Based Planner",
+    description:
+      "Select your travel mood (Relax, Adventure, Cultural, Romantic) and get an instant 3-day personalized itinerary perfectly tailored to your vibe.",
+    icon: <Heart className="w-10 h-10" />,
+    color: "bg-rose-100 text-rose-600 dark:bg-rose-950 dark:text-rose-300",
+    categories: ["ai", "planning"],
+    size: "large",
+    featured: true,
+    link: "/mood-planner",
+    highlights: [
+      "Vibe-based curation",
+      "Instant 3-day plans",
+      "Beautiful UI",
+      "Fully personalized"
+    ],
+  },
   {
     title: "AI Travel Planner",
     description:
@@ -182,6 +200,7 @@ const features = [
     color: "bg-cyan-100 text-cyan-600 dark:bg-indigo-950 dark:text-indigo-300",
     categories: ["utilities"],
     size: "small",
+    link: "/travel-locker",
     highlights: [
       "Document storage",
       "Belongings tracker",
@@ -373,7 +392,13 @@ export default function Features() {
                 className="feature-card-wrapper"
                 style={{ transitionDelay: `${index * 60}ms` }}
               >
-                <FeatureCard {...feature} />
+                {feature.link ? (
+                  <Link to={feature.link} className="block h-full transform transition-transform hover:-translate-y-1">
+                    <FeatureCard {...feature} />
+                  </Link>
+                ) : (
+                  <FeatureCard {...feature} />
+                )}
               </div>
             ))
           )}

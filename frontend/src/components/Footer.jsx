@@ -11,6 +11,11 @@ import {
 
 export default function Footer() {
   return (
+<footer className="bg-gradient-to-br from-slate-50 via-white to-teal-50 text-gray-600 dark:from-[#020617] dark:via-[#0b1120] dark:to-[#111827] dark:text-gray-400 py-16 relative overflow-hidden border-t border-gray-200 dark:border-transparent">
+  <div className="absolute -top-32 -left-32 h-72 w-72 rounded-full bg-teal-500/10 blur-3xl"></div>
+
+<div className="absolute -bottom-32 -right-32 h-72 w-72 rounded-full bg-cyan-500/10 blur-3xl dark:bg-orange-500/10"></div>
+        <div className="absolute top-0 left-0 w-full h-px bg-linear-to-r from-transparent via-teal-500/40 to-transparent dark:via-orange-500/40"></div>
     <footer className="bg-gray-50 text-gray-600 dark:bg-[#0b1120] dark:text-gray-400 py-16 relative overflow-hidden border-t border-gray-200 dark:border-transparent">
       <div className="absolute top-0 left-0 w-full h-px bg-linear-to-r from-transparent via-teal-500/40 to-transparent dark:via-orange-500/40"></div>
 
@@ -18,6 +23,9 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 mb-16">
           {/* Brand Section */}
           <div className="lg:col-span-4 space-y-6">
+<h3 className="text-gray-900 dark:text-white font-bold text-3xl tracking-tight transition-all duration-300 hover:scale-105 cursor-pointer">
+                Tour<span className="text-teal-600 dark:text-teal-400">Ease</span>
+
             <h3 className="text-gray-900 dark:text-white font-bold text-3xl tracking-tight">
               Tour
               <span className="text-teal-600 dark:text-indigo-600">Ease</span>
@@ -146,7 +154,7 @@ export default function Footer() {
               <input
                 type="email"
                 placeholder="Your email address"
-                className="w-full bg-white dark:bg-[#111827] border border-gray-300 dark:border-gray-800 rounded-xl px-4 py-3 text-sm text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:border-teal-500 dark:focus:border-orange-500 transition-all outline-none"
+                className="w-full bg-white/80 backdrop-blur-sm dark:bg-[#111827]/80 border border-gray-300 dark:border-gray-800 rounded-xl px-4 py-3 text-sm text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:border-teal-500 dark:focus:border-orange-500 focus:ring-2 focus:ring-teal-500/20 dark:focus:ring-orange-500/20 transition-all outline-none"
               />
 
               <Link
@@ -176,7 +184,7 @@ export default function Footer() {
 
 function FooterLink({ to, label }) {
   return (
-    <li className="group flex items-center">
+    <li className="group flex items-center transition-all duration-300 hover:translate-x-1">
       <span className="h-1.5 w-1.5 rounded-full bg-teal-500 dark:bg-orange-500 mr-3 opacity-70 group-hover:opacity-100 transition-all"></span>
 
       <Link
