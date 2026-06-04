@@ -100,7 +100,7 @@ export default function Navigation() {
         }
       `}</style>
 
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-white dark:bg-gray-950 bg-gradient-to-b from-teal-50/50 to-transparent dark:from-gray-800/50 shadow-md border-b border-gray-200 dark:border-gray-800">
+      <nav className="sticky top-0 left-0 right-0 z-50 bg-white dark:bg-gray-950 bg-gradient-to-b from-teal-50/50 to-transparent dark:from-gray-800/50 shadow-md border-b border-gray-200 dark:border-gray-800">
         
         {/* Outer Container: Uses clamp to reduce side padding on medium screens to buy more space */}
         <div className="w-full px-[clamp(16px,2vw,48px)]">
