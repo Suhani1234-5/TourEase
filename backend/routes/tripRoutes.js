@@ -5,15 +5,9 @@ const {
   generateTrip,
   refineTrip,
 } = require("../controllers/tripController");
+const { aiTripLimiter } = require("../middleware/rateLimiter");
 
-// @route   POST /api/trip/generate
-// @desc    Generate a weather-aware trip itinerary
-// @access  Public (No login required)
-router.post("/generate", generateTrip);
-
-// @route   POST /api/trip/refine
-// @desc    Refine an existing itinerary
-// @access  Public (No login required)
-router.post("/refine", refineTrip);
+router.post("/generate", aiTripLimiter, generateTrip);
+router.post("/refine", aiTripLimiter, refineTrip);
 
 module.exports = router;
