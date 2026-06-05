@@ -1,6 +1,29 @@
+const path = require("path");
+const dotenv = require("dotenv");
+
+const envPath = path.join(__dirname, ".env");
+console.log("[DEBUG] Current working directory:", process.cwd());
+console.log("[DEBUG] __dirname:", __dirname);
+console.log("[DEBUG] Loading .env from:", envPath);
+
+const envConfig = dotenv.config({ path: envPath });
+if (envConfig.error) {
+  console.warn("[DEBUG] Could not load .env file:", envConfig.error.message);
+}
+
+// Default to development if not specified
+process.env.NODE_ENV = process.env.NODE_ENV || "development";
+
+console.log("[DEBUG] NODE_ENV is:", process.env.NODE_ENV);
+console.log("[DEBUG] JWT_SECRET present:", !!process.env.JWT_SECRET);
+
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+const helmet = require("helmet");
+const morgan = require("morgan");
+const passport = require("./config/passport");
+const helmet = require("helmet");
 const dotenv = require("dotenv");
 dotenv.config();
 const helmet = require("helmet");
@@ -18,7 +41,6 @@ const itineraryRoutes = require("./routes/itineraryRoutes");
 const eventRoutes = require("./routes/eventRoutes");
 const weatherRoutes = require("./routes/weatherRoutes");
 const smartPlannerRoutes = require("./routes/smartPlannerRoutes");
-const reviewRoutes = require("./routes/reviewRoutes");
 const chatRoutes = require("./routes/chatroutes");
 const expenseRoutes = require("./routes/expenseRoutes");
 const lockerRoutes = require("./routes/lockerRoutes");
@@ -48,6 +70,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(passport.initialize());
 
+let MONGODB_URI = process.env.MONGODB_URL;
 // 1. Connect to Database
 mongoose
   .connect(process.env.MONGODB_URL)
@@ -56,7 +79,13 @@ mongoose
 const MONGODB_URI = process.env.MONGODB_URL;
 
 if (!MONGODB_URI) {
-  console.error("CRITICAL ERROR: MONGODB_URL is not defined in the environment variables!");
+  if (process.env.NODE_ENV === "development") {
+    MONGODB_URI = "mongodb://localhost:27017/tourease";
+    console.warn("[DB] Using local fallback for MONGODB_URL");
+  } else {
+    console.error("CRITICAL ERROR: MONGODB_URL is not defined in the environment variables!");
+    process.exit(1);
+  }
 }
 
 mongoose.connect(MONGODB_URI)

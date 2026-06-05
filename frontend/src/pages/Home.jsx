@@ -183,7 +183,7 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-white dark:bg-gray-950">
       {/* ================= HERO SECTION ================= */}
-      <div className="relative min-h-screen w-full bg-white dark:bg-[#030712] overflow-hidden flex items-center py-12 lg:py-0 font-sans">
+      <div className="relative min-h-[100svh] w-full bg-white dark:bg-[#030712] overflow-x-hidden flex items-center pt-28 pb-16 lg:pt-32 lg:pb-24 font-sans">
         {/* Background Glows */}
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-teal-500/10 blur-[100px] rounded-full"></div>
@@ -264,6 +264,8 @@ export default function Home() {
                     <img
                       src="https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?q=80&w=2070&auto=format&fit=crop"
                       alt="Luxury Tourism"
+                      loading="eager"
+                      fetchPriority="high"
                       className="w-full h-[300px] md:h-[380px] lg:h-[480px] object-cover transition-transform duration-[3s] group-hover:scale-105"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>

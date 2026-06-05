@@ -4,7 +4,12 @@ const User = require("../models/user");
 const jwt = require("jsonwebtoken");
 
 if (!process.env.JWT_SECRET) {
-  throw new Error("FATAL: JWT_SECRET environment variable is required");
+  if (process.env.NODE_ENV !== "production") {
+    process.env.JWT_SECRET = "dev-secret-key-fallback";
+    console.warn("[Auth] Using insecure dev fallback for JWT_SECRET");
+  } else {
+    throw new Error("FATAL: JWT_SECRET environment variable is required");
+  }
 }
 
 const {
