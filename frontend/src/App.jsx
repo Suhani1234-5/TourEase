@@ -17,6 +17,16 @@ import { ToastProvider } from "./context/ToastContext";
 import Navigation from "./components/Navigation";
 import ScrollToTopButton from "./components/common/ScrollToTop";
 import ChatbotLauncher from "./components/chatbot/ChatbotLauncher";
+import DestinationDetails from "./pages/DestinationDetails";
+import LanguageSelector from "./components/LanguageSelector";
+import PlanTrip from "./pages/PlanTrip";
+import OAuthSuccess from "./pages/OAuthSuccess";
+import Privacy from "./pages/Privacy";
+import Terms from "./pages/Terms";
+import HelpCenter from "./pages/HelpCenter";
+import NotFound from "./components/NotFound";
+import TripPlanner from './pages/TripPlanner';
+import SmartTripPlanner from './pages/SmartTripPlanner';
 import Footer from "./components/Footer";
 import WatchDemoPage from './pages/DemoSection';
 import MoodPlanner from "./pages/MoodPlanner";
@@ -73,6 +83,7 @@ function AppRoutes() {
       <ScrollToTopOnNavigate /> 
       {showNavigation && <Navigation />}
       <ScrollToTopButton />
+<<<<<<< main
       {showNavigation && <ChatbotLauncher />}
       <div className={showNavigation ? "pt-16" : ""} style={{ minHeight: "100vh", backgroundColor: "var(--page-bg, #ffffff)" }}>
         <Suspense fallback={<Loader />}>
@@ -185,6 +196,51 @@ function AppRoutes() {
             />
           </Routes>
         </AnimatePresence>
+=======
+      <LanguageSelector />
+      <ChatbotLauncher />
+      <div className={showNavigation ? "pt-16" : ""}>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route
+            path="/home2"
+            element={
+              <ProtectedRoute>
+                <Home2 />
+              </ProtectedRoute>
+            }
+          />
+          <Route path='/demo' element={<WatchDemoPage />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/features" element={<Features />} />
+          <Route path="/destinations" element={<Destinations />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/privacy" element={<Privacy />} />
+          <Route path="/terms" element={<Terms />} />
+          <Route path="/help" element={<HelpCenter />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/split-expense" element={<SplitExpense />} />
+          <Route path="/travel-locker" element={<TravelLocker />} />
+          <Route path="/currency-converter" element={<CurrencyConverter />} />
+          <Route
+            path="/favorites"
+            element={
+              <ProtectedRoute>
+                <AddFavorite />
+              </ProtectedRoute>
+            }
+          />
+          <Route path="/destinations/:id" element={<DestinationDetails />} />
+
+          <Route path="/plan-trip" element={<PlanTrip />} />
+          <Route path="/dynamic-planner" element={<DynamicPlannerPage />} />
+          <Route path="/oauth-success" element={<OAuthSuccess />} />
+          <Route path="/trip-planner" element={<TripPlanner />} />
+          <Route path="/smart-trip-planner" element={<SmartTripPlanner />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+>>>>>>> main
       </div>
       {showNavigation && <Footer />}
     </>

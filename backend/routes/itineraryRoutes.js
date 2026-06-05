@@ -7,7 +7,7 @@ const { verifyToken } = require('../middleware/auth');
 router.post('/save', verifyToken, itineraryController.saveItinerary);
 
 // These can remain public or be protected depending on your needs
-router.post('/analyze', itineraryController.analyzeItinerary);
+router.post('/analyze', verifyToken, itineraryController.analyzeItinerary);
 router.get('/user', verifyToken, itineraryController.getUserItineraries); // Protect this too!
 router.get('/:id', itineraryController.getItinerary);
 router.get('/:id/suggestions', itineraryController.getSuggestions);

@@ -11,24 +11,18 @@ import {
 
 export default function Footer() {
   return (
-<footer className="bg-gradient-to-br from-slate-50 via-white to-teal-50 text-gray-600 dark:from-[#020617] dark:via-[#0b1120] dark:to-[#111827] dark:text-gray-400 py-16 relative overflow-hidden border-t border-gray-200 dark:border-transparent">
-  <div className="absolute -top-32 -left-32 h-72 w-72 rounded-full bg-teal-500/10 blur-3xl"></div>
+    <footer className="bg-gradient-to-br from-slate-50 via-white to-teal-50 text-gray-600 dark:from-[#020617] dark:via-[#0b1120] dark:to-[#111827] dark:text-gray-400 py-16 relative overflow-hidden border-t border-gray-200 dark:border-transparent">
+      <div className="absolute -top-32 -left-32 h-72 w-72 rounded-full bg-teal-500/10 blur-3xl"></div>
 
-<div className="absolute -bottom-32 -right-32 h-72 w-72 rounded-full bg-cyan-500/10 blur-3xl dark:bg-orange-500/10"></div>
-        <div className="absolute top-0 left-0 w-full h-px bg-linear-to-r from-transparent via-teal-500/40 to-transparent dark:via-orange-500/40"></div>
-    <footer className="bg-gray-50 text-gray-600 dark:bg-[#0b1120] dark:text-gray-400 py-16 relative overflow-hidden border-t border-gray-200 dark:border-transparent">
+      <div className="absolute -bottom-32 -right-32 h-72 w-72 rounded-full bg-cyan-500/10 blur-3xl dark:bg-orange-500/10"></div>
       <div className="absolute top-0 left-0 w-full h-px bg-linear-to-r from-transparent via-teal-500/40 to-transparent dark:via-orange-500/40"></div>
 
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 mb-16">
           {/* Brand Section */}
           <div className="lg:col-span-4 space-y-6">
-<h3 className="text-gray-900 dark:text-white font-bold text-3xl tracking-tight transition-all duration-300 hover:scale-105 cursor-pointer">
-                Tour<span className="text-teal-600 dark:text-teal-400">Ease</span>
-
-            <h3 className="text-gray-900 dark:text-white font-bold text-3xl tracking-tight">
-              Tour
-              <span className="text-teal-600 dark:text-indigo-600">Ease</span>
+            <h3 className="text-gray-900 dark:text-white font-bold text-3xl tracking-tight transition-all duration-300 hover:scale-105 cursor-pointer">
+              Tour<span className="text-teal-600 dark:text-teal-400">Ease</span>
             </h3>
 
             <p className="text-sm text-gray-600 dark:text-gray-400 max-w-xs">
