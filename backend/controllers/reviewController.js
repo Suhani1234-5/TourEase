@@ -97,17 +97,40 @@ const deleteReview = async (req, res) => {
 const likeReview = async (req, res) => {
   try {
     const { reviewId } = req.params;
+    const userId = req.user?.id || req.user?.userId; // support both formats based on middleware
 
-    // $inc is a MongoDB command that means "increment this number by 1"
-    const updatedReview = await Review.findByIdAndUpdate(
-      reviewId,
-      { $inc: { likes: 1 } },
-      { new: true },
-    );
+    if (!userId) {
+      return res.status(401).json({ message: "Unauthorized: User ID missing" });
+    }
+
+    const review = await Review.findById(reviewId);
+    if (!review) {
+      return res.status(404).json({ message: "Review not found" });
+    }
+
+    // Check if the user has already liked this review
+    const hasLiked = review.likedBy && review.likedBy.includes(userId);
+
+    if (hasLiked) {
+      // Unlike the review
+      review.likes = Math.max(0, review.likes - 1);
+      review.likedBy = review.likedBy.filter(
+        (id) => id.toString() !== userId.toString()
+      );
+    } else {
+      // Like the review
+      review.likes += 1;
+      if (!review.likedBy) {
+        review.likedBy = [];
+      }
+      review.likedBy.push(userId);
+    }
+
+    const updatedReview = await review.save();
 
     res.status(200).json(updatedReview);
   } catch (error) {
-    res.status(500).json({ message: "Failed to like review" });
+    res.status(500).json({ message: "Failed to process like action" });
   }
 };
 
