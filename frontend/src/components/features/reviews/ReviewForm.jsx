@@ -122,9 +122,7 @@ const ReviewForm = ({ destinationId, refreshReviews }) => {
         rating: Number(formData.rating),
         destinationId,
         travelDate: new Date().toISOString(),
-      };
-
-      await submitReview(destinationId, reviewPayload);
+      });
 
       // Clear the form
       setFormData({
@@ -206,8 +204,8 @@ const ReviewForm = ({ destinationId, refreshReviews }) => {
             onChange={handleChange}
             required
             disabled
-            placeholder="e.g. Sarah Johnson"
             className={inputBase}
+            placeholder="John Doe"
           />
         </div>
 

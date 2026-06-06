@@ -1,8 +1,8 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
-const helmet = require("helmet");
 const dotenv = require("dotenv");
+dotenv.config();
 const helmet = require("helmet");
 const morgan = require("morgan");
 const passport = require("./config/passport");

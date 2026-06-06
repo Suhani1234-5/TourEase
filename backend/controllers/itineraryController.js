@@ -29,7 +29,7 @@ exports.saveItinerary = async (req, res) => {
 
         // Create new itinerary
         const itinerary = new Itinerary({
-            userId: req.user?.id, // Optional - might not have auth yet
+            userId: req.user.id, // Optional - might not have auth yet
             destination,
             startDate: new Date(startDate),
             endDate: new Date(endDate),
@@ -272,7 +272,7 @@ exports.rejectSuggestion = async (req, res) => {
 // Get all itineraries for a user
 exports.getUserItineraries = async (req, res) => {
     try {
-        const userId = req.user?.id;
+        const userId = req.user.id;
 
         const itineraries = await Itinerary.find({ userId })
             .sort({ startDate: -1 });

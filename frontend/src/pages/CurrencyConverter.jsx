@@ -54,10 +54,11 @@ function convert(amount, from, to, rates) {
 
 function formatResult(value, code) {
   if (value === null || isNaN(value)) return "—";
-  const isZeroDecimal = code === "JPY" || code === "KRW" || code === "IDR";
+  const noFractionCurrencies = ["JPY", "KRW", "IDR"];
+  const useNoFractions = noFractionCurrencies.includes(code);
   const opts = {
-    minimumFractionDigits: isZeroDecimal ? 0 : 2,
-    maximumFractionDigits: isZeroDecimal ? 0 : 2,
+    minimumFractionDigits: useNoFractions ? 0 : 2,
+    maximumFractionDigits: useNoFractions ? 0 : 2,
   };
   return new Intl.NumberFormat("en-US", opts).format(value);
 }
@@ -72,25 +73,29 @@ export default function CurrencyConverter() {
   const [error, setError] = useState(null);
   const [refreshing, setRefreshing] = useState(false);
 
-  const fetchRates = useCallback(async (showRefreshSpinner = false) => {
+  const fetchRates = useCallback(async (baseCurrency = fromCurrency, showRefreshSpinner = false) => {
     try {
       if (showRefreshSpinner) setRefreshing(true);
       else setLoading(true);
       setError(null);
-      const data = await api.getExchangeRates("USD");
-      setRates(data.rates);
-      setLastUpdated(data.time_last_update_utc || "");
+
+      const data = await api.getExchangeRates(baseCurrency);
+      const fetchedRates = { ...(data.rates || {}) };
+      fetchedRates[baseCurrency] = 1;
+
+      setRates(fetchedRates);
+      setLastUpdated(data.time_last_update_utc || data.time_last_updated_utc || "");
     } catch (err) {
       setError(err.message || "Failed to load exchange rates.");
     } finally {
       setLoading(false);
       setRefreshing(false);
     }
-  }, []);
+  }, [fromCurrency]);
 
   useEffect(() => {
-    fetchRates();
-  }, [fetchRates]);
+    fetchRates(fromCurrency);
+  }, [fetchRates, fromCurrency]);
 
   const handleSwap = () => {
     setFromCurrency(toCurrency);
@@ -131,7 +136,7 @@ export default function CurrencyConverter() {
               <p className="font-semibold">Could not load rates</p>
               <p className="mt-0.5 text-red-600 dark:text-red-500">{error}</p>
               <button
-                onClick={() => fetchRates(true)}
+                onClick={() => fetchRates(fromCurrency, true)}
                 className="mt-2 font-semibold underline hover:no-underline cursor-pointer"
               >
                 Try again
