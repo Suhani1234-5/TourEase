@@ -5,6 +5,7 @@ const {
   generateTrip,
   refineTrip,
 } = require("../controllers/tripController");
+const { aiTripLimiter } = require("../middleware/rateLimiter");
 
 const { verifyToken } = require("../middleware/auth");
 const { aiTripLimiter } = require("../middleware/rateLimiter");
