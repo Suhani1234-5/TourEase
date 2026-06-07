@@ -26,22 +26,20 @@ function StarPicker({ value, onChange }) {
             aria-label={`Rate ${n} star${n > 1 ? "s" : ""}`}
           >
             <Star
-              className={`w-8 h-8 transition-all duration-150 ${
-                n <= active
+              className={`w-8 h-8 transition-all duration-150 ${n <= active
                   ? "text-amber-400 fill-amber-400"
                   : "text-gray-300 dark:text-gray-600"
-              }`}
+                }`}
             />
           </button>
         ))}
       </div>
 
       <span
-        className={`text-sm font-semibold transition-colors duration-200 ${
-          active
+        className={`text-sm font-semibold transition-colors duration-200 ${active
             ? "text-teal-600 dark:text-teal-400"
             : "text-gray-400 dark:text-gray-500"
-        }`}
+          }`}
       >
         {RATING_LABELS[active] || "Select a rating"}
       </span>
@@ -53,10 +51,10 @@ function StarPicker({ value, onChange }) {
    Traveler type pills
 ────────────────────────────────────────── */
 const TRAVELER_TYPES = [
-  { value: "Solo",     emoji: "🧳" },
-  { value: "Couple",   emoji: "💑" },
-  { value: "Family",   emoji: "👨‍👩‍👧" },
-  { value: "Friends",  emoji: "👫" },
+  { value: "Solo", emoji: "🧳" },
+  { value: "Couple", emoji: "💑" },
+  { value: "Family", emoji: "👨‍👩‍👧" },
+  { value: "Friends", emoji: "👫" },
   { value: "Business", emoji: "💼" },
 ];
 
@@ -70,11 +68,10 @@ function TravelerPills({ value, onChange }) {
             key={t.value}
             type="button"
             onClick={() => onChange(t.value)}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-semibold border transition-all duration-200 ${
-              active
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-semibold border transition-all duration-200 ${active
                 ? "bg-teal-50 dark:bg-teal-900/25 border-teal-300 dark:border-teal-700 text-teal-700 dark:text-teal-300"
                 : "bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700 text-gray-500 dark:text-gray-400 hover:border-gray-300 dark:hover:border-gray-600"
-            }`}
+              }`}
           >
             <span>{t.emoji}</span>
             {t.value}
@@ -101,7 +98,7 @@ const ReviewForm = ({ destinationId, refreshReviews }) => {
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError]     = useState("");
+  const [error, setError] = useState("");
   const [submitted, setSubmitted] = useState(false);
 
   const handleChange = (e) =>
@@ -111,8 +108,8 @@ const ReviewForm = ({ destinationId, refreshReviews }) => {
     e.preventDefault();
     setError("");
 
-    if (!formData.username.trim())            return setError("Please enter your name.");
-    if (formData.rating === 0)                return setError("Please select a star rating.");
+    if (!formData.username.trim()) return setError("Please enter your name.");
+    if (formData.rating === 0) return setError("Please select a star rating.");
     if (formData.reviewText.trim().length < 10) return setError("Review must be at least 10 characters.");
 
     setIsSubmitting(true);
@@ -122,7 +119,7 @@ const ReviewForm = ({ destinationId, refreshReviews }) => {
         rating: Number(formData.rating),
         destinationId,
         travelDate: new Date().toISOString(),
-      });
+      };
 
       // Clear the form
       setFormData({
