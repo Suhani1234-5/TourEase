@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { MapPin, Star, Heart, Clock, TrendingUp, Search } from "lucide-react";
 
 import { useFavorites } from "../hooks/useFavorites";
@@ -187,6 +187,11 @@ function FilterButton({ label, active, onClick }) {
 
 function DestinationCard({ destination, isFavorite, onToggleFavorite }) {
   const navigate = useNavigate();
+  const [imgSrc, setImgSrc] = useState(destination.image); // ← tracks image src
+
+  useEffect(() => {
+    setImgSrc(destination.image);
+  }, [destination.image]); 
 
   const [liveRating, setLiveRating] = useState(destination.rating || 0);
 
@@ -231,12 +236,15 @@ function DestinationCard({ destination, isFavorite, onToggleFavorite }) {
       className="h-full flex flex-col bg-white dark:bg-slate-900 rounded-xl shadow-sm hover:shadow-xl transition-all overflow-hidden group cursor-pointer border border-gray-100 dark:border-slate-800"
     >
       {/* Image */}
-      <div
-        className="h-48 relative overflow-hidden bg-cover bg-center"
-        style={{
-          backgroundImage: `url(${destination.image})`,
-        }}
-      >
+      <div className="h-48 relative overflow-hidden">
+        <img
+          src={imgSrc}                      
+          alt={destination.name}
+          className="w-full h-full object-cover"
+          onError={() => setImgSrc("/fallback.jpg")}
+        />
+
+        {/* Overlay and button stay exactly the same */}
         <div className="absolute inset-0 bg-black/20 group-hover:bg-black/30 transition" />
 
         <button
