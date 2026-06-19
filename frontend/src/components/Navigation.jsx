@@ -98,23 +98,23 @@ export default function Navigation() {
       `}</style>
 
       <nav className="fixed top-0 left-0 right-0 z-50 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex h-16 items-center justify-between">
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-10">
+          <div className="flex h-[72px] items-center justify-between">
             {/* LOGO */}
             <span
               onClick={handleLogoClick}
-              className="cursor-pointer text-2xl font-bold bg-linear-to-r from-teal-500 to-cyan-600 dark:from-indigo-400 dark:to-purple-500 bg-clip-text text-transparent"
+              className="mr-6 cursor-pointer text-2xl font-bold bg-linear-to-r from-teal-500 to-cyan-600 dark:from-indigo-400 dark:to-purple-500 bg-clip-text text-transparent"
             >
               TourEase
             </span>
 
             {/* DESKTOP NAV */}
-            <div className="hidden md:flex items-center gap-1">
+            <div className="hidden md:flex items-center gap-2 lg:gap-3">
               {navItems.map((item) => (
                 <Link
                   key={item.path}
                   to={item.path}
-                  className={`px-4 py-2 rounded-lg font-semibold transition-all ${isActive(item.path)
+                  className={`px-5 py-2.5 rounded-xl font-medium transition-all duration-200 ${isActive(item.path)
                     ? "bg-teal-500 dark:bg-indigo-600 text-white"
                     : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
                     }`}
@@ -124,7 +124,7 @@ export default function Navigation() {
               ))}
               <Link
                 to="/favorites"
-                className={`relative px-4 pr-12 py-2 rounded-lg font-semibold flex items-center gap-2 transition ${isActive("/favorites")
+                className={`relative px-5 pr-14 py-2.5 rounded-xl rounded-lg font-semibold flex items-center gap-2 transition ${isActive("/favorites")
                   ? "bg-teal-500 dark:bg-indigo-600 text-white"
                   : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
                   }`}
@@ -140,7 +140,7 @@ export default function Navigation() {
             </div>
 
             {/* RIGHT ACTIONS */}
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-4">
 
               {/* THEME TOGGLE */}
               <button
@@ -165,14 +165,14 @@ export default function Navigation() {
                 /* CHANGED: Points to Trip Planner */
                 <Link
                   to="/trip-planner"
-                  className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-2 rounded-lg font-semibold transition items-center"
+                  className="bg-orange-500 hover:bg-orange-600 text-white px-7 py-2.5 rounded-lg font-semibold transition items-center"
                 >
                   Get Started
                 </Link>
               ) : (
                 <button
                   onClick={handleLogout}
-                  className="bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded-lg font-semibold transition"
+                  className="bg-red-500 hover:bg-red-600 text-white px-7 py-2.5 rounded-lg font-semibold transition"
                 >
                   Logout
                 </button>

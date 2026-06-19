@@ -36,6 +36,7 @@ import Footer from "./components/Footer";
 import WatchDemoPage from './pages/DemoSection';
 import DynamicPlannerPage from './pages/DynamicPlannerPage';
 import ScrollToTop from "./components/common/ScrollToTop";
+import MyTrips from "./pages/MyTrips";
 
 function ProtectedRoute({ children }) {
   const isAuthenticated = Boolean(localStorage.getItem("token"));
@@ -91,6 +92,7 @@ function AppRoutes() {
           <Route path="/oauth-success" element={<OAuthSuccess />} />
           <Route path="*" element={<NotFound />} />
           <Route path="/trip-planner" element={<TripPlanner />} />
+          <Route path="/my-trips" element={<MyTrips />} />
         </Routes>
       </div>
       {showNavigation && <Footer />}
