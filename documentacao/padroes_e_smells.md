@@ -1,3 +1,4 @@
+# Code Smells, refatorações e padrões de projeto
 # Code Smells
 
 # 1. Magic Numbers em backend/services/weatherService
