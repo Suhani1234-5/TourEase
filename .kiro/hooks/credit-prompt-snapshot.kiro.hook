@@ -1,0 +1,13 @@
+{
+  "enabled": true,
+  "name": "Credit Prompt Snapshot",
+  "description": "Auto-deployed by Kiro Credit Tracker: 记录 prompt 提交时的 credit 快照",
+  "version": "1.2",
+  "when": {
+    "type": "promptSubmit"
+  },
+  "then": {
+    "type": "runCommand",
+    "command": "python \"C:\\Users\\tripa\\.kiro\\scripts\\credit-prompt-tracker.py\" snapshot"
+  }
+}
