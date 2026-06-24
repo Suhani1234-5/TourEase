@@ -1,0 +1,13 @@
+{
+  "enabled": true,
+  "name": "Credit Ledger",
+  "description": "Auto-deployed by Kiro Credit Tracker: 会话结束时记录 credit 消耗",
+  "version": "1",
+  "when": {
+    "type": "agentStop"
+  },
+  "then": {
+    "type": "runCommand",
+    "command": "python \"C:\\Users\\tripa\\.kiro\\scripts\\credit-prompt-tracker.py\" record"
+  }
+}
