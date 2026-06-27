@@ -35,5 +35,11 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": ""
+  "description": "",
+  
+  "scripts": {
+    "test": "jest --runInBand"
+  }
+  
 }
+
