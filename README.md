@@ -276,6 +276,27 @@ docker compose up --build
  - Backend API Layer: http://localhost:4000
 
 ---
+## 🚀 GSSoC 2026 Contributor Onboarding
+
+Welcome to TourEase! If you are contributing under GSSoC 2026, follow these steps to get started:
+
+### Prerequisites
+- Install Git
+- Install Node.js
+- Install VS Code
+
+### Contribution Workflow
+
+1. Fork this repository.
+2. Clone your fork locally.
+3. Create a new branch.
+4. Make your changes.
+5. Commit your changes with a meaningful message.
+6. Push the branch to your GitHub repository.
+7. Open a Pull Request.
+8. Wait for review and make requested changes if needed.
+
+Happy Contributing! 🎉
 
 ## 🤝 Contributing
 
