@@ -19,7 +19,9 @@ import {
   Plus,
   X,
   RefreshCw,
-  FolderPlus
+  FolderPlus,
+  ArrowRight,
+  AlertTriangle
 } from "lucide-react";
 
 const CATEGORIES = [
@@ -29,6 +31,131 @@ const CATEGORIES = [
   { name: "Activities", color: "bg-pink-500", text: "text-pink-500", iconColor: "bg-pink-50 text-pink-600 dark:bg-pink-950/40 dark:text-pink-400" },
   { name: "Other", color: "bg-slate-500", text: "text-slate-500", iconColor: "bg-slate-50 text-slate-600 dark:bg-slate-950/40 dark:text-slate-400" }
 ];
+
+// ─── Settlement Confirmation Modal ───────────────────────────────────────────
+function SettlementConfirmModal({ settlement, onConfirm, onCancel, isSubmitting }) {
+  if (!settlement) return null;
+  return (
+    <div
+      className="fixed inset-0 z-[200] flex items-center justify-center p-4 animate-in fade-in duration-200"
+      style={{ background: "rgba(0,0,0,0.65)", backdropFilter: "blur(8px)" }}
+      onClick={onCancel}
+    >
+      <div
+        className="relative w-full max-w-md bg-gray-900 border border-slate-700/60 rounded-2xl shadow-2xl p-6 space-y-5 animate-in zoom-in-95 duration-200"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="flex items-start justify-between gap-3">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-emerald-950/50 border border-emerald-800/50 flex items-center justify-center shrink-0">
+              <CheckCircle className="w-5 h-5 text-emerald-400" />
+            </div>
+            <div>
+              <h3 className="text-base font-bold text-slate-100">Confirm Settlement</h3>
+              <p className="text-xs text-slate-400 mt-0.5">Mark this transaction as completed</p>
+            </div>
+          </div>
+          <button
+            onClick={onCancel}
+            className="p-1.5 text-slate-500 hover:text-slate-300 hover:bg-slate-800 rounded-lg transition cursor-pointer"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        </div>
+
+        <div className="bg-slate-800/60 border border-slate-700/40 rounded-xl p-4 space-y-3">
+          <div className="flex items-center justify-between gap-2">
+            <div className="text-center flex-1">
+              <p className="text-[10px] uppercase tracking-widest font-bold text-slate-500 mb-1">From</p>
+              <p className="text-sm font-extrabold text-slate-100 truncate">{settlement.from}</p>
+            </div>
+            <div className="flex flex-col items-center gap-1 px-2">
+              <ArrowRight className="w-5 h-5 text-emerald-400" />
+            </div>
+            <div className="text-center flex-1">
+              <p className="text-[10px] uppercase tracking-widest font-bold text-slate-500 mb-1">To</p>
+              <p className="text-sm font-extrabold text-slate-100 truncate">{settlement.to}</p>
+            </div>
+          </div>
+          <div className="border-t border-slate-700/50 pt-3 text-center">
+            <p className="text-[10px] uppercase tracking-widest font-bold text-slate-500 mb-1">Amount</p>
+            <p className="text-2xl font-black text-emerald-400">${settlement.amount.toFixed(2)}</p>
+          </div>
+        </div>
+
+        <p className="text-xs text-slate-400 text-center leading-relaxed">
+          This will record a counter-expense to balance the debts between these two members.
+        </p>
+
+        <div className="flex gap-3 pt-1">
+          <button
+            type="button"
+            onClick={onCancel}
+            disabled={isSubmitting}
+            className="flex-1 py-2.5 rounded-xl border border-slate-700 text-slate-300 font-semibold text-sm hover:bg-slate-800 transition cursor-pointer disabled:opacity-50"
+          >
+            Cancel
+          </button>
+          <button
+            type="button"
+            onClick={onConfirm}
+            disabled={isSubmitting}
+            className="flex-1 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-semibold text-sm transition shadow-lg cursor-pointer disabled:opacity-60 flex items-center justify-center gap-2"
+          >
+            {isSubmitting ? (
+              <><RefreshCw className="w-4 h-4 animate-spin" /> Settling...</>
+            ) : (
+              <><CheckCircle className="w-4 h-4" /> Confirm Settlement</>
+            )}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── Generic Confirm Modal (delete actions) ───────────────────────────────────
+function GenericConfirmModal({ isOpen, title, message, confirmLabel = "Delete", onConfirm, onCancel }) {
+  if (!isOpen) return null;
+  return (
+    <div
+      className="fixed inset-0 z-[200] flex items-center justify-center p-4 animate-in fade-in duration-200"
+      style={{ background: "rgba(0,0,0,0.65)", backdropFilter: "blur(8px)" }}
+      onClick={onCancel}
+    >
+      <div
+        className="relative w-full max-w-sm bg-gray-900 border border-slate-700/60 rounded-2xl shadow-2xl p-6 space-y-4 animate-in zoom-in-95 duration-200"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="flex items-start gap-3">
+          <div className="w-10 h-10 rounded-xl bg-red-950/50 border border-red-800/50 flex items-center justify-center shrink-0">
+            <AlertTriangle className="w-5 h-5 text-red-400" />
+          </div>
+          <div>
+            <h3 className="text-base font-bold text-slate-100">{title}</h3>
+            <p className="text-xs text-slate-400 mt-1 leading-relaxed">{message}</p>
+          </div>
+        </div>
+        <div className="flex gap-3 pt-1">
+          <button
+            type="button"
+            onClick={onCancel}
+            className="flex-1 py-2.5 rounded-xl border border-slate-700 text-slate-300 font-semibold text-sm hover:bg-slate-800 transition cursor-pointer"
+          >
+            Cancel
+          </button>
+          <button
+            type="button"
+            onClick={onConfirm}
+            className="flex-1 py-2.5 rounded-xl bg-gradient-to-r from-red-600 to-red-500 hover:from-red-500 hover:to-red-400 text-white font-semibold text-sm transition cursor-pointer"
+          >
+            {confirmLabel}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default function SplitExpense() {
   const { showToast } = useToast();
@@ -50,6 +177,14 @@ export default function SplitExpense() {
   const [expenseSplits, setExpenseSplits] = useState([]);
   const [expenseDate, setExpenseDate] = useState(new Date().toISOString().split("T")[0]);
   const [isSubmittingExpense, setIsSubmittingExpense] = useState(false);
+
+  // Settlement modal state
+  const [settlementModal, setSettlementModal] = useState(null); // { from, to, amount }
+  const [isSettling, setIsSettling] = useState(false);
+  const [settledItems, setSettledItems] = useState(new Set()); // key: "from->to->amount"
+
+  // Generic confirm modal state
+  const [confirmModal, setConfirmModal] = useState(null); // { title, message, confirmLabel, onConfirm }
 
   useEffect(() => {
     fetchGroups();
@@ -124,24 +259,28 @@ export default function SplitExpense() {
     }
   };
 
-  const handleDeleteGroup = async (groupId, e) => {
+  const handleDeleteGroup = (groupId, e) => {
     e.stopPropagation();
-    if (!window.confirm("Are you sure you want to delete this expense group? All historical records will be permanently lost.")) {
-      return;
-    }
-
-    try {
-      const res = await api.deleteExpenseGroup(groupId);
-      if (res.success) {
-        showToast("Group deleted.", "success");
-        setGroups(prev => prev.filter(g => g._id !== groupId));
-        if (selectedGroup && selectedGroup._id === groupId) {
-          setSelectedGroup(null);
+    setConfirmModal({
+      title: "Delete Expense Group",
+      message: "Are you sure you want to delete this expense group? All historical records will be permanently lost.",
+      confirmLabel: "Delete Group",
+      onConfirm: async () => {
+        setConfirmModal(null);
+        try {
+          const res = await api.deleteExpenseGroup(groupId);
+          if (res.success) {
+            showToast("Group deleted.", "success");
+            setGroups(prev => prev.filter(g => g._id !== groupId));
+            if (selectedGroup && selectedGroup._id === groupId) {
+              setSelectedGroup(null);
+            }
+          }
+        } catch (err) {
+          showToast(err.message || "Failed to delete group.", "error");
         }
       }
-    } catch (err) {
-      showToast(err.message || "Failed to delete group.", "error");
-    }
+    });
   };
 
   const handleAddMemberInput = () => {
@@ -195,16 +334,57 @@ export default function SplitExpense() {
     }
   };
 
-  const handleDeleteExpense = async (expenseId) => {
-    if (!window.confirm("Delete this expense?")) return;
+  const handleDeleteExpense = (expenseId) => {
+    setConfirmModal({
+      title: "Delete Expense",
+      message: "This expense will be permanently removed from the group records.",
+      confirmLabel: "Delete Expense",
+      onConfirm: async () => {
+        setConfirmModal(null);
+        try {
+          const res = await api.deleteExpense(selectedGroup._id, expenseId);
+          if (res.success) {
+            showToast("Expense removed.", "success");
+            setSelectedGroup(res.group);
+          }
+        } catch (err) {
+          showToast(err.message || "Failed to delete expense.", "error");
+        }
+      }
+    });
+  };
+
+  // Settlement modal handlers
+  const handleSettleClick = (step) => {
+    const key = `${step.from}->${step.to}->${step.amount.toFixed(2)}`;
+    if (settledItems.has(key)) return;
+    setSettlementModal(step);
+  };
+
+  const handleSettleConfirm = async () => {
+    if (!settlementModal) return;
+    setIsSettling(true);
+    const step = settlementModal;
     try {
-      const res = await api.deleteExpense(selectedGroup._id, expenseId);
+      const res = await api.addExpense(selectedGroup._id, {
+        description: `Settle: ${step.from} ➔ ${step.to}`,
+        amount: step.amount,
+        paidBy: step.from,
+        category: "Other",
+        splitBetween: [step.to],
+        date: new Date().toISOString().split("T")[0]
+      });
       if (res.success) {
-        showToast("Expense removed.", "success");
+        const key = `${step.from}->${step.to}->${step.amount.toFixed(2)}`;
+        setSettledItems(prev => new Set([...prev, key]));
         setSelectedGroup(res.group);
+        setSettlementModal(null);
+        showToast(`✅ Settlement confirmed! ${step.from} paid ${step.to} $${step.amount.toFixed(2)}`, "success");
       }
     } catch (err) {
-      showToast(err.message || "Failed to delete expense.", "error");
+      showToast(err.message || "Failed to settle.", "error");
+    } finally {
+      setIsSettling(false);
     }
   };
 
@@ -826,48 +1006,49 @@ export default function SplitExpense() {
                             This optimized transaction route minimizes the total cash transfers needed to settle all debts in the group.
                           </p>
                           <div className="grid md:grid-cols-2 gap-4">
-                            {settlementPlan.map((step, idx) => (
-                              <div
-                                key={idx}
-                                className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-800/40 rounded-xl border border-dashed border-slate-200 dark:border-slate-800 hover:border-emerald-200 dark:hover:border-emerald-950/40 transition duration-300"
-                              >
-                                <div>
-                                  <span className="font-extrabold text-slate-800 dark:text-slate-200">{step.from}</span>
-                                  <span className="text-xs text-slate-400 mx-2">owes</span>
-                                  <span className="font-extrabold text-slate-800 dark:text-slate-200">{step.to}</span>
+                            {settlementPlan.map((step, idx) => {
+                              const key = `${step.from}->${step.to}->${step.amount.toFixed(2)}`;
+                              const isSettled = settledItems.has(key);
+                              return (
+                                <div
+                                  key={idx}
+                                  className={`flex items-center justify-between p-4 rounded-xl border transition duration-300 ${
+                                    isSettled
+                                      ? "bg-emerald-50/40 dark:bg-emerald-950/10 border-emerald-200/60 dark:border-emerald-900/30 opacity-70"
+                                      : "bg-slate-50 dark:bg-slate-800/40 border-dashed border-slate-200 dark:border-slate-800 hover:border-emerald-200 dark:hover:border-emerald-950/40"
+                                  }`}
+                                >
+                                  <div className="flex flex-col gap-0.5">
+                                    <div className="flex items-center gap-1.5">
+                                      <span className="font-extrabold text-slate-800 dark:text-slate-200 text-sm">{step.from}</span>
+                                      <ArrowRight className="w-3.5 h-3.5 text-slate-400" />
+                                      <span className="font-extrabold text-slate-800 dark:text-slate-200 text-sm">{step.to}</span>
+                                    </div>
+                                    {isSettled && (
+                                      <span className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-wide">✓ Settled</span>
+                                    )}
+                                  </div>
+                                  <div className="flex items-center gap-3">
+                                    <span className={`font-black text-lg ${
+                                      isSettled ? "text-emerald-500/70 dark:text-emerald-500/60" : "text-emerald-600 dark:text-emerald-400"
+                                    }`}>
+                                      ${step.amount.toFixed(2)}
+                                    </span>
+                                    <button
+                                      onClick={() => handleSettleClick(step)}
+                                      disabled={isSettled}
+                                      className={`font-semibold text-xs px-3.5 py-2 rounded-lg transition duration-200 ${
+                                        isSettled
+                                          ? "bg-emerald-100/60 dark:bg-emerald-950/20 text-emerald-600/60 dark:text-emerald-500/50 cursor-not-allowed"
+                                          : "bg-emerald-50 hover:bg-emerald-100 text-emerald-600 dark:bg-emerald-950/30 dark:hover:bg-emerald-950/70 dark:text-emerald-400 cursor-pointer hover:shadow-sm"
+                                      }`}
+                                    >
+                                      {isSettled ? "Settled ✓" : "Mark Settled"}
+                                    </button>
+                                  </div>
                                 </div>
-                                <div className="flex items-center gap-3">
-                                  <span className="font-black text-emerald-600 dark:text-emerald-400 text-lg">
-                                    ${step.amount.toFixed(2)}
-                                  </span>
-                                  <button
-                                    onClick={() => {
-                                      // Settle transaction: add counter-expense
-                                      if (window.confirm(`Mark settlement: "${step.from} paid ${step.to} $${step.amount.toFixed(2)}" as a completed transaction?`)) {
-                                        api.addExpense(selectedGroup._id, {
-                                          description: `Settle: ${step.from} ➔ ${step.to}`,
-                                          amount: step.amount,
-                                          paidBy: step.from,
-                                          category: "Other",
-                                          splitBetween: [step.to],
-                                          date: new Date().toISOString().split("T")[0]
-                                        }).then((res) => {
-                                          if (res.success) {
-                                            showToast("Settlement recorded!", "success");
-                                            setSelectedGroup(res.group);
-                                          }
-                                        }).catch((err) => {
-                                          showToast(err.message || "Failed to settle.", "error");
-                                        });
-                                      }
-                                    }}
-                                    className="bg-emerald-50 hover:bg-emerald-100 text-emerald-600 dark:bg-emerald-950/30 dark:hover:bg-emerald-950/70 dark:text-emerald-400 font-semibold text-xs px-3.5 py-2 rounded-lg transition duration-200 cursor-pointer"
-                                  >
-                                    Mark Settled
-                                  </button>
-                                </div>
-                              </div>
-                            ))}
+                              );
+                            })}
                           </div>
                         </div>
                       )}
@@ -881,6 +1062,24 @@ export default function SplitExpense() {
           </div>
         )}
       </div>
+
+      {/* SETTLEMENT CONFIRMATION MODAL */}
+      <SettlementConfirmModal
+        settlement={settlementModal}
+        onConfirm={handleSettleConfirm}
+        onCancel={() => setSettlementModal(null)}
+        isSubmitting={isSettling}
+      />
+
+      {/* GENERIC CONFIRM MODAL (delete group / delete expense) */}
+      <GenericConfirmModal
+        isOpen={!!confirmModal}
+        title={confirmModal?.title || ""}
+        message={confirmModal?.message || ""}
+        confirmLabel={confirmModal?.confirmLabel || "Delete"}
+        onConfirm={confirmModal?.onConfirm || (() => {})}
+        onCancel={() => setConfirmModal(null)}
+      />
 
       {/* CREATE GROUP MODAL (Glassmorphic) */}
       {showCreateModal && (
