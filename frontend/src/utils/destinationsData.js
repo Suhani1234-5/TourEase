@@ -8,6 +8,7 @@ export const destinations = [
     bestFor: "Romance, Culture",
     season: "Spring & Fall",
     cost: "$$$",
+    price: 2500,
     overview:
       "Paris is the capital of France and one of the most romantic cities in the world, famous for its art, fashion, history, and café culture.",
     highlights: [
@@ -27,6 +28,7 @@ export const destinations = [
     bestFor: "Tech, Culture, Food",
     season: "Spring & Autumn",
     cost: "$$$",
+    price: 3200,
     overview:
       "Tokyo blends ultra-modern technology with deep-rooted traditions, offering a unique mix of skyscrapers, temples, and world-class cuisine.",
     highlights: [
@@ -46,6 +48,7 @@ export const destinations = [
     bestFor: "Art, Beach, Architecture",
     season: "May–October",
     cost: "$$",
+    price: 1500,
     overview:
       "Barcelona is a lively coastal city known for its artistic architecture, Mediterranean beaches, and vibrant street life.",
     highlights: [
@@ -65,6 +68,7 @@ export const destinations = [
     bestFor: "Beach, Mountains, Spirituality, Budget",
     season: "April–October",
     cost: "$",
+    price: 800,
     overview:
       "Bali is a tropical paradise offering serene beaches, spiritual temples, lush landscapes, and affordable travel experiences.",
     highlights: [
@@ -84,6 +88,7 @@ export const destinations = [
     bestFor: "Beach, Luxury, Romance", // Includes 'Beach'
     season: "November–April",
     cost: "$$$",
+    price: 4500,
     overview: "A tropical nation in the Indian Ocean composed of 26 ring-shaped atolls, which are made up of more than 1,000 coral islands.",
     highlights: ["Overwater Bungalows", "Snorkeling with Mantas", "Sandbank Dinners", "Underwater Spa"]
   },
@@ -96,6 +101,7 @@ export const destinations = [
     bestFor: "Beach, Culture, Romance", // Includes 'Beach'
     season: "May–October",
     cost: "$$$",
+    price: 3500,
     overview: "Famous for its whitewashed buildings with blue domes, stunning sunsets over the caldera, and unique volcanic beaches.",
     highlights: ["Oia Sunset", "Red Beach", "Akrotiri Ruins", "Wine Tasting"]
   },
@@ -108,6 +114,7 @@ export const destinations = [
     bestFor: "City Life, Broadway, Food",
     season: "Spring & Fall",
     cost: "$$$",
+    price: 2800,
     overview:
       "New York City is a global metropolis known for its iconic skyline, diverse culture, entertainment, and food from around the world.",
     highlights: [
@@ -127,6 +134,7 @@ export const destinations = [
     bestFor: "Luxury, Desert, Shopping",
     season: "October–April",
     cost: "$$$",
+    price: 4000,
     overview:
       "Dubai is a luxury destination famous for futuristic architecture, desert adventures, and world-class shopping experiences.",
     highlights: [
@@ -146,6 +154,7 @@ export const destinations = [
     bestFor: "Cycling, Canals, Art",
     season: "May–September",
     cost: "$$",
+    price: 1800,
     overview:
       "Amsterdam is known for its scenic canals, cycling culture, historic buildings, and world-famous art museums.",
     highlights: [
@@ -165,6 +174,7 @@ export const destinations = [
     bestFor: "History, Museums, Food",
     season: "Summer",
     cost: "$$$",
+    price: 2200,
     overview:
       "London is a historic capital city offering royal landmarks, diverse culture, world-class museums, and modern attractions.",
     highlights: [
@@ -183,6 +193,7 @@ export const destinations = [
     bestFor: "Mountains, Skiing, Luxury, Nature",
     season: "Dec–Mar (Ski) / Jun–Sep (Hike)",
     cost: "$$$",
+    price: 5000,
     overview:
       "The Swiss Alps offer some of the most dramatic mountain scenery in the world. From the iconic Matterhorn to the luxury resort towns of St. Moritz and Zermatt, this is the ultimate destination for winter sports and summer hiking.",
     highlights: [
@@ -202,6 +213,7 @@ export const destinations = [
     bestFor: "Mountains, Hiking, Nature, Adventure",
     season: "June–August",
     cost: "$$",
+    price: 2000,
     overview:
       "Banff National Park is Canada's oldest national park, nestled in the heart of the Rocky Mountains. Known for its turquoise glacial lakes, such as Lake Louise and Moraine Lake, it offers endless outdoor adventures.",
     highlights: [
@@ -220,6 +232,7 @@ export const destinations = [
     bestFor: "Mountains, History, Culture, Hiking",
     season: "May–October",
     cost: "$$",
+    price: 1600,
     overview:
       "Set high in the Andes Mountains, Machu Picchu is an Incan citadel recognized as one of the New Seven Wonders of the World. The trek to reach it is as breathtaking as the ruins themselves.",
     highlights: [
@@ -239,6 +252,7 @@ export const destinations = [
     bestFor: "Mountains, Nature, Culture, Photography",
     season: "July–September (Climbing)",
     cost: "$$",
+    price: 1400,
     overview:
       "Mount Fuji is Japan's tallest peak and an active volcano revered as a sacred symbol. Whether viewed from afar during cherry blossom season or climbed during the summer, it is an awe-inspiring sight.",
     highlights: [

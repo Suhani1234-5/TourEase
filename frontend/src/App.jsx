@@ -44,7 +44,6 @@ import ScrollToTopOnNavigate from "./components/common/ScrollToTopOnNavigate";
 import DynamicPlannerPage from './pages/DynamicPlannerPage';
 import ScrollToTop from "./components/common/ScrollToTop";
 import MyTrips from "./pages/MyTrips";
-import { ScrollToTop } from "./components/common/ScrollToTop";
 import SplitExpense from "./pages/SplitExpense";
 import TravelLocker from "./pages/TravelLocker";
 import CurrencyConverter from "./pages/CurrencyConverter";

@@ -6,6 +6,63 @@ import { useFavorites } from "../hooks/useFavorites";
 import ReviewPanel from "../components/features/reviews/ReviewPanel";
 import { getCoordinates } from "../utils/geocoder";
 import DestinationMap from "../components/DestinationMap";
+import CurrencyConverterWidget from "../components/CurrencyConverterWidget";
+
+class MapErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError(error) {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error, errorInfo) {
+    console.error("Map rendering error caught:", error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="w-full h-[350px] bg-gray-100 dark:bg-gray-950 rounded-xl flex flex-col items-center justify-center text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-gray-800 p-4 text-center">
+          <span className="text-orange-500 text-lg mb-1">🗺️</span>
+          <p className="font-semibold text-sm text-gray-700 dark:text-gray-300">Map loading issue</p>
+          <p className="text-xs text-gray-450 dark:text-gray-550 mt-1 max-w-[250px] mx-auto">
+            Interactive map couldn't load. Try refreshing or check your connection.
+          </p>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+
+class WidgetErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError(error) {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error, errorInfo) {
+    console.error("Widget rendering error caught:", error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="mt-4 border-t border-gray-200 dark:border-gray-800 pt-4 text-xs text-gray-500 text-center">
+          ⚠️ Currency converter is temporarily unavailable.
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
 
 export default function DestinationDetails() {
   const { id } = useParams();
@@ -154,11 +211,13 @@ export default function DestinationDetails() {
                         Plotting interactive points of interest...
                       </div>
                     ) : (
-                      <DestinationMap 
-                        center={cityCenter}
-                        destinationName={destination.name}
-                        attractions={mapPins}
-                      />
+                      <MapErrorBoundary>
+                        <DestinationMap 
+                          center={cityCenter}
+                          destinationName={destination.name}
+                          attractions={mapPins}
+                        />
+                      </MapErrorBoundary>
                     )}
                   </div>
 
@@ -195,34 +254,47 @@ export default function DestinationDetails() {
           {/* Right Section */}
           <div className="lg:col-span-4">
             <div className="sticky top-20 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl p-6">
-              <p className="text-xl font-bold mb-4">Quick actions</p>
+              <div className="mb-4">
+                <span className="text-xs text-gray-500 dark:text-gray-400 uppercase font-bold tracking-wider">
+                  Starting from
+                </span>
+                <div className="text-3xl font-extrabold text-teal-600 dark:text-indigo-400 mt-1">
+                  ${destination.price || 1500} <span className="text-sm font-semibold text-gray-500 dark:text-gray-400">USD</span>
+                </div>
+              </div>
 
-              <button
-                onClick={() => toggleFavorite(destination.id)}
-                className="w-full bg-gray-100 dark:bg-gray-950 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100 py-3 rounded-lg font-semibold mb-3 hover:bg-gray-200 dark:hover:bg-gray-800 transition"
-              >
-                {isFavorite(destination.id)
-                  ? "Remove from Favorites"
-                  : "Add to Favorites"}
-              </button>
+              <div className="space-y-3 mb-4">
+                <button
+                  onClick={() => toggleFavorite(destination.id)}
+                  className="w-full bg-gray-100 dark:bg-gray-950 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100 py-3 rounded-lg font-semibold hover:bg-gray-200 dark:hover:bg-gray-800 transition"
+                >
+                  {isFavorite(destination.id)
+                    ? "Remove from Favorites"
+                    : "Add to Favorites"}
+                </button>
 
-              <button
-onClick={() =>
-  navigate("/trip-planner", {
-    state: { destinationName: destination.name },
-  })
-}
-className="w-full bg-teal-500 hover:bg-teal-600 dark:bg-indigo-600 dark:hover:bg-indigo-800 text-white py-3 rounded-lg font-semibold transition"
-              >
-                Plan this Trip
-              </button>
+                <button
+                  onClick={() =>
+                    navigate("/trip-planner", {
+                      state: { destinationName: destination.name },
+                    })
+                  }
+                  className="w-full bg-teal-500 hover:bg-teal-600 dark:bg-indigo-600 dark:hover:bg-indigo-800 text-white py-3 rounded-lg font-semibold transition"
+                >
+                  Plan this Trip
+                </button>
+              </div>
 
               <button
                 onClick={() => navigate("/destinations")}
-                className="mt-3 w-full text-teal-600 dark:text-indigo-600 font-semibold hover:underline"
+                className="w-full text-center text-teal-650 dark:text-indigo-400 font-semibold hover:underline text-sm"
               >
                 Explore more destinations
               </button>
+
+              <WidgetErrorBoundary>
+                <CurrencyConverterWidget basePriceUsd={destination.price || 1500} />
+              </WidgetErrorBoundary>
             </div>
           </div>
         </div>

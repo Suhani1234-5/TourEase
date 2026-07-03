@@ -59,6 +59,7 @@ function timeAgo(dateStr) {
 const ReviewCard = ({ review, refreshReviews }) => {
   const [likesCount, setLikesCount] = useState(review.likes || 0);
   const [isLiked, setIsLiked]       = useState(false);
+  const isMock = review._id && String(review._id).startsWith("mock");
 
   const storedUser = localStorage.getItem("user");
   const currentUser = storedUser ? JSON.parse(storedUser) : null;
