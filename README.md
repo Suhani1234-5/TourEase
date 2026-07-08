@@ -105,6 +105,50 @@ TourEase is an open-source, AI-powered travel assistant that helps tourists plan
 ![OpenAI](https://img.shields.io/badge/OpenAI_SDK-412991?style=flat-square&logo=openai&logoColor=white)
 
 ---
+📁 FOLDER STRUCTURE-
+TourEase/
+├── backend/
+│   ├── src/
+│   │   ├── controllers/
+│   │   ├── models/
+│   │   ├── routes/
+│   │   ├── middlewares/
+│   │   ├── services/
+│   │   ├── utils/
+│   │   └── config/
+│   ├── tests/
+│   │   ├── unit/
+│   │   └── integration/
+│   ├── .env.example
+│   └── package.json
+│
+├── frontend/
+│   ├── public/
+│   ├── src/
+│   │   ├── assets/
+│   │   │   ├── images/
+│   │   │   └── styles/
+│   │   ├── components/
+│   │   ├── pages/
+│   │   ├── services/
+│   │   ├── utils/
+│   │   ├── hooks/
+│   │   └── config/
+│   ├── tests/
+│   │   ├── unit/
+│   │   └── integration/
+│   ├── .env.example
+│   └── package.json
+│
+├── docs/
+│   └── architecture.md
+│
+├── .gitignore
+├── README.md
+└── LICENSE
+
+
+---
 
 <!-- Removed duplicate Project Structure heading -->
 
