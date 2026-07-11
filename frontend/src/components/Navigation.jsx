@@ -100,7 +100,7 @@ export default function Navigation() {
         }
       `}</style>
 
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-white dark:bg-gray-955 bg-gradient-to-b from-teal-50/50 to-transparent dark:from-gray-800/50 shadow-md border-b border-gray-200 dark:border-gray-800">
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md bg-gradient-to-b from-teal-50/10 to-transparent dark:from-slate-950/20 shadow-md border-b border-gray-200 dark:border-gray-800/80 transition-all duration-300">
         
         {/* Outer Container: Uses clamp to reduce side padding on medium screens to buy more space */}
         <div className="w-full px-[clamp(16px,2vw,48px)]">
@@ -140,7 +140,7 @@ export default function Navigation() {
                     key={item.path}
                     to={item.path}
                     className={`px-[clamp(4px,0.55vw,9px)] py-1.5 rounded-lg font-semibold text-[clamp(10px,0.78vw,13px)] leading-tight text-center max-w-[110px] overflow-hidden transition-all ${isActive(item.path)
-                      ? "bg-teal-500 dark:bg-indigo-600 text-white"
+                      ? "bg-teal-500 dark:bg-teal-600 text-white"
                       : `text-gray-700 dark:text-gray-300 ${hoverColors[index]}`
                       }`}
                     title={item.label}
@@ -152,7 +152,7 @@ export default function Navigation() {
               <Link
                 to="/favorites"
                 className={`group relative px-[clamp(4px,0.55vw,9px)] py-1.5 rounded-lg font-semibold flex items-center gap-1 text-[clamp(10px,0.78vw,13px)] leading-tight transition flex-shrink-0 ${isActive("/favorites")
-                  ? "bg-teal-500 dark:bg-indigo-600 text-white"
+                  ? "bg-teal-500 dark:bg-teal-600 text-white"
                   : "text-gray-700 dark:text-gray-300 hover:bg-red-100 dark:hover:bg-red-900/30"
                   }`}
                 title="Favorites"
@@ -275,7 +275,7 @@ export default function Navigation() {
                   to={item.path}
                   onClick={() => setIsOpen(false)}
                   className={`block px-5 py-4 rounded-2xl font-semibold text-[15px] transition-all duration-200 ${isActive(item.path)
-                    ? "bg-linear-to-r from-teal-500 to-cyan-600 dark:from-indigo-500 dark:to-purple-600 text-white shadow-lg"
+                    ? "bg-linear-to-r from-teal-500 to-cyan-600 dark:from-teal-500 dark:to-cyan-600 text-white shadow-lg"
                     : `text-gray-700 dark:text-gray-100 ${mobileHoverColors[index]}`
                     }`}
                   style={{
@@ -298,7 +298,7 @@ export default function Navigation() {
               to="/favorites"
               onClick={() => setIsOpen(false)}
               className={`group relative px-5 py-4 rounded-2xl font-semibold flex items-center gap-3 text-[15px] transition-all duration-200 ${isActive("/favorites")
-                ? "bg-linear-to-r from-teal-500 to-cyan-600 dark:from-indigo-500 dark:to-purple-600 text-white shadow-lg"
+                ? "bg-linear-to-r from-teal-500 to-cyan-600 dark:from-teal-500 dark:to-cyan-600 text-white shadow-lg"
                 : "text-gray-700 dark:text-gray-100 hover:bg-red-100 dark:hover:bg-red-900/40"
                 }`}
               style={{
