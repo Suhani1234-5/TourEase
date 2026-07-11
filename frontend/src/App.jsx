@@ -12,6 +12,7 @@ import { AnimatePresence } from "framer-motion";
 import PageTransition from "./components/common/PageTransition";
 
 import { FavoritesProvider } from "./context/FavoritesContext";
+import { LanguageProvider } from "./context/LanguageContext";
 import { ThemeProvider } from "./context/ThemeContext";
 import { ToastProvider } from "./context/ToastContext";
 import Navigation from "./components/Navigation";
@@ -28,7 +29,7 @@ import AddFavorite from "./pages/AddFavorite";
 import ScrollToTopButton from "./components/common/ScrollToTop";
 import ChatbotLauncher from "./components/chatbot/ChatbotLauncher";
 import DestinationDetails from "./pages/DestinationDetails";
-import LanguageSelector from "./components/LanguageSelector";
+
 import PlanTrip from "./pages/PlanTrip";
 import OAuthSuccess from "./pages/OAuthSuccess";
 import Privacy from "./pages/Privacy";
@@ -44,7 +45,6 @@ import ScrollToTopOnNavigate from "./components/common/ScrollToTopOnNavigate";
 import DynamicPlannerPage from './pages/DynamicPlannerPage';
 import ScrollToTop from "./components/common/ScrollToTop";
 import MyTrips from "./pages/MyTrips";
-import { ScrollToTop } from "./components/common/ScrollToTop";
 import SplitExpense from "./pages/SplitExpense";
 import TravelLocker from "./pages/TravelLocker";
 import CurrencyConverter from "./pages/CurrencyConverter";
@@ -74,7 +74,6 @@ function AppRoutes() {
       <ScrollToTopOnNavigate /> 
       {showNavigation && <Navigation />}
       <ScrollToTopButton />
-      <LanguageSelector />
       <ChatbotLauncher />
       <div className={showNavigation ? "pt-16" : ""}>
         <Routes>
@@ -138,15 +137,17 @@ export default function App() {
   }
 
   return (
-    <ThemeProvider>
-      <ToastProvider>
-        <FavoritesProvider>
-          <Router>
-            <ScrollToTop />
-            <AppRoutes />
-          </Router>
-        </FavoritesProvider>
-      </ToastProvider>
-    </ThemeProvider>
+    <LanguageProvider>
+      <ThemeProvider>
+        <ToastProvider>
+          <FavoritesProvider>
+            <Router>
+              <ScrollToTop />
+              <AppRoutes />
+            </Router>
+          </FavoritesProvider>
+        </ToastProvider>
+      </ThemeProvider>
+    </LanguageProvider>
   );
 }

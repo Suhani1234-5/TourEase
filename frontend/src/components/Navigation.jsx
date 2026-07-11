@@ -100,10 +100,7 @@ export default function Navigation() {
         }
       `}</style>
 
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 shadow-sm">
-        <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-10">
-          <div className="flex h-[72px] items-center justify-between">
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-white dark:bg-gray-950 bg-gradient-to-b from-teal-50/50 to-transparent dark:from-gray-800/50 shadow-md border-b border-gray-200 dark:border-gray-800">
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-white dark:bg-gray-955 bg-gradient-to-b from-teal-50/50 to-transparent dark:from-gray-800/50 shadow-md border-b border-gray-200 dark:border-gray-800">
         
         {/* Outer Container: Uses clamp to reduce side padding on medium screens to buy more space */}
         <div className="w-full px-[clamp(16px,2vw,48px)]">
@@ -113,7 +110,6 @@ export default function Navigation() {
             {/* LOGO */}
             <div
               onClick={handleLogoClick}
-              className="mr-6 cursor-pointer text-2xl font-bold bg-linear-to-r from-teal-500 to-cyan-600 dark:from-indigo-400 dark:to-purple-500 bg-clip-text text-transparent"
               className="cursor-pointer flex items-center gap-2 group shrink-0"
             >
               <div className="relative flex items-center justify-center w-8 h-8">
@@ -126,24 +122,7 @@ export default function Navigation() {
             </div>
 
             {/* DESKTOP NAV */}
-            <div className="hidden md:flex items-center gap-2 lg:gap-3">
-              {navItems.map((item) => (
-                <Link
-                  key={item.path}
-                  to={item.path}
-                  className={`px-5 py-2.5 rounded-xl font-medium transition-all duration-200 ${isActive(item.path)
-                    ? "bg-teal-500 dark:bg-indigo-600 text-white"
-                    : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
-                    }`}
-                >
-                  {item.label}
-                </Link>
-              ))}
-              <Link
-                to="/favorites"
-                className={`relative px-5 pr-14 py-2.5 rounded-xl rounded-lg font-semibold flex items-center gap-2 transition ${isActive("/favorites")
-            {/* DESKTOP NAV (Breaks exactly at 1200px, but shrinks dynamically before that) */}
-            <div className="hidden min-[1200px]:flex items-center gap-[clamp(4px,0.8vw,8px)] flex-1 justify-center px-2">
+            <div className="hidden min-[1200px]:flex items-center gap-[clamp(2px,0.5vw,6px)] flex-1 justify-center px-1 overflow-hidden">
               {navItems.map((item, index) => {
                 const hoverColors = [
                   "hover:bg-cyan-100 dark:hover:bg-cyan-900/30",
@@ -156,40 +135,39 @@ export default function Navigation() {
                   "hover:bg-amber-100 dark:hover:bg-amber-900/30",
                   "hover:bg-lime-100 dark:hover:bg-lime-900/30"
                 ];
-                const isSecondaryDesktopItem = index >= 5;
                 return (
                   <Link
                     key={item.path}
                     to={item.path}
-                    className={`px-[clamp(6px,0.8vw,12px)] py-2 rounded-lg font-semibold whitespace-nowrap text-[clamp(12px,1vw,15px)] transition-all ${isActive(item.path)
+                    className={`px-[clamp(4px,0.55vw,9px)] py-1.5 rounded-lg font-semibold text-[clamp(10px,0.78vw,13px)] leading-tight text-center max-w-[110px] overflow-hidden transition-all ${isActive(item.path)
                       ? "bg-teal-500 dark:bg-indigo-600 text-white"
                       : `text-gray-700 dark:text-gray-300 ${hoverColors[index]}`
                       }`}
+                    title={item.label}
                   >
-                    {item.label}
+                    <span className="block truncate">{item.label}</span>
                   </Link>
                 );
               })}
               <Link
                 to="/favorites"
-                className={`group relative px-[clamp(6px,0.8vw,12px)] py-2 rounded-lg font-semibold flex items-center gap-2 whitespace-nowrap text-[clamp(12px,1vw,15px)] transition ${isActive("/favorites")
+                className={`group relative px-[clamp(4px,0.55vw,9px)] py-1.5 rounded-lg font-semibold flex items-center gap-1 text-[clamp(10px,0.78vw,13px)] leading-tight transition flex-shrink-0 ${isActive("/favorites")
                   ? "bg-teal-500 dark:bg-indigo-600 text-white"
                   : "text-gray-700 dark:text-gray-300 hover:bg-red-100 dark:hover:bg-red-900/30"
                   }`}
+                title="Favorites"
               >
-                <Heart className="w-5 h-5 transition-colors group-hover:text-red-500 group-hover:fill-red-500 shrink-0" />
-                Favorites
+                <Heart className="w-4 h-4 transition-colors group-hover:text-red-500 group-hover:fill-red-500 shrink-0" />
+                <span className="truncate max-w-[70px]">Favorites</span>
                 {favoriteIds.length > 0 && (
-                  <span className="absolute right-2 top-1/2 -translate-y-1/2 bg-red-500 text-white text-xs px-2 h-5 min-w-7 rounded-full inline-flex items-center justify-center">
-                    {favoriteIds.length}
+                  <span className="absolute -right-1 -top-1 bg-red-500 text-white text-[10px] w-4 h-4 rounded-full inline-flex items-center justify-center font-bold">
+                    {favoriteIds.length > 9 ? "9+" : favoriteIds.length}
                   </span>
                 )}
               </Link>
             </div>
 
             {/* RIGHT ACTIONS */}
-            <div className="flex items-center gap-4">
-
             <div className="flex items-center gap-[clamp(8px,1vw,16px)] shrink-0">
               {/* THEME TOGGLE */}
               <button
@@ -208,24 +186,20 @@ export default function Navigation() {
                 )}
               </button>
 
-              <LanguageSelector
-                variant="inline"
-                className="hidden min-[1200px]:block"
-              />
+              <LanguageSelector className="hidden min-[1200px]:block" />
 
 
-              {/* CTA - Uses clamp to shrink padding and text proportionally */}
+              {/* CTA */}
               {!isLoggedIn ? (
                 <Link
                   to="/trip-planner"
-                  className="bg-orange-500 hover:bg-orange-600 text-white px-7 py-2.5 rounded-lg font-semibold transition items-center"
+                  className="bg-orange-500 hover:bg-orange-600 text-white px-[clamp(8px,1.2vw,18px)] py-2 rounded-lg font-semibold transition text-[clamp(11px,0.9vw,14px)] whitespace-nowrap shrink-0"
                 >
                   Get Started
                 </Link>
               ) : (
                 <button
                   onClick={handleLogout}
-                  className="bg-red-500 hover:bg-red-600 text-white px-7 py-2.5 rounded-lg font-semibold transition"
                   className="bg-red-500 hover:bg-red-600 text-white px-[clamp(12px,1.5vw,20px)] py-2 rounded-lg font-semibold transition whitespace-nowrap text-[clamp(12px,1vw,15px)] shadow-lg hover:shadow-xl"
                 >
                   Logout

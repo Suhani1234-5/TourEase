@@ -24,19 +24,42 @@
     <link rel="manifest" href="/site.webmanifest" />    
 
     <script>
+      /**
+       * Early language restore / reset.
+       * Runs BEFORE Google Translate loads, so the correct cookie is in place
+       * when translate_a/element.js initialises.
+       *
+       * - If the user previously chose a non-English language → set the
+       *   googtrans cookie so GT restores that language automatically.
+       * - Otherwise (English or nothing saved) → clear any stale cookies so
+       *   GT does NOT auto-translate on load.
+       */
       (function () {
         var storageKey = 'tourease_language';
+        var savedLang = 'en';
         try {
-          localStorage.setItem(storageKey, 'en');
-        } catch (error) {
-          // Ignore storage failures and still clear the translate cookie.
+          savedLang = localStorage.getItem(storageKey) || 'en';
+        } catch (e) { /* localStorage unavailable */ }
+
+        var hostname = location.hostname;
+
+        if (savedLang && savedLang !== 'en') {
+          // Restore non-English language: set the cookie GT reads on init.
+          var value = '/en/' + savedLang;
+          var maxAge = '; max-age=' + (60 * 60 * 24 * 365);
+          document.cookie = 'googtrans=' + value + '; path=/' + maxAge;
+          if (hostname.indexOf('.') !== -1) {
+            document.cookie = 'googtrans=' + value + '; path=/' + maxAge + '; domain=.' + hostname;
+          }
+        } else {
+          // English (or nothing) → clear any stale googtrans cookie.
+          document.cookie = 'googtrans=; path=/; max-age=0';
+          document.cookie = 'googtrans=; path=/; max-age=0; domain=' + hostname;
+          document.cookie = 'googtrans=; path=/; max-age=0; domain=.' + hostname;
+          try { localStorage.setItem(storageKey, 'en'); } catch (e) {}
         }
 
-        document.documentElement.lang = 'en';
-        var hostname = location.hostname;
-        document.cookie = 'googtrans=; path=/; max-age=0';
-        document.cookie = 'googtrans=; path=/; max-age=0; domain=' + hostname;
-        document.cookie = 'googtrans=; path=/; max-age=0; domain=.' + hostname;
+        document.documentElement.lang = savedLang !== 'en' ? savedLang : 'en';
       })();
     </script>
     
@@ -51,7 +74,8 @@
         globalThis.googleTranslateElement = new google.translate.TranslateElement(
           {
             pageLanguage: 'en',
-            includedLanguages: 'en,hi',
+            // All languages supported by the language selector
+            includedLanguages: 'en,hi,kn,ta,te,ml,mr,bn,gu,pa,ur,fr,de,es,pt,it,ja,ko,zh-CN,ar,ru',
             autoDisplay: false,
           },
           'google_translate_element'

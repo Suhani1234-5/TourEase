@@ -3,7 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import AuthCard from '../components/AuthCard';
 import AuthBackground from '../components/AuthBackground';
 import ChatbotLauncher from '../components/chatbot/ChatbotLauncher';
-import LanguageSelector from '../components/LanguageSelector';
+
 import '../styles/auth.css';
 
 export default function Auth() {
@@ -28,9 +28,8 @@ export default function Auth() {
         <AuthCard initialMode={mode} />
       </div>
 
-      {/* Bottom Utilities — language + chatbot */}
+      {/* Bottom Utilities — chatbot */}
       <div className="auth-bottom-utilities" style={{ zIndex: 20 }}>
-        <LanguageSelector />
         <ChatbotLauncher />
       </div>
     </div>

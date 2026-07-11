@@ -206,74 +206,181 @@ body > .skiptranslate {
 
 /* ===============================
    Floating Language FAB (bottom-left)
-   Mirrors chatbot launcher style
    ================================ */
 
-.lang-fab-wrapper {
+/* Outer positioning wrapper */
+.lang-fab-container {
   position: fixed;
-  bottom: 96px; /* same level as chatbot launcher */
+  bottom: 96px;
   left: 24px;
   z-index: 1001;
   display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+/* Trigger pill button */
+.lang-fab-trigger {
+  display: inline-flex;
   align-items: center;
-  gap: 4px;
+  gap: 6px;
   background: linear-gradient(135deg, #14b8a6, #6366f1);
+  border: none;
   border-radius: 999px;
-  padding: 8px 12px;
+  padding: 9px 14px;
+  cursor: pointer;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
-  transition: box-shadow 0.2s ease;
-}
-
-.lang-fab-wrapper:hover {
-  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
-}
-
-.lang-fab-icon {
-  width: 18px;
-  height: 18px;
+  transition: box-shadow 0.2s ease, opacity 0.2s ease;
   color: white;
-  flex-shrink: 0;
-  margin-right: 2px;
 }
 
-.lang-fab-btn {
-  padding: 4px 10px;
+.lang-fab-trigger:hover {
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
+  opacity: 0.95;
+}
+
+.lang-fab-trigger-icon {
+  width: 17px;
+  height: 17px;
+  flex-shrink: 0;
+}
+
+.lang-fab-trigger-label {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  min-width: 18px;
+  text-align: center;
+}
+
+.lang-fab-trigger-chevron {
+  width: 13px;
+  height: 13px;
+  flex-shrink: 0;
+  opacity: 0.85;
+}
+
+/* Slide-up menu card */
+.lang-fab-menu {
+  width: 200px;
+  border-radius: 14px;
+  overflow: hidden;
+  background: rgba(17, 24, 39, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45);
+  animation: lang-menu-fadein 0.18s ease;
+}
+
+@keyframes lang-menu-fadein {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.lang-fab-menu-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 12px 8px;
   font-size: 11px;
   font-weight: 700;
-  border-radius: 999px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.45);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.lang-fab-menu-icon {
+  width: 13px;
+  height: 13px;
+  flex-shrink: 0;
+}
+
+.lang-fab-menu-close {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
   border: none;
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.6);
   cursor: pointer;
-  color: rgba(255, 255, 255, 0.75);
-  background: transparent;
-  transition: background 0.2s ease, color 0.2s ease;
-  letter-spacing: 0.05em;
+  transition: background 0.15s ease;
 }
 
-.lang-fab-btn:hover {
-  color: white;
+.lang-fab-menu-close:hover {
   background: rgba(255, 255, 255, 0.2);
+  color: white;
 }
 
-.lang-fab-btn--active {
-  background: white !important;
-  color: #0d9488 !important; /* Teal-700 for high contrast against white */
+.lang-fab-menu-list {
+  max-height: 260px;
+  overflow-y: auto;
+  padding: 4px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(99, 102, 241, 0.5) transparent;
+}
+
+.lang-fab-menu-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 7px 10px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.15s ease;
+}
+
+.lang-fab-menu-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.lang-fab-menu-item--active {
+  background: rgba(20, 184, 166, 0.2) !important;
+}
+
+.lang-fab-menu-item-native {
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.lang-fab-menu-item--active .lang-fab-menu-item-native {
+  color: #5eead4; /* teal-300 */
+}
+
+.lang-fab-menu-item-label {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.lang-fab-menu-item--active .lang-fab-menu-item-label {
+  color: #5eead4;
 }
 
 @media (max-width: 640px) {
-  .lang-fab-wrapper {
+  .lang-fab-container {
     bottom: 80px;
     left: 16px;
-    padding: 7px 10px;
   }
 
-  .lang-fab-icon {
-    width: 15px;
-    height: 15px;
+  .lang-fab-trigger {
+    padding: 7px 11px;
   }
 
-  .lang-fab-btn {
-    font-size: 10px;
-    padding: 3px 8px;
+  .lang-fab-menu {
+    width: 185px;
   }
 }
 
