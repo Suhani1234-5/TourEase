@@ -8,16 +8,16 @@ on:
   pull_request:
 
 jobs:
-  build:
+  frontend:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v5
         with:
-          node-version: 18
+          node-version: 22
 
       - name: Install frontend dependencies
         working-directory: frontend
@@ -26,3 +26,23 @@ jobs:
       - name: Build frontend
         working-directory: frontend
         run: npm run build
+
+
+  backend:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: 22
+
+      - name: Install backend dependencies
+        working-directory: backend
+        run: npm install
+
+      - name: Run backend tests
+        working-directory: backend
+        run: npm test
