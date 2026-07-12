@@ -3,8 +3,9 @@ import { submitReview } from "../../../services/reviewService";
 import { Send, CheckCircle2, Star, MapPin, User } from "lucide-react";
 
 /* ──────────────────────────────────────────
-   Interactive star picker — smooth & readable
+   Interactive star picker
 ────────────────────────────────────────── */
+
 const RATING_LABELS = ["", "Poor", "Fair", "Good", "Great", "Excellent"];
 
 function StarPicker({ value, onChange }) {
@@ -50,13 +51,14 @@ function StarPicker({ value, onChange }) {
 }
 
 /* ──────────────────────────────────────────
-   Traveler type pills
+   Traveler Type
 ────────────────────────────────────────── */
+
 const TRAVELER_TYPES = [
-  { value: "Solo",     emoji: "🧳" },
-  { value: "Couple",   emoji: "💑" },
-  { value: "Family",   emoji: "👨‍👩‍👧" },
-  { value: "Friends",  emoji: "👫" },
+  { value: "Solo", emoji: "🧳" },
+  { value: "Couple", emoji: "💑" },
+  { value: "Family", emoji: "👨‍👩‍👧" },
+  { value: "Friends", emoji: "👫" },
   { value: "Business", emoji: "💼" },
 ];
 
@@ -65,6 +67,7 @@ function TravelerPills({ value, onChange }) {
     <div className="flex flex-wrap gap-2">
       {TRAVELER_TYPES.map((t) => {
         const active = value === t.value;
+
         return (
           <button
             key={t.value}
@@ -88,6 +91,7 @@ function TravelerPills({ value, onChange }) {
 /* ──────────────────────────────────────────
    Main Review Form
 ────────────────────────────────────────── */
+
 const ReviewForm = ({ destinationId, refreshReviews }) => {
   const storedUser = localStorage.getItem("user");
   const currentUser = storedUser ? JSON.parse(storedUser) : null;
@@ -101,44 +105,70 @@ const ReviewForm = ({ destinationId, refreshReviews }) => {
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError]     = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const [error, setError] = useState("");
 
-  const handleChange = (e) =>
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
 
-    if (!formData.username.trim())            return setError("Please enter your name.");
-    if (formData.rating === 0)                return setError("Please select a star rating.");
-    if (formData.reviewText.trim().length < 10) return setError("Review must be at least 10 characters.");
+    if (!formData.username.trim()) {
+      setError("Please enter your name.");
+      return;
+    }
+
+    if (formData.rating === 0) {
+      setError("Please select a star rating.");
+      return;
+    }
+
+    if (formData.reviewText.trim().length < 10) {
+      setError("Review must be at least 10 characters.");
+      return;
+    }
 
     setIsSubmitting(true);
+
     try {
       const reviewPayload = {
         ...formData,
         rating: Number(formData.rating),
         destinationId,
         travelDate: new Date().toISOString(),
-      });
+      };
 
-      // Clear the form
+      // ENVIA PARA A API
+      await submitReview(reviewPayload);
+
+      // Limpa formulário
       setFormData({
         username: currentUser ? currentUser.name : "",
         rating: 5,
         travelerType: "Solo",
         reviewText: "",
       });
+
       setSubmitted(true);
-      setTimeout(() => setSubmitted(false), 4000);
-      refreshReviews();
+
+      setTimeout(() => {
+        setSubmitted(false);
+      }, 4000);
+
+      if (refreshReviews) {
+        refreshReviews();
+      }
     } catch (err) {
       setError(
         err?.response?.data?.message ||
-        err?.message ||
-        "Failed to submit review. Please try again."
+          err?.message ||
+          "Failed to submit review. Please try again."
       );
     } finally {
       setIsSubmitting(false);
@@ -151,114 +181,124 @@ const ReviewForm = ({ destinationId, refreshReviews }) => {
         <h3 className="text-xl font-bold mb-2 text-zinc-800 dark:text-white">
           Share Your Experience
         </h3>
+
         <p className="text-zinc-600 dark:text-zinc-400 mb-6 max-w-md mx-auto text-sm leading-relaxed">
-          Join TourEase to write reviews, like other travelers' feedback, and plan your perfect trip.
+          Join TourEase to write reviews, like other travelers' feedback, and
+          plan your perfect trip.
         </p>
+
         <a
           href="/auth?mode=login"
-          className="inline-block bg-teal-500 hover:bg-teal-600 text-white px-6 py-2.5 rounded-lg font-semibold transition-colors shadow-md hover:shadow-lg transform active:scale-95 duration-250 text-sm"
+          className="inline-block bg-teal-500 hover:bg-teal-600 text-white px-6 py-2.5 rounded-lg font-semibold transition-colors shadow-md hover:shadow-lg"
         >
           Log In to Write a Review
         </a>
       </div>
     );
   }
+
   const inputBase =
     "w-full px-4 py-2.5 rounded-xl text-sm border bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 outline-none transition-all duration-200 border-gray-200 dark:border-gray-700 focus:border-teal-400 dark:focus:border-teal-600 focus:ring-2 focus:ring-teal-400/20 dark:focus:ring-teal-600/20";
 
   return (
     <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-6 md:p-8 shadow-sm">
-      {/* Header */}
       <div className="flex items-center gap-2.5 mb-6">
         <div className="w-8 h-8 rounded-lg bg-teal-50 dark:bg-teal-900/30 flex items-center justify-center">
           <User className="w-4 h-4 text-teal-600 dark:text-teal-400" />
         </div>
+
         <div>
           <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100">
             Write a Review
           </h3>
+
           <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">
-            Share your experience to help other travellers
+            Share your experience to help other travellers.
           </p>
         </div>
       </div>
 
-      {/* Success banner */}
       {submitted && (
-        <div className="mb-5 flex items-center gap-2.5 px-4 py-3 rounded-xl bg-teal-50 dark:bg-teal-900/20 border border-teal-200 dark:border-teal-800 text-teal-700 dark:text-teal-300 text-sm font-medium animate-fadeIn">
+        <div className="mb-5 flex items-center gap-2.5 px-4 py-3 rounded-xl bg-teal-50 dark:bg-teal-900/20 border border-teal-200 dark:border-teal-800 text-teal-700 dark:text-teal-300 text-sm font-medium">
           <CheckCircle2 className="w-4 h-4 shrink-0" />
           Thank you! Your review has been posted.
         </div>
       )}
 
       <form onSubmit={handleSubmit} className="space-y-5">
-        {/* Name */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
+          <label className="block text-sm font-medium mb-2">
             Your Name
           </label>
+
           <input
             type="text"
             name="username"
             value={formData.username}
             onChange={handleChange}
-            required
             disabled
             className={inputBase}
-            placeholder="John Doe"
           />
         </div>
 
-        {/* Star rating */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+          <label className="block text-sm font-medium mb-2">
             Your Rating
           </label>
+
           <StarPicker
             value={formData.rating}
-            onChange={(val) => setFormData({ ...formData, rating: val })}
+            onChange={(value) =>
+              setFormData({
+                ...formData,
+                rating: value,
+              })
+            }
           />
         </div>
 
-        {/* Travel style */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-            <MapPin className="inline w-3.5 h-3.5 mr-1 -mt-0.5 text-teal-500" />
+          <label className="block text-sm font-medium mb-2">
+            <MapPin className="inline w-4 h-4 mr-1" />
             Travel Style
           </label>
+
           <TravelerPills
             value={formData.travelerType}
-            onChange={(val) => setFormData({ ...formData, travelerType: val })}
+            onChange={(value) =>
+              setFormData({
+                ...formData,
+                travelerType: value,
+              })
+            }
           />
         </div>
 
-        {/* Review text */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
+          <label className="block text-sm font-medium mb-2">
             Your Experience
           </label>
+
           <textarea
             name="reviewText"
+            rows={4}
             value={formData.reviewText}
             onChange={handleChange}
-            rows={4}
-            placeholder="What made this destination special? Tell other travellers..."
             className={`${inputBase} resize-none`}
+            placeholder="What made this destination special?"
           />
         </div>
 
-        {/* Error */}
         {error && (
-          <p className="text-sm font-medium text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-900/15 border border-rose-200 dark:border-rose-800 rounded-lg px-3 py-2">
+          <p className="text-sm text-red-600 font-medium">
             {error}
           </p>
         )}
 
-        {/* Submit */}
         <button
           type="submit"
           disabled={isSubmitting}
-          className="inline-flex items-center gap-2 bg-teal-500 hover:bg-teal-600 dark:bg-teal-600 dark:hover:bg-teal-700 disabled:opacity-60 text-white font-semibold px-6 py-2.5 rounded-xl text-sm transition-all duration-200 shadow-sm hover:shadow-md hover:shadow-teal-500/20 active:scale-[0.98]"
+          className="inline-flex items-center gap-2 bg-teal-500 hover:bg-teal-600 text-white font-semibold px-6 py-2.5 rounded-xl disabled:opacity-60"
         >
           <Send className="w-4 h-4" />
           {isSubmitting ? "Posting..." : "Post Review"}
