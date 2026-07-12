@@ -142,12 +142,9 @@ const ReviewForm = ({ destinationId, refreshReviews }) => {
         rating: Number(formData.rating),
         destinationId,
         travelDate: new Date().toISOString(),
-      };
+      });
 
-      // ENVIA PARA A API
-      await submitReview(reviewPayload);
-
-      // Limpa formulário
+      // Clear the form
       setFormData({
         username: currentUser ? currentUser.name : "",
         rating: 5,
