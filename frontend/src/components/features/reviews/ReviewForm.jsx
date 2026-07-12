@@ -142,7 +142,9 @@ const ReviewForm = ({ destinationId, refreshReviews }) => {
         rating: Number(formData.rating),
         destinationId,
         travelDate: new Date().toISOString(),
-      });
+      };
+
+      await submitReview(reviewPayload);
 
       // Clear the form
       setFormData({
