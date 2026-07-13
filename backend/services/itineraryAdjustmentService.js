@@ -72,11 +72,7 @@ class ItineraryAdjustmentService {
       suggestions.push(...disruptionSuggestions);
 
       // Score and rank all suggestions
-      const rankedSuggestions = this._scoreAndRankSuggestions(
-        suggestions,
-        interests
-      );
-
+      const rankedSuggestions = this._scoreAndRankSuggestions(suggestions);
       return {
         suggestions: rankedSuggestions,
         summary: {
@@ -222,7 +218,7 @@ class ItineraryAdjustmentService {
   }
 
   // Score and rank suggestions by importance
-  _scoreAndRankSuggestions(suggestions, interests = []) {
+  _scoreAndRankSuggestions(suggestions) {
     return suggestions.sort((a, b) => b.score - a.score);
   }
 

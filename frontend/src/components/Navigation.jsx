@@ -100,6 +100,9 @@ export default function Navigation() {
         }
       `}</style>
 
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 shadow-sm">
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-10">
+          <div className="flex h-[72px] items-center justify-between">
       <nav className="fixed top-0 left-0 right-0 z-50 bg-white dark:bg-gray-950 bg-gradient-to-b from-teal-50/50 to-transparent dark:from-gray-800/50 shadow-md border-b border-gray-200 dark:border-gray-800">
         
         {/* Outer Container: Uses clamp to reduce side padding on medium screens to buy more space */}
@@ -110,6 +113,7 @@ export default function Navigation() {
             {/* LOGO */}
             <div
               onClick={handleLogoClick}
+              className="mr-6 cursor-pointer text-2xl font-bold bg-linear-to-r from-teal-500 to-cyan-600 dark:from-indigo-400 dark:to-purple-500 bg-clip-text text-transparent"
               className="cursor-pointer flex items-center gap-2 group shrink-0"
             >
               <div className="relative flex items-center justify-center w-8 h-8">
@@ -121,6 +125,23 @@ export default function Navigation() {
               </span>
             </div>
 
+            {/* DESKTOP NAV */}
+            <div className="hidden md:flex items-center gap-2 lg:gap-3">
+              {navItems.map((item) => (
+                <Link
+                  key={item.path}
+                  to={item.path}
+                  className={`px-5 py-2.5 rounded-xl font-medium transition-all duration-200 ${isActive(item.path)
+                    ? "bg-teal-500 dark:bg-indigo-600 text-white"
+                    : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
+                    }`}
+                >
+                  {item.label}
+                </Link>
+              ))}
+              <Link
+                to="/favorites"
+                className={`relative px-5 pr-14 py-2.5 rounded-xl rounded-lg font-semibold flex items-center gap-2 transition ${isActive("/favorites")
             {/* DESKTOP NAV (Breaks exactly at 1200px, but shrinks dynamically before that) */}
             <div className="hidden min-[1200px]:flex items-center gap-[clamp(4px,0.8vw,8px)] flex-1 justify-center px-2">
               {navItems.map((item, index) => {
@@ -167,6 +188,8 @@ export default function Navigation() {
             </div>
 
             {/* RIGHT ACTIONS */}
+            <div className="flex items-center gap-4">
+
             <div className="flex items-center gap-[clamp(8px,1vw,16px)] shrink-0">
               {/* THEME TOGGLE */}
               <button
@@ -194,14 +217,15 @@ export default function Navigation() {
               {/* CTA - Uses clamp to shrink padding and text proportionally */}
               {!isLoggedIn ? (
                 <Link
-                  to="/login"
-                  className="bg-orange-500 hover:bg-orange-600 text-white px-[clamp(12px,1.5vw,24px)] py-2 rounded-lg font-semibold transition items-center whitespace-nowrap text-[clamp(12px,1vw,15px)]"
+                  to="/trip-planner"
+                  className="bg-orange-500 hover:bg-orange-600 text-white px-7 py-2.5 rounded-lg font-semibold transition items-center"
                 >
                   Get Started
                 </Link>
               ) : (
                 <button
                   onClick={handleLogout}
+                  className="bg-red-500 hover:bg-red-600 text-white px-7 py-2.5 rounded-lg font-semibold transition"
                   className="bg-red-500 hover:bg-red-600 text-white px-[clamp(12px,1.5vw,20px)] py-2 rounded-lg font-semibold transition whitespace-nowrap text-[clamp(12px,1vw,15px)] shadow-lg hover:shadow-xl"
                 >
                   Logout

@@ -1,5 +1,18 @@
 // Weather service - checks forecasts and alerts travelers to potential disruptions
 // Uses OpenWeatherMap API
+// Constantes que documentam as regras de negócio de disrupção climática.
+// Centralizar aqui evita valores divergentes entre métodos diferentes.
+const WEATHER_THRESHOLDS = {
+    HEAVY_RAIN_PRECIPITATION_PERCENT: 70,   // % de chance de chuva considerada "forte"
+    EXTREME_HEAT_CELSIUS: 38,               // temp. máxima considerada "calor extremo"
+    COLD_CELSIUS: 5,                        // temp. mínima considerada "frio"
+    STRONG_WIND_KMH: 30,                    // velocidade do vento considerada "forte"
+
+    // Limiares usados para sugerir alternativas indoor (intencionalmente
+    // mais sensíveis que os de disrupção, pois aqui é só uma sugestão)
+    INDOOR_SUGGESTION_PRECIPITATION_PERCENT: 60,
+    INDOOR_SUGGESTION_HEAT_CELSIUS: 35
+};
 
 const axios = require('axios');
 
@@ -124,8 +137,7 @@ class WeatherService {
         forecast.forEach(day => {
             const issues = [];
 
-            // Check for rain
-            if (day.precipitation > 70) {
+            if (day.precipitation > WEATHER_THRESHOLDS.HEAVY_RAIN_PRECIPITATION_PERCENT) {
                 issues.push({
                     type: 'heavy_rain',
                     severity: 'moderate',
@@ -133,8 +145,7 @@ class WeatherService {
                 });
             }
 
-            // Extreme temperatures
-            if (day.temp.max > 38) {
+            if (day.temp.max > WEATHER_THRESHOLDS.EXTREME_HEAT_CELSIUS) {
                 issues.push({
                     type: 'extreme_heat',
                     severity: 'high',
@@ -142,7 +153,7 @@ class WeatherService {
                 });
             }
 
-            if (day.temp.min < 5) {
+            if (day.temp.min < WEATHER_THRESHOLDS.COLD_CELSIUS) {
                 issues.push({
                     type: 'cold',
                     severity: 'moderate',
@@ -150,8 +161,7 @@ class WeatherService {
                 });
             }
 
-            // Storms
-            if (day.condition.toLowerCase().includes('thunderstorm')) {
+            if (this._isStormCondition(day.condition)) {
                 issues.push({
                     type: 'storm',
                     severity: 'high',
@@ -159,8 +169,7 @@ class WeatherService {
                 });
             }
 
-            // Strong winds
-            if (day.windSpeed > 30) {
+            if (day.windSpeed > WEATHER_THRESHOLDS.STRONG_WIND_KMH) {
                 issues.push({
                     type: 'wind',
                     severity: 'moderate',
@@ -179,30 +188,18 @@ class WeatherService {
 
         return disruptions;
     }
-
     // Suggest indoor alternatives for bad weather days
     suggestIndoorAlternatives(weather, originalActivity) {
         const alternatives = [];
 
         // If it's rainy or stormy, suggest covered activities
-        if (weather.precipitation > 60 || weather.condition.includes('storm')) {
-            alternatives.push({
-                type: 'museum',
-                suggestion: 'Visit local museums or art galleries instead',
-                reason: 'Avoid heavy rain'
-            });
-
-            alternatives.push({
-                type: 'indoor_market',
-                suggestion: 'Explore covered markets or shopping centers',
-                reason: 'Stay dry while experiencing local culture'
-            });
-
-            alternatives.push({
-                type: 'cafe',
-                suggestion: 'Enjoy local cafes and try regional cuisine',
-                reason: 'Perfect rainy day activity'
-            });
+        if (weather.precipitation > WEATHER_THRESHOLDS.INDOOR_SUGGESTION_PRECIPITATION_PERCENT
+            || this._isStormCondition(weather.condition)) {
+            alternatives.push(
+                { type: 'museum', suggestion: 'Visit local museums or art galleries instead', reason: 'Avoid heavy rain' },
+                { type: 'indoor_market', suggestion: 'Explore covered markets or shopping centers', reason: 'Stay dry while experiencing local culture' },
+                { type: 'cafe', suggestion: 'Enjoy local cafes and try regional cuisine', reason: 'Perfect rainy day activity' }
+            );
         }
 
         // Extreme heat suggestions
@@ -221,6 +218,9 @@ class WeatherService {
         }
 
         return alternatives;
+    }
+    _isStormCondition(condition) {
+    return condition.toLowerCase().includes('storm');
     }
 
     // Mock weather data for testing; return only the requested date range
