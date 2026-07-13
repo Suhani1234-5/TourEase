@@ -119,13 +119,9 @@ const ReviewForm = ({ destinationId, refreshReviews }) => {
         rating: Number(formData.rating),
         destinationId,
         travelDate: new Date().toISOString(),
-      };
-<<<<<<< HEAD
-=======
+      });
 
-      await submitReview(destinationId, reviewPayload);
->>>>>>> origin/main
-
+      await submitReview(reviewPayload); 
       // Clear the form
       setFormData({
         username: currentUser ? currentUser.name : "",
