@@ -105,7 +105,7 @@ export default function Footer() {
                 <FooterLink to="/destinations" label="Destinations" />
                 <FooterLink to="/plan-trip" label="Plan Trip" />
                 <FooterLink to="/trip-planner" label="Trip Planner" />
-                <FooterLink to="/smart-planner" label="Smart Planner" />
+                <FooterLink to="/smart-trip-planner" label="Smart Planner" />
                 <FooterLink to="/split-expense" label="Expense splitter" />
               </ul>
             </div>
@@ -129,7 +129,7 @@ export default function Footer() {
               </h4>
 
               <ul className="space-y-4">
-                <FooterLink to="/favourites" label="Favourites" />
+                <FooterLink to="/favorites" label="Favourites" />
                 <FooterLink to="/login" label="Getting Started" />
                 <FooterLink to="/privacy" label="Privacy" />
                 <FooterLink to="/terms" label="Terms" />
