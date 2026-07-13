@@ -4,8 +4,12 @@
 
 | Integrante | Contribuições |
 |---|---|
-| Vivian Souza | PR1 - Documentação da arquitetura do sistema; PR5 - Configuração da pipeline CI/CD e ajustes de desenvolvimento; PR6 - Correção da persistência de idioma e melhoria do seletor de idiomas |
-| Thiago | PR2 - Implementações e melhorias no projeto; PR3 - Implementações e melhorias no projeto; PR4 - Implementações e melhorias no projeto |
+| Vivian Souza | PR1 - Documentação da arquitetura do sistema; 
+PR5 - Configuração da pipeline CI/CD e ajustes de desenvolvimento; 
+PR6 - Correção da persistência de idioma e melhoria do seletor de idiomas |
+| Thiago | PR2 - Implementações e melhorias no projeto; 
+PR3 - Implementações e melhorias no projeto; 
+PR4 - Implementações e melhorias no projeto |
 
 ---
 
