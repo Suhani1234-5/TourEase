@@ -59,12 +59,12 @@ Com a alteração, novos usuários iniciam utilizando inglês e usuários recorr
 # Caminho B - Refatorações Realizadas
 
 
-PR1	- 
-PR2	- 
-PR3	-
-PR4	-
-PR5	-
-PR6	- 
+- PR1	- 
+- PR2	- 
+- PR3	-
+- PR4	-
+- PR5	-
+- PR6	- 
 
 # Conclusão
 
