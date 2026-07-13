@@ -66,7 +66,6 @@ PR4	-
 PR5	-
 PR6	- 
 
-Conclusão
+# Conclusão
 
-As contribuições realizadas no projeto TourEase envolveram evolução arquitetural, implementação de melhorias de qualidade, correção de problemas de experiência do usuário, criação de testes automatizados e configuração de integração contínua.
-As alterações contribuíram para um sistema mais organizado, escalável, testável e preparado para futuras evoluções.
+As contribuições realizadas no projeto TourEase envolveram evolução arquitetural, implementação de melhorias de qualidade, correção de problemas de experiência do usuário, criação de testes automatizados e configuração de integração contínua. As alterações contribuíram para um sistema mais organizado, escalável, testável e preparado para futuras evoluções.
