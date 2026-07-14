@@ -402,11 +402,7 @@ export default function Navigation() {
 
 
 
-              <LanguageSelector
-                variant="inline"
-                className="hidden min-[1200px]:block"
-              />
-
+             <LanguageSelector variant="inline" />
 
 
 

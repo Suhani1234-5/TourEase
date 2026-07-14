@@ -93,7 +93,7 @@ export default function LanguageSelector({ variant = "floating", className = "" 
       applyLanguage("en");
     }, 1000);
     return () => clearTimeout(timer);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, []);
 
   useEffect(() => {
