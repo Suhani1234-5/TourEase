@@ -3,7 +3,6 @@ import { ChevronDown, Languages } from "lucide-react";
 
 const LANGUAGE_STORAGE_KEY = "tourease_language";
 
-
 const languages = [
   { code: "en", label: "EN", name: "English" },
   { code: "pt", label: "PT", name: "Português" },
@@ -20,223 +19,224 @@ const languages = [
 
 function changeGoogleLanguage(language) {
 
-  const value =
+  const googleLanguage =
     language === "en"
       ? "/en/en"
       : `/en/${language}`;
 
 
+  // Define idioma no Google Translate
   document.cookie =
-    `googtrans=${value}; path=/;`;
+    `googtrans=${googleLanguage}; path=/; SameSite=Lax`;
 
 
+  // Salva preferência do usuário
   localStorage.setItem(
     LANGUAGE_STORAGE_KEY,
     language
   );
 
 
+  // Recarrega para aplicar tradução
   window.location.reload();
-
 }
 
 
 
 export default function LanguageSelector({
-  className=""
-}){
+  className = ""
+}) {
 
+  const [activeLanguage, setActiveLanguage] =
+    useState(() => {
 
-const [activeLanguage,setActiveLanguage]
-=
-useState(
-localStorage.getItem(
-LANGUAGE_STORAGE_KEY
-)
-||
-"en"
-);
+      return (
+        localStorage.getItem(
+          LANGUAGE_STORAGE_KEY
+        ) || "en"
+      );
 
+    });
 
 
-const [open,setOpen]
-=
-useState(false);
+  const [open, setOpen] =
+    useState(false);
 
 
+  const ref =
+    useRef(null);
 
-const ref =
-useRef(null);
 
 
+  useEffect(() => {
 
-useEffect(()=>{
+    function close(event) {
 
+      if (
+        ref.current &&
+        !ref.current.contains(event.target)
+      ) {
+        setOpen(false);
+      }
 
-function close(event){
+    }
 
-if(
-ref.current &&
-!ref.current.contains(
-event.target
-)
-){
 
-setOpen(false);
+    document.addEventListener(
+      "mousedown",
+      close
+    );
 
-}
 
-}
+    return () => {
 
+      document.removeEventListener(
+        "mousedown",
+        close
+      );
 
-document.addEventListener(
-"mousedown",
-close
-);
+    };
 
 
-return()=>{
+  }, []);
 
-document.removeEventListener(
-"mousedown",
-close
-);
 
-};
 
+  return (
 
-},[]);
+    <div
+      ref={ref}
+      className={`relative ${className}`}
+    >
 
 
+      <button
 
+        type="button"
 
-return (
+        onClick={() => setOpen(!open)}
 
-<div
-ref={ref}
-className={`relative ${className}`}
-translate="no"
->
+        className="
+          flex
+          items-center
+          gap-2
+          rounded-lg
+          border
+          px-3
+          py-2
+          bg-white
+          shadow
+        "
 
+      >
 
-<button
+        <Languages size={18} />
 
-type="button"
 
-onClick={()=>setOpen(!open)}
+        {
+          languages.find(
+            language =>
+              language.code === activeLanguage
+          )?.label
+        }
 
-className="
-flex
-items-center
-gap-2
-rounded-lg
-border
-px-3
-py-2
-bg-white
-shadow
-"
 
->
+        <ChevronDown size={16} />
 
-<Languages size={18}/>
+      </button>
 
 
-{
-languages.find(
-l=>l.code===activeLanguage
-)?.label
-}
 
+      {
+        open && (
 
-<ChevronDown size={16}/>
+          <div
 
+            className="
+              absolute
+              right-0
+              mt-2
+              w-48
+              rounded-xl
+              border
+              bg-white
+              shadow-xl
+              z-50
+              overflow-hidden
+            "
 
-</button>
+          >
 
 
+            {
+              languages.map(language => (
 
-{
-open &&
+                <button
 
-<div
+                  key={language.code}
 
-className="
-absolute
-right-0
-mt-2
-w-48
-rounded-xl
-border
-bg-white
-shadow-xl
-z-50
-overflow-hidden
-"
+                  type="button"
 
->
 
-{
-languages.map(language=>(
+                  onClick={() => {
 
+                    setActiveLanguage(
+                      language.code
+                    );
 
-<button
+                    setOpen(false);
 
-key={language.code}
+                    changeGoogleLanguage(
+                      language.code
+                    );
 
-type="button"
+                  }}
 
-onClick={()=>{
-setActiveLanguage(language.code);
-changeGoogleLanguage(language.code);
-}}
 
-className={`
-w-full
-flex
-justify-between
-px-4
-py-3
-text-sm
+                  className={`
+                    w-full
+                    flex
+                    justify-between
+                    px-4
+                    py-3
+                    text-sm
 
-${
-activeLanguage===language.code
-?
-"bg-teal-100"
-:
-"hover:bg-gray-100"
-}
+                    ${
+                      activeLanguage === language.code
+                        ?
+                        "bg-teal-100"
+                        :
+                        "hover:bg-gray-100"
+                    }
+                  `}
 
-`}
+                >
 
->
+                  <span>
+                    {language.name}
+                  </span>
 
-<span>
-{language.name}
-</span>
 
+                  <span>
+                    {language.label}
+                  </span>
 
-<span>
-{language.label}
-</span>
 
+                </button>
 
-</button>
+              ))
+            }
 
 
-))
+          </div>
 
-}
+        )
+      }
 
-</div>
 
-}
 
+    </div>
 
-
-</div>
-
-);
-
+  );
 
 }
