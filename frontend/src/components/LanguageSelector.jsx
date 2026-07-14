@@ -4,8 +4,16 @@ import { ChevronDown, Languages } from "lucide-react";
 const LANGUAGE_STORAGE_KEY = "tourease_language";
 
 const languages = [
-  { code: "en", label: "EN", name: "English" },
-  { code: "hi", label: "HI", name: "Hindi" },
+ { code:"en", label:"EN", name:"English"},
+ { code:"pt", label:"PT", name:"Português"},
+ { code:"es", label:"ES", name:"Español"},
+ { code:"fr", label:"FR", name:"Français"},
+ { code:"de", label:"DE", name:"Deutsch"},
+ { code:"it", label:"IT", name:"Italiano"},
+ { code:"ja", label:"JA", name:"日本語"},
+ { code:"ko", label:"KO", name:"한국어"},
+ { code:"zh-CN", label:"ZH", name:"中文"},
+ { code:"hi", label:"HI", name:"Hindi"},
 ];
 
 // Clear / set the googtrans cookie that Google Translate reads on load
