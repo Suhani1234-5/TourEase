@@ -19,26 +19,42 @@ const languages = [
 
 function changeGoogleLanguage(language) {
 
-  const googleLanguage =
-    language === "en"
-      ? "/en/en"
-      : `/en/${language}`;
-
-
-  // Define idioma no Google Translate
-  document.cookie =
-    `googtrans=${googleLanguage}; path=/; SameSite=Lax`;
-
-
-  // Salva preferência do usuário
+  // Salva preferência
   localStorage.setItem(
     LANGUAGE_STORAGE_KEY,
     language
   );
 
 
-  // Recarrega para aplicar tradução
-  window.location.reload();
+  // Aguarda o Google Translate carregar
+  setTimeout(() => {
+
+    const googleSelect =
+      document.querySelector(".goog-te-combo");
+
+
+    if (!googleSelect) {
+
+      console.log(
+        "Google Translate não encontrado"
+      );
+
+      return;
+    }
+
+
+    googleSelect.value = language;
+
+
+    googleSelect.dispatchEvent(
+      new Event("change", {
+        bubbles: true
+      })
+    );
+
+
+  }, 300);
+
 }
 
 
@@ -46,6 +62,7 @@ function changeGoogleLanguage(language) {
 export default function LanguageSelector({
   className = ""
 }) {
+
 
   const [activeLanguage, setActiveLanguage] =
     useState(() => {
@@ -59,8 +76,10 @@ export default function LanguageSelector({
     });
 
 
+
   const [open, setOpen] =
     useState(false);
+
 
 
   const ref =
@@ -76,7 +95,9 @@ export default function LanguageSelector({
         ref.current &&
         !ref.current.contains(event.target)
       ) {
+
         setOpen(false);
+
       }
 
     }
@@ -108,7 +129,6 @@ export default function LanguageSelector({
       ref={ref}
       className={`relative ${className}`}
     >
-
 
       <button
 
@@ -167,7 +187,6 @@ export default function LanguageSelector({
 
           >
 
-
             {
               languages.map(language => (
 
@@ -184,7 +203,9 @@ export default function LanguageSelector({
                       language.code
                     );
 
+
                     setOpen(false);
+
 
                     changeGoogleLanguage(
                       language.code
@@ -231,8 +252,8 @@ export default function LanguageSelector({
           </div>
 
         )
-      }
 
+      }
 
 
     </div>
