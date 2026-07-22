@@ -20,7 +20,7 @@
 
 ## ⚡ Quick Navigation
 
-| [📖 About](#-about-tourease) | [✨ Features](#-features) | [🛠️ Tech Stack](#️-tech-stack) | [🗂️ Structure](#️-project-structure) | [🏛️ Architecture](#️-architecture-flow) | [🗺️ Routes](#️-application-routes) | [🚀 Quick Start](#-quick-start) | [🤝 Contributing](CONTRIBUTING.md) |
+| [📖 About](#-about-tourease) | [✨ Features](#-features) | [🛠️ Tech Stack](#️-tech-stack) | [🗂️ Structure](#️-project-structure) | [🏛️ Architecture](docs/ARCHITECTURE.md) | [🗺️ Routes](#️-application-routes) | [🚀 Quick Start](#-quick-start) | [🤝 Contributing](CONTRIBUTING.md) |
 |:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
 
 ---
@@ -157,6 +157,8 @@ TourEase/
 
 ## 🏛️ Architecture Flow
 
+> 💡 **Detailed Architecture Guide**: Visit [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for a comprehensive breakdown of the application layers, data flow diagrams, and orientation checklist.
+
 ```
 ┌──────────────────────────────────────┐
 │     Browser  (React + Vite :5173)    │
@@ -188,6 +190,9 @@ TourEase/
 | Favourites | `FavoritesContext` (React Context API) |
 | Dark / light theme | `ThemeContext` (React Context API) |
 | Server data | Local `useState` + service call |
+
+> [!NOTE]
+> For a comprehensive breakdown of the application layers, system flow diagrams, and key files, check out the full [Architecture Documentation](docs/ARCHITECTURE.md).
 
 ---
 
@@ -279,6 +284,9 @@ docker compose up --build
 ## 🚀 GSSoC 2026 Contributor Onboarding
 
 Welcome to TourEase! If you are contributing under GSSoC 2026, follow these steps to get started:
+
+> [!TIP]
+> To understand the folder layout, data flows, and layer structure of TourEase before coding, read the [Architecture Documentation](docs/ARCHITECTURE.md) first.
 
 ### Prerequisites
 - Install Git
