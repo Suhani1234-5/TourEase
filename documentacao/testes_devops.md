@@ -1,158 +1,98 @@
 # Testes
-# 1. Geração de itinerário com dados válidos
+# 1. Login com credenciais válidas
 Critério de aceitação: 
 
-Dado que um usuário (autenticado ou não) acessa a funcionalidade de planejamento inteligente de viagens e informa um destino, número de dias, número de viajantes, tipo de viagem, orçamento e interesses válidos, o sistema deve gerar um itinerário completo, retornando o plano junto com os metadados corretos da viagem (destino, datas, número de dias, viajantes).
+Dado que um usuário que já possui uma conta cadastrada no sistema, acessa a página de login, preenche o email e senha corretos e clica em "Sign In", o sistema deve autenticá-lo e redirecioná-lo para outra página, saindo da rota /login.
 
 ```javascript
-test('Cenário 1: usuário gera um itinerário com dados válidos e recebe o plano com metadados corretos', async () => {
-  const response = await request(app)
-    .post('/api/smart-planner/generate-itinerary')u
-    .send({
-      destination: 'Rio de Janeiro',
-      days: 3,
-      travelers: 2,
-      travelType: 'leisure',
-      budget: 5000,
-      interests: ['praia', 'gastronomia'],
-    });
-
-  expect(response.status).toBe(200);
-  expect(response.body.success).toBe(true);
-  expect(response.body.generatedPlan).toBeDefined();
-  expect(response.body.meta.destination).toBe('Rio de Janeiro');
-  expect(response.body.meta.days).toBe(3);
-  expect(response.body.meta.travelers).toBe(2);
-});
+it('Cenário 1: usuário faz login com credenciais válidas e é redirecionado', () => {
+  cy.visit('/login')
+  cy.get('input[placeholder="you@example.com"]').type('teste@tourease.com')
+  cy.get('input[type="password"]').type('Teste@123')
+  cy.contains('button', 'Sign In').click()
+  cy.url().should('not.include', '/login')
+})
 ```
 
 O que o teste verifica
 
 | Verificação |Por que importa |
 |-------------|----------------|
-| response.status === 200 | Confirma que a requisição foi processada com sucesso, sem erros de validação ou falhas internas.|
-| response.body.success === true | Confirma o contrato de resposta da API (todas as rotas do controller retornam um campo success para indicar o resultado da operação).|
-| response.body.generatedPlan está definido | Garante que o sistema de fato gerou um plano de viagem, e não retornou uma resposta vazia. |
-| meta.destination, meta.days, meta.travelers corretos | Confirma que os metadados retornados refletem exatamente os dados enviados pelo usuário, validando a integridade da resposta.|
-
-Rota testada: POST /api/smart-planner/generate-itinerary
+| cy.visit('/login') | Garante que o teste começa sempre na página correta, independente do estado anterior do navegador.|
+| cy.get('input[placeholder="you@example.com"]').type(...) | Simula o preenchimento do campo de email exatamente como um usuário real faria.|
+| cy.get('input[type="password"]').type(...) | Simula o preenchimento da senha. |
+| cy.contains('button', 'Sign In').click() | CLocaliza e clica no botão de login pelo texto visível — da mesma forma que um usuário o identificaria na tela.|
+| cy.url().should('not.include', '/login') |Confirma que o redirecionamento ocorreu — se o usuário ainda estiver em /login, significa que a autenticação falhou.|
 
 Camadas testadas: 
-* Camada de rotas
-* Camada de controller
-* Camada de serviço
+* Frontend: página de login (/login), formulário de autenticação, lógica de redirecionamento pós-login.
+* Backend: rota POST /api/auth/login, validação de credenciais, geração de token JWT.
+* Banco de dados: consulta ao MongoDB para encontrar o usuário e verificar a senha via comparePassword.
 
-# 2. Validação de campos obrigatórios ao salvar itinerário
+# 2. Login com credenciais inválidas exibe mensagem de erro
 
 Critério de aceitação: 
-Dado que um usuário autenticado deseja salvar um itinerário gerado e envia a requisição de salvamento sem informar o campo obrigatório destination, o sistema deve rejeitar a operação com status 400, retornar uma mensagem de erro indicando o campo faltante, e não deve persistir nenhum dado no banco.
+Dado que um usuário que tenta acessar o sistema, preenche credenciais incorretas (email ou senha errados) e clica em "Sign In", o sistema deve manter o usuário na página de login e exibir a mensagem "Invalid credentials", sem conceder acesso.
 
 ```javascript
-test('Cenário 2: usuário autenticado tenta salvar itinerário sem "destination" e recebe erro 400, sem persistir nada', async () => {
-  const token = makeAuthToken();
-
-  const response = await request(app)
-    .post('/api/smart-planner/save')
-    .set('Authorization', `Bearer ${token}`)
-    .send({
-      // destination ausente de propósito
-      generatedPlan: { dailyItinerary: [] },
-      days: 2,
-    });
-
-  expect(response.status).toBe(400);
-  expect(response.body.success).toBe(false);
-  expect(response.body.message).toMatch(/destination/i);
-
-  const count = await Itinerary.countDocuments({});
-  expect(count).toBe(0);
-});
+it('Cenário 2: usuário tenta login com credenciais inválidas e vê mensagem de erro', () => {
+  cy.visit('/login')
+  cy.get('input[placeholder="you@example.com"]').type('errado@email.com')
+  cy.get('input[type="password"]').type('SenhaErrada@123')
+  cy.contains('button', 'Sign In').click()
+  cy.url().should('include', '/login')
+  cy.contains('Invalid credentials').should('be.visible')
+})
 ```
 
 O que o teste verifica
 
 | Verificação |Por que importa |
 |-------------|----------------|
-| response.status === 400 | Confirma que o sistema reconhece a requisição como inválida (erro do cliente), e não como erro interno (500) ou sucesso indevido. |
-| response.body.success === false | Confirma o contrato de resposta de erro, consistente com o restante da API. |
-| response.body.message contém "destination" | Garante que a mensagem de erro é específica e útil, apontando exatamente qual campo está faltando — importante para a experiência do usuário/desenvolvedor que consome a API |
-| Itinerary.countDocuments({}) === 0 | Verificação mais importante deste teste: garante que a validação ocorre antes de qualquer tentativa de persistência, evitando dados inconsistentes ou incompletos no banco. | 
-
-Rota testada: POST /api/smart-planner/save
+| cy.url().should('include', '/login') | CConfirma que o sistema não redirecionou o usuário — ou seja, o acesso foi negado corretamente. |
+| cy.contains('Invalid credentials').should('be.visible') | Confirma que uma mensagem de erro clara e visível foi exibida ao usuário, sem revelar detalhes internos (ex: "usuário não encontrado" vs "senha errada" — ambos retornam a mesma mensagem, o que é uma boa prática de segurança). |
 
 Camadas testadas:
-* Camada de Middleware
-* Camada de controller
-* Camada de modelo
+* Frontend: exibição condicional da mensagem de erro retornada pelo backend.
+* Backend: rota POST /api/auth/login, retorno de status 401 com mensagem "Invalid credentials" quando as credenciais não batem.
+* Banco de dados: consulta ao MongoDB para verificar se o usuário existe e se a senha é válida.
 
-# 3. Fluxo completo — gerar, salvar e visualizar itinerário salvo
+# 3. Geração de itinerário por usuário autenticado
 Critério de aceitação:
 
-Dado que um usuário autenticado gera um itinerário válido, salva-o e, em seguida, consulta sua lista de itinerários salvos. O itinerário deve aparecer corretamente na listagem, confirmando que os dados persistidos correspondem ao que foi gerado e salvo.
-
+Dado que um usuário que está autenticado no sistema, acessa o Smart Trip Planner, preenche os dados da viagem (destino, orçamento, interesse) e clica em "Generate AI Itinerary", o sistema deve processar os dados e exibir um itinerário gerado com pelo menos o "Day 1" do plano visível na tela.
 ```javascript
-test('Cenário 3: usuário gera, salva e em seguida visualiza o itinerário na lista de salvos', async () => {
-  const token = makeAuthToken('user456');
+it('Cenário 3: usuário autenticado preenche o formulário e gera um itinerário', () => {
+  cy.visit('/login')
+  cy.get('input[placeholder="you@example.com"]').type('teste@tourease.com')
+  cy.get('input[type="password"]').type('Teste@123')
+  cy.contains('button', 'Sign In').click()
+  cy.url().should('not.include', '/login')
 
-  // Passo 1: gera o itinerário (rota pública)
-  const generateResponse = await request(app)
-    .post('/api/smart-planner/generate-itinerary')
-    .send({
-      destination: 'Salvador',
-      days: 2,
-      travelers: 1,
-      travelType: 'solo',
-      budget: 2000,
-      interests: ['cultura'],
-    });
-
-  expect(generateResponse.status).toBe(200);
-  const { generatedPlan } = generateResponse.body;
-
-  // Passo 2: salva o itinerário gerado (rota protegida)
-  const saveResponse = await request(app)
-    .post('/api/smart-planner/save')
-    .set('Authorization', `Bearer ${token}`)
-    .send({
-      destination: 'Salvador',
-      days: 2,
-      travelers: 1,
-      travelType: 'solo',
-      budget: 2000,
-      interests: ['cultura'],
-      generatedPlan,
-    });
-
-  expect(saveResponse.status).toBe(201);
-  expect(saveResponse.body.success).toBe(true);
-
-  // Passo 3: lista os itinerários salvos e confirma que o item aparece
-  const listResponse = await request(app)
-    .get('/api/smart-planner/saved-itineraries')
-    .set('Authorization', `Bearer ${token}`);
-
-  expect(listResponse.status).toBe(200);
-  expect(listResponse.body.success).toBe(true);
-  expect(listResponse.body.count).toBe(1);
-  expect(listResponse.body.itineraries[0].destination).toBe('Salvador');
-});
+  cy.visit('/smart-trip-planner')
+  cy.get('input[placeholder="e.g. Goa, Paris, Manali"]').type('Rio de Janeiro')
+  cy.get('input[placeholder="e.g. 50000"]').type('5000')
+  cy.contains('Culture').click()
+  cy.contains('button', 'Generate AI Itinerary').click()
+  cy.contains('Day 1', { timeout: 15000 }).should('be.visible')
+})
 ```
 
 O que o teste verifica
 |Verificação | Por que importa|
 |------------|----------------|
-| generateResponse.status === 200 | Confirma que a etapa de geração funcionou antes de seguir para o salvamento, se falhar aqui, o teste já para, evitando um falso negativo nas etapas seguintes. |
-| saveResponse.status === 201 | Status 201 Created é o correto semanticamente para confirmar que um novo recurso (o itinerário salvo) foi criado no banco |
-| listResponse.body.count === 1 | Confirma que exatamente um itinerário foi persistido — não duplicado, não perdido. | 
-| itineraries[0].destination === 'Salvador' | Confirma que os dados retornados na listagem correspondem exatamente ao que foi gerado e salvo, validando a integridade de ponta a ponta.|
-
-Rotas testadas:
-POST /api/smart-planner/generate-itinerary (pública)
-POST /api/smart-planner/save (protegida)
-GET /api/smart-planner/saved-itineraries (protegida)
+|Login antes de acessar o planner | Garante que o teste simula um usuário autenticado, que é o estado necessário para usar o Smart Trip Planner. |
+| cy.get('input[placeholder="e.g. Goa, Paris, Manali"]').type('Rio de Janeiro') | imula o preenchimento do destino. |
+| lcy.get('input[placeholder="e.g. 50000"]').type('5000') | Simula o preenchimento do orçamento. | 
+| cy.contains('Culture').click() | Seleciona um interesse — campo obrigatório para habilitar a geração do itinerário.|
+| cy.contains('button', 'Generate AI Itinerary').click() | Dispara a geração do plano.|
+| cy.contains('Day 1', { timeout: 15000 }).should('be.visible')| Confirma que o itinerário foi gerado e renderizado na tela. O timeout: 15000 dá até 15 segundos para o sistema processar e exibir o resultado — necessário pois a geração envolve chamadas ao backend e ao serviço de clima.|
 
 Camadas testadas:
-* Geração via service
-* Persistência real no banco
-* Autenticação via middleware
-* Consulta/leitura filtrada por usuário
+* Frontend: formulário do Smart Trip Planner, lógica de submissão, renderização do resultado.
+* Backend: rota POST /api/smart-planner/generate-itinerary, serviço generateSmartItinerary, fallback generateRuleBasedPlan (já que não há chave de IA configurada no ambiente de teste)
+* AServiço externo: chamada ao weatherService para buscar a previsão do tempo do destino (GET /api/weather/forecast).
+
+Observação sobre o caminho de geração:
+
+Como o ambiente de teste não possui OPENROUTER_API_KEY configurada, o sistema utiliza automaticamente o generateRuleBasedPlan, o caminho determinístico de geração de itinerário. Isso garante que o teste seja repetível e não dependa de serviços externos de IA, sem comprometer a validade do cenário testado, que é verificar se o fluxo completo de geração funciona do ponto de vista do usuário.

@@ -3,9 +3,9 @@ const sendContactMail = require('../services/contactMail.service');
 
 exports.saveContact = async (req, res) => {
     try {
-        const { name, email, subject, message } = req.body;
+        let { name, email, subject, message } = req.body;
 
-        // Validate required fields
+        // Basic presence validation
         if (!name || !email || !message) {
             return res.status(400).json({
                 success: false,
@@ -13,17 +13,54 @@ exports.saveContact = async (req, res) => {
             });
         }
 
+        // Type checking and Sanitization
+        if (typeof name !== 'string' || typeof email !== 'string' || typeof message !== 'string') {
+            return res.status(400).json({
+                success: false,
+                message: 'Invalid input format'
+            });
+        }
+        
+        name = name.trim();
+        email = email.trim();
+        subject = typeof subject === 'string' ? subject.trim() : '';
+        message = message.trim();
+
+        // Email format validation
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            return res.status(400).json({
+                success: false,
+                message: 'Invalid email address format'
+            });
+        }
+
+        // Payload length restrictions
+        if (name.length > 100) {
+            return res.status(400).json({
+                success: false,
+                message: 'Name exceeds maximum length of 100 characters'
+            });
+        }
+
+        if (message.length > 2000) {
+            return res.status(400).json({
+                success: false,
+                message: 'Message exceeds maximum length of 2000 characters'
+            });
+        }
+
         // Save contact to database
         const contact = await Contact.create({
             name,
             email,
-            subject: subject || '',
+            subject,
             message
         });
 
         // Try sending email (DO NOT block response)
         sendContactMail(contact).catch((err) => {
-            console.error('Nodemailer error:', err.message);
+            console.error(`[Mail Service Error] Failed to send contact email to ${email} (Contact ID: ${contact._id}):`, err.message);
         });
 
         // Success response (always succeeds if DB save succeeds)

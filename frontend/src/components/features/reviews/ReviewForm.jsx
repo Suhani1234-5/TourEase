@@ -119,9 +119,7 @@ const ReviewForm = ({ destinationId, refreshReviews }) => {
         rating: Number(formData.rating),
         destinationId,
       };
-
       await submitReview(destinationId, reviewPayload);
-
       // Clear the form
       setFormData({
         username: currentUser ? currentUser.name : "",
