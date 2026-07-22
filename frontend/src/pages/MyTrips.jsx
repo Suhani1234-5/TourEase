@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Calendar, MapPin, Users, DollarSign, Trash2, ArrowRight, Plane, Plus, Sparkles, AlertTriangle } from 'lucide-react';

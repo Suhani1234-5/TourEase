@@ -1,263 +1,104 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { ChevronDown, Languages } from "lucide-react";
+import { LANGUAGES, useLanguage } from "../context/LanguageContext";
 
-const LANGUAGE_STORAGE_KEY = "tourease_language";
+/**
+ * LanguageSelector (inline only)
+ *
+ * Reads and writes language via the shared LanguageContext so every instance
+ * on the page stays in perfect sync.
+ *
+ * Props:
+ *   className – extra classes for the wrapper div
+ */
+export default function LanguageSelector({ className = "" }) {
+  const { activeLanguage, setActiveLanguage } = useLanguage();
+  const [isOpen, setIsOpen] = useState(false);
+  const rootRef = useRef(null);
 
-const languages = [
-  { code: "en", label: "EN", name: "English" },
-  { code: "pt", label: "PT", name: "Português" },
-  { code: "es", label: "ES", name: "Español" },
-  { code: "fr", label: "FR", name: "Français" },
-  { code: "de", label: "DE", name: "Deutsch" },
-  { code: "it", label: "IT", name: "Italiano" },
-  { code: "ja", label: "JA", name: "日本語" },
-  { code: "ko", label: "KO", name: "한국어" },
-  { code: "zh-CN", label: "ZH", name: "中文" },
-  { code: "hi", label: "HI", name: "हिन्दी" },
-];
+  const activeLang = LANGUAGES.find((l) => l.code === activeLanguage) ?? LANGUAGES[0];
 
-
-function changeGoogleLanguage(language) {
-
-  // Salva preferência
-  localStorage.setItem(
-    LANGUAGE_STORAGE_KEY,
-    language
-  );
-
-
-  // Aguarda o Google Translate carregar
-  setTimeout(() => {
-
-    const googleSelect =
-      document.querySelector(".goog-te-combo");
-
-
-    if (!googleSelect) {
-
-      console.log(
-        "Google Translate não encontrado"
-      );
-
-      return;
-    }
-
-
-    googleSelect.value = language;
-
-
-    googleSelect.dispatchEvent(
-      new Event("change", {
-        bubbles: true
-      })
-    );
-
-
-  }, 300);
-
-}
-
-
-
-export default function LanguageSelector({
-  className = ""
-}) {
-
-
-  const [activeLanguage, setActiveLanguage] =
-    useState(() => {
-
-      return (
-        localStorage.getItem(
-          LANGUAGE_STORAGE_KEY
-        ) || "en"
-      );
-
-    });
-
-
-
-  const [open, setOpen] =
-    useState(false);
-
-
-
-  const ref =
-    useRef(null);
-
-
-
+  // ── Close on outside click / Escape ────────────────────────────────────────
   useEffect(() => {
-
-    function close(event) {
-
-      if (
-        ref.current &&
-        !ref.current.contains(event.target)
-      ) {
-
-        setOpen(false);
-
+    const handleOutsideClick = (e) => {
+      if (rootRef.current && !rootRef.current.contains(e.target)) {
+        setIsOpen(false);
       }
-
-    }
-
-
-    document.addEventListener(
-      "mousedown",
-      close
-    );
-
-
-    return () => {
-
-      document.removeEventListener(
-        "mousedown",
-        close
-      );
-
+    };
+    const handleEscape = (e) => {
+      if (e.key === "Escape") setIsOpen(false);
     };
 
-
+    document.addEventListener("mousedown", handleOutsideClick);
+    document.addEventListener("touchstart", handleOutsideClick);
+    document.addEventListener("keydown", handleEscape);
+    return () => {
+      document.removeEventListener("mousedown", handleOutsideClick);
+      document.removeEventListener("touchstart", handleOutsideClick);
+      document.removeEventListener("keydown", handleEscape);
+    };
   }, []);
 
-
-
-  return (
-
-    <div
-      ref={ref}
-      className={`relative ${className}`}
-    >
-
-      <button
-
-        type="button"
-
-        onClick={() => setOpen(!open)}
-
-        className="
-          flex
-          items-center
-          gap-2
-          rounded-lg
-          border
-          px-3
-          py-2
-          bg-white
-          shadow
-        "
-
-      >
-
-        <Languages size={18} />
-
-
-        {
-          languages.find(
-            language =>
-              language.code === activeLanguage
-          )?.label
-        }
-
-
-        <ChevronDown size={16} />
-
-      </button>
-
-
-
-      {
-        open && (
-
-          <div
-
-            className="
-              absolute
-              right-0
-              mt-2
-              w-48
-              rounded-xl
-              border
-              bg-white
-              shadow-xl
-              z-50
-              overflow-hidden
-            "
-
-          >
-
-            {
-              languages.map(language => (
-
-                <button
-
-                  key={language.code}
-
-                  type="button"
-
-
-                  onClick={() => {
-
-                    setActiveLanguage(
-                      language.code
-                    );
-
-
-                    setOpen(false);
-
-
-                    changeGoogleLanguage(
-                      language.code
-                    );
-
-                  }}
-
-
-                  className={`
-                    w-full
-                    flex
-                    justify-between
-                    px-4
-                    py-3
-                    text-sm
-
-                    ${
-                      activeLanguage === language.code
-                        ?
-                        "bg-teal-100"
-                        :
-                        "hover:bg-gray-100"
-                    }
-                  `}
-
-                >
-
-                  <span>
-                    {language.name}
-                  </span>
-
-
-                  <span>
-                    {language.label}
-                  </span>
-
-
-                </button>
-
-              ))
-            }
-
-
-          </div>
-
-        )
-
-      }
-
-
-    </div>
-
+  // ── Handler ────────────────────────────────────────────────────────────────
+  const handleLanguageChange = useCallback(
+    (code) => {
+      setActiveLanguage(code);
+      setIsOpen(false);
+    },
+    [setActiveLanguage],
   );
 
+  return (
+    <div ref={rootRef} className={`relative ${className}`} translate="no">
+      {/* Trigger button */}
+      <button
+        type="button"
+        onClick={() => setIsOpen((prev) => !prev)}
+        className="notranslate inline-flex items-center gap-1 rounded-lg border border-gray-200 dark:border-gray-700 bg-white/90 dark:bg-gray-900/90 px-2 py-1.5 text-xs font-semibold text-gray-700 dark:text-gray-200 shadow-sm backdrop-blur-sm transition-all hover:border-teal-400 hover:text-teal-700 dark:hover:text-teal-300 hover:shadow-md select-none whitespace-nowrap"
+        aria-haspopup="menu"
+        aria-expanded={isOpen}
+        aria-label="Change language"
+        title={`Language: ${activeLang.name}`}
+      >
+        <Languages className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+        <span className="notranslate">{activeLang.label}</span>
+        <ChevronDown
+          className={`h-3.5 w-3.5 shrink-0 transition-transform ${isOpen ? "rotate-180" : ""}`}
+          aria-hidden="true"
+        />
+      </button>
+
+      {/* Dropdown menu */}
+      {isOpen && (
+        <div
+          className="absolute right-0 top-full z-[9999] mt-2 w-52 overflow-hidden rounded-xl border border-gray-200 bg-white shadow-xl dark:border-gray-700 dark:bg-gray-900"
+          translate="no"
+          role="menu"
+        >
+          <div className="max-h-72 overflow-y-auto p-1">
+            {LANGUAGES.map((lang) => (
+              <button
+                key={lang.code}
+                type="button"
+                onClick={() => handleLanguageChange(lang.code)}
+                translate="no"
+                className={`notranslate flex w-full items-center justify-between rounded-lg px-3 py-2 text-sm transition-colors ${
+                  activeLanguage === lang.code
+                    ? "bg-teal-50 text-teal-700 dark:bg-teal-500/20 dark:text-teal-200"
+                    : "text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800"
+                }`}
+                role="menuitemradio"
+                aria-checked={activeLanguage === lang.code}
+              >
+                <span className="font-medium">{lang.name}</span>
+                <span className="text-xs font-bold tracking-[0.2em] text-gray-400 dark:text-gray-500">
+                  {lang.label}
+                </span>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
 }
