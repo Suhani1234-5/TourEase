@@ -26,7 +26,7 @@ function formatItinerary(plan) {
   if (!plan) return null;
   const lines = plan.split("\n").filter(Boolean);
 
-  return lines.map((line, index) => {
+  return (lines ?? []).map((line, index) => {
     const normalized = line.replace(/\*\*/g, "");
 
     // Day headings
