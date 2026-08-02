@@ -17,7 +17,8 @@ export default function Contributors() {
           "https://api.github.com/repos/Suhani1234-5/TourEase/contributors?per_page=100"
         );
 
-        const data = await response.json();
+        if (!response.ok) throw new Error("Request failed");
+const data = await response.json();
 
         // only contributors with 3+ contributions
         const filtered = data.filter(
