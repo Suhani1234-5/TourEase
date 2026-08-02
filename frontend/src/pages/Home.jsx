@@ -131,7 +131,7 @@ function FeatureCarousel({ cards }) {
           className="flex transition-transform duration-400 ease-out"
           style={{ transform: translateX, willChange: "transform" }}
         >
-          {cards.map((card, index) => (
+          {(cards ?? []).map((card, index) => (
             <div
               key={index}
               className="shrink-0 box-border"
