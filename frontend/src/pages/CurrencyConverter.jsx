@@ -179,7 +179,7 @@ export default function CurrencyConverter() {
                   onChange={(e) => setFromCurrency(e.target.value)}
                   className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 focus:outline-none focus:border-teal-500 dark:focus:border-cyan-500 text-sm font-semibold text-slate-800 dark:text-slate-100 transition appearance-none cursor-pointer"
                 >
-                  {CURRENCIES.map((c) => (
+                  {(CURRENCIES ?? []).map((c) => (
                     <option key={c.code} value={c.code}>
                       {c.code} — {c.name}
                     </option>

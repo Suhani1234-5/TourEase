@@ -147,7 +147,7 @@ const data = await response.json();
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
               
-              {contributors.map((contributor) => (
+              {(contributors ?? []).map((contributor) => (
                 <a
                   key={contributor.id}
                   href={contributor.html_url}
