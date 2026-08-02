@@ -518,7 +518,7 @@ function CommunityCard({ name, location, quote, trips }) {
     <div className="bg-white dark:bg-gray-900 p-8 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 hover:shadow-md dark:hover:shadow-[0_0_20px_rgba(45,212,191,0.3)] hover:-translate-y-2 transition-all duration-300 dark:hover:border-teal-500">
       <div className="flex items-center mb-6">
         <div className="w-14 h-14 bg-gradient-to-br from-teal-400 to-cyan-500 rounded-full flex items-center justify-center text-white font-bold text-xl mr-4">
-          {name.charAt(0)}
+          {name[0]}
         </div>
         <div>
           <h4 className="font-semibold text-lg text-gray-900 dark:text-white">
