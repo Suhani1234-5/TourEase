@@ -6,7 +6,8 @@ export async function getCoordinates(placeName, cityName = "") {
     const response = await fetch(url, {
       headers: { 'User-Agent': 'TourEase-OpenSource-Map-Feature' }
     });
-    const data = await response.json();
+    if (!response.ok) throw new Error("Request failed");
+const data = await response.json();
     if (data && data.length > 0) {
       return [parseFloat(data[0].lat), parseFloat(data[0].lon)];
     }
