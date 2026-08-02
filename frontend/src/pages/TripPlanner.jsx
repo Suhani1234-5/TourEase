@@ -627,7 +627,7 @@ export default function TripPlanner() {
           {step === 3 && (
             <StepSection showHeading={false}>
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {interests.map((interest) => {
+                {(interests ?? []).map((interest) => {
                   const Icon = interest.icon;
                   const isSelected = formData.interests.includes(interest.id);
                   return (
