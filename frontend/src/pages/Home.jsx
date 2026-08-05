@@ -108,7 +108,7 @@ function FeatureCarousel({ cards }) {
   }, [maxSlideIndex, activeSlide]);
 
   useEffect(() => {
-    if (isPaused || maxSlideIndex <= 0) return undefined;
+    if (isPaused || maxSlideIndex <= 0) return;
     const timer = window.setInterval(() => {
       setActiveSlide((current) => (current >= maxSlideIndex ? 0 : current + 1));
     }, 3200);
