@@ -32,7 +32,7 @@ exports.getNearbyEvents = async (req, res) => {
             location,
             startDate,
             endDate,
-            radius ? parseInt(radius) : 25
+            radius ? parseInt(radius, 10) : 25
         );
 
         // Cache the results
