@@ -288,3 +288,4 @@ Return a brief explanation of changes made.
 }
 
 module.exports = new ItineraryAdjustmentService();
+.catch(err => console.error("Promise.all failed:", err));
