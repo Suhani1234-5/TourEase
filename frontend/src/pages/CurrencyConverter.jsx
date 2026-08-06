@@ -53,7 +53,7 @@ function convert(amount, from, to, rates) {
 }
 
 function formatResult(value, code) {
-  if (value === null || isNaN(value)) return "—";
+  if (value === null || Number.isNaN(value)) return "—";
   const noFractionCurrencies = ["JPY", "KRW", "IDR"];
   const useNoFractions = noFractionCurrencies.includes(code);
   const opts = {
