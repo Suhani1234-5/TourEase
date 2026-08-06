@@ -167,7 +167,7 @@ export default function TripPlanner() {
 
   useEffect(() => {
     const style = document.createElement("style");
-    style.innerHTML = `
+    style.textContent = `
       @media print {
         body * { visibility: hidden; }
         #print-area, #print-area * { visibility: visible; }
