@@ -13,7 +13,7 @@ const eventRoutes = require("./routes/eventRoutes");
 const weatherRoutes = require("./routes/weatherRoutes");
 const smartPlannerRoutes = require("./routes/smartPlannerRoutes");
 const reviewRoutes = require("./routes/reviewRoutes");
-const chatRoutes = require("./routes/chatroutes");
+const chatRoutes = require("./routes/chatRoutes");
 const expenseRoutes = require("./routes/expenseRoutes");
 const lockerRoutes = require("./routes/lockerRoutes");
 
