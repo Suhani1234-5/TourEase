@@ -16,7 +16,9 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 18
-      - name: Install dependencies
+      - name: Install backend dependencies
+        working-directory: backend
         run: npm install
-      - name: Run tests
+      - name: Run backend tests
+        working-directory: backend
         run: npm test
