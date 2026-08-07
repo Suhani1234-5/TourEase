@@ -34,7 +34,7 @@ export default function SmartTripPlanner() {
 
   useEffect(() => {
     const style = document.createElement('style');
-    style.innerHTML = `
+    style.textContent = `
       @media print {
         body * { visibility: hidden; }
         #smart-planner-print, #smart-planner-print * { visibility: visible; }
