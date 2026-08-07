@@ -227,7 +227,7 @@ class WeatherService {
     _getMockWeather(location, dates) {
         const forecasts = [];
         const startStr = dates.start || (Array.isArray(dates) ? dates[0] : null);
-        const endStr = dates.end || (Array.isArray(dates) ? dates[dates.length - 1] : null);
+        const endStr = dates.end || (Array.isArray(dates) ? dates.at(-1) : null);
         const startDate = startStr ? new Date(startStr) : new Date();
         const endDate = endStr ? new Date(endStr) : new Date(startDate);
         const dayCount = Math.max(1, Math.round((endDate - startDate) / (1000 * 60 * 60 * 24)) + 1);
