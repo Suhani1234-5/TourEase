@@ -2,7 +2,7 @@ const rateLimit = require('express-rate-limit');
 
 // Rate limiter for AI trip generation to prevent API abuse
 const aiTripLimiter = rateLimit({
-  windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS) || 15 * 60 * 1000, // 15 minutes default
+  windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS, 10) || 15 * 60 * 1000, // 15 minutes default
   max: parseInt(process.env.RATE_LIMIT_MAX) || 10, // limit each IP to 10 requests per windowMs
   message: {
     success: false,
