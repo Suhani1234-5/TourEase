@@ -4,7 +4,6 @@ import { Mail, Lock, Eye, EyeOff, ArrowLeft } from "lucide-react";
 import { api } from "../services/api";
 import { API_BASE_URL } from "../config/auth";
 
-
 export default function Login() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -26,6 +25,7 @@ export default function Login() {
   const handleGoogleLogin = () => {
     window.location.href = `${API_BASE_URL}/auth/google`;
   };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
 
@@ -96,9 +96,12 @@ export default function Login() {
       <div className="w-full max-w-md bg-white dark:bg-gray-900 p-8 rounded-2xl shadow-xl dark:shadow-2xl border border-transparent dark:border-gray-800 relative">
 
         {/* BACK TO HOME BUTTON */}
-        <Link to="/" className="absolute top-10 right-8 flex items-center justify-center gap-1 text-sm font-semibold text-white px-2 py-2 rounded-lg  bg-gradient-to-r from-teal-500 to-cyan-600 dark:from-indigo-600 dark:to-purple-600 hover:from-teal-600 hover:to-cyan-700  shadow hover:shadow-lg dark:hover:from-indigo-500 dark:hover:to-purple-500 ">
-        <ArrowLeft size={18} className="sm:inline hidden "/>
-        <span>Back to Home</span>
+        <Link 
+          to="/" 
+          className="absolute top-10 right-8 flex items-center justify-center gap-1 text-sm font-semibold text-white px-2 py-2 rounded-lg bg-gradient-to-r from-teal-500 to-cyan-600 dark:from-indigo-600 dark:to-purple-600 hover:from-teal-600 hover:to-cyan-700 shadow hover:shadow-lg dark:hover:from-indigo-500 dark:hover:to-purple-500"
+        >
+          <ArrowLeft size={18} className="sm:inline hidden" />
+          <span>Back to Home</span>
         </Link>
 
         {/* LOGO */}
@@ -143,10 +146,9 @@ export default function Login() {
           </div>
         )}
 
-        <div className="relative mb-6">
-        </div>
         {/* GOOGLE LOGIN */}
         <button
+          type="button"
           onClick={handleGoogleLogin}
           className="w-full mb-6 flex items-center justify-center gap-3 border border-gray-300 py-3 rounded-lg hover:bg-gray-50 transition"
         >
@@ -165,27 +167,33 @@ export default function Login() {
             <div className="w-full border-t border-gray-200"></div>
           </div>
           <div className="relative flex justify-center text-sm">
-            <span className="bg-white px-3 text-gray-500">or</span>
+            <span className="bg-white dark:bg-gray-900 px-3 text-gray-500">or</span>
           </div>
         </div>
+
         <form onSubmit={handleSubmit} className="space-y-5">
           {/* EMAIL */}
           <div>
-            <label className="block text-sm font-medium mb-1 text-gray-900 dark:text-white">
+            <label 
+              htmlFor="login-email" 
+              className="block text-sm font-medium mb-1 text-gray-900 dark:text-white"
+            >
               Email Address
             </label>
             <div className="relative">
               <Mail className="absolute left-3 top-3 h-5 w-5 text-gray-400 dark:text-gray-400" />
               <input
+                id="login-email"
                 type="email"
                 name="email"
                 required
                 value={formData.email}
                 onChange={handleChange}
-                className={`w-full pl-10 pr-3 py-3 border rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:ring-1 focus:ring-teal-500 dark:focus:ring-indigo-400 focus:border-teal-500 dark:focus:border-indigo-400 ${errors.email
+                className={`w-full pl-10 pr-3 py-3 border rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:ring-1 focus:ring-teal-500 dark:focus:ring-indigo-400 focus:border-teal-500 dark:focus:border-indigo-400 ${
+                  errors.email
                     ? "border-red-300 bg-red-50 dark:border-red-900 dark:bg-red-950"
                     : "border-gray-300 dark:border-gray-700"
-                  }`}
+                }`}
                 placeholder="you@example.com"
               />
             </div>
@@ -198,32 +206,38 @@ export default function Login() {
 
           {/* PASSWORD */}
           <div>
-            <label className="block text-sm font-medium mb-1 text-gray-900 dark:text-white">
+            <label 
+              htmlFor="login-password" 
+              className="block text-sm font-medium mb-1 text-gray-900 dark:text-white"
+            >
               Password
             </label>
             <div className="relative">
               <Lock className="absolute left-3 top-3 h-5 w-5 text-gray-400 dark:text-gray-400" />
               <input
+                id="login-password"
                 type={showPassword ? "text" : "password"}
                 name="password"
                 required
                 value={formData.password}
                 onChange={handleChange}
-                className={`w-full pl-10 pr-10 py-3 border rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:ring-1 focus:ring-teal-500 dark:focus:ring-indigo-400 focus:border-teal-500 dark:focus:border-indigo-400 ${errors.password
+                className={`w-full pl-10 pr-10 py-3 border rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:ring-1 focus:ring-teal-500 dark:focus:ring-indigo-400 focus:border-teal-500 dark:focus:border-indigo-400 ${
+                  errors.password
                     ? "border-red-300 bg-red-50 dark:border-red-900 dark:bg-red-950"
                     : "border-gray-300 dark:border-gray-700"
-                  }`}
+                }`}
                 placeholder="••••••••"
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-3"
+                className="absolute right-3 top-3 text-gray-400 dark:text-gray-400 hover:text-gray-600 dark:hover:text-gray-200"
+                aria-label={showPassword ? "Hide password" : "Show password"}
               >
                 {showPassword ? (
-                  <EyeOff className="h-5 w-5 text-gray-400 dark:text-gray-400" />
+                  <EyeOff className="h-5 w-5" />
                 ) : (
-                  <Eye className="h-5 w-5 text-gray-400 dark:text-gray-400" />
+                  <Eye className="h-5 w-5" />
                 )}
               </button>
             </div>
@@ -236,11 +250,12 @@ export default function Login() {
 
           {/* ACTIONS */}
           <div className="flex items-center justify-between text-sm">
-            <label className="inline-flex items-center gap-2 text-gray-600 dark:text-gray-300">
+            <label htmlFor="remember-me" className="inline-flex items-center gap-2 text-gray-600 dark:text-gray-300 cursor-pointer">
               <input
+                id="remember-me"
                 type="checkbox"
                 className="rounded border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800"
-              />{" "}
+              />
               Remember me
             </label>
             <button

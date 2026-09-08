@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Calendar, MapPin, Users, DollarSign, Trash2, ArrowRight, Plane, Plus, Sparkles, AlertTriangle } from 'lucide-react';
@@ -108,7 +107,7 @@ export default function MyTrips() {
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
             <div>
               <div className="inline-flex items-center space-x-2 bg-white/15 px-3 py-1 rounded-full text-xs font-bold tracking-wide uppercase mb-3">
-                <Sparkles className="w-3.5 h-3.5 text-orange-300" />
+                <Sparkles className="w-3.5 h-3.5 text-orange-300" aria-hidden="true" />
                 <span>My Dashboard</span>
               </div>
               <h1 className="text-4xl md:text-5xl font-black mb-3 tracking-tight">
@@ -123,7 +122,7 @@ export default function MyTrips() {
               onClick={() => navigate('/trip-planner')}
               className="inline-flex items-center gap-2 bg-orange-500 hover:bg-orange-600 dark:bg-orange-500 dark:hover:bg-orange-600 text-white px-6 py-4 rounded-xl font-bold shadow-lg shadow-orange-500/25 transition-all transform hover:scale-105 active:scale-95 duration-200"
             >
-              <Plus className="w-5 h-5" />
+              <Plus className="w-5 h-5" aria-hidden="true" />
               Plan a New Trip
             </button>
           </div>
@@ -134,8 +133,12 @@ export default function MyTrips() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Navigation Tabs */}
         <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-px mb-10">
-          <div className="flex gap-2">
+          <div className="flex gap-2" role="tablist" aria-label="Trip Filter Tabs">
             <button
+              role="tab"
+              id="tab-upcoming"
+              aria-selected={activeTab === 'upcoming'}
+              aria-controls="trips-panel"
               onClick={() => setActiveTab('upcoming')}
               className={`pb-4 px-4 font-bold text-lg border-b-2 transition-all relative ${
                 activeTab === 'upcoming'
@@ -151,6 +154,10 @@ export default function MyTrips() {
               )}
             </button>
             <button
+              role="tab"
+              id="tab-past"
+              aria-selected={activeTab === 'past'}
+              aria-controls="trips-panel"
               onClick={() => setActiveTab('past')}
               className={`pb-4 px-4 font-bold text-lg border-b-2 transition-all relative ${
                 activeTab === 'past'
@@ -168,14 +175,14 @@ export default function MyTrips() {
           </div>
 
           <div className="hidden sm:flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400 font-semibold">
-            <Plane className="w-4 h-4 text-teal-500" />
+            <Plane className="w-4 h-4 text-teal-500" aria-hidden="true" />
             <span>Total Saved: {itineraries.length}</span>
           </div>
         </div>
 
         {/* Loading Spinner */}
         {loading && (
-          <div className="flex flex-col items-center justify-center py-24">
+          <div className="flex flex-col items-center justify-center py-24" role="status" aria-live="polite">
             <div className="w-12 h-12 border-4 border-teal-500/20 border-t-teal-500 rounded-full animate-spin mb-4" />
             <p className="text-slate-500 font-semibold dark:text-slate-400">Loading your itineraries...</p>
           </div>
@@ -183,8 +190,8 @@ export default function MyTrips() {
 
         {/* Error Alert */}
         {error && (
-          <div className="bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-900 rounded-2xl p-6 text-center max-w-xl mx-auto my-12">
-            <AlertTriangle className="w-10 h-10 text-red-500 mx-auto mb-4" />
+          <div className="bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-900 rounded-2xl p-6 text-center max-w-xl mx-auto my-12" role="alert">
+            <AlertTriangle className="w-10 h-10 text-red-500 mx-auto mb-4" aria-hidden="true" />
             <h3 className="font-bold text-lg text-red-900 dark:text-red-400 mb-2">Failed to Load Trips</h3>
             <p className="text-red-600 dark:text-red-300 text-sm mb-4">{error}</p>
             <button onClick={fetchTrips} className="bg-red-600 hover:bg-red-700 text-white px-5 py-2 rounded-xl text-sm font-bold transition">
@@ -197,7 +204,7 @@ export default function MyTrips() {
         {!loading && !error && displayedTrips.length === 0 && (
           <div className="text-center py-20 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800/80 rounded-2xl p-8 max-w-xl mx-auto shadow-sm">
             <div className="w-16 h-16 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-6">
-              <Calendar className="w-8 h-8 text-slate-400" />
+              <Calendar className="w-8 h-8 text-slate-400" aria-hidden="true" />
             </div>
             <h3 className="text-xl font-bold text-slate-800 dark:text-white mb-2">
               No {activeTab} trips found
@@ -218,7 +225,12 @@ export default function MyTrips() {
 
         {/* Trips Grid */}
         {!loading && !error && displayedTrips.length > 0 && (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div 
+            id="trips-panel" 
+            role="tabpanel" 
+            aria-labelledby={activeTab === 'upcoming' ? 'tab-upcoming' : 'tab-past'}
+            className="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
+          >
             {displayedTrips.map((trip) => {
               // Extract budget class
               const isBudget = trip.budget === 'budget';
@@ -227,23 +239,33 @@ export default function MyTrips() {
               return (
                 <div
                   key={trip._id}
+                  role="button"
+                  tabIndex={0}
                   onClick={() => navigate(`/itinerary/${trip._id}`)}
-                  className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800/60 rounded-2xl shadow-sm hover:shadow-xl dark:hover:shadow-indigo-950/20 p-6 relative group cursor-pointer transition-all transform hover:-translate-y-1.5 duration-300"
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      navigate(`/itinerary/${trip._id}`);
+                    }
+                  }}
+                  aria-label={`View trip details for ${trip.destination}`}
+                  className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800/60 rounded-2xl shadow-sm hover:shadow-xl dark:hover:shadow-indigo-950/20 p-6 relative group cursor-pointer transition-all transform hover:-translate-y-1.5 duration-300 focus:outline-none focus:ring-2 focus:ring-teal-500"
                 >
                   
                   {/* Delete Button top corner */}
                   <button
                     onClick={(e) => openDeleteModal(e, trip)}
-                    className="absolute top-4 right-4 text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/40 p-2 rounded-xl transition duration-200 z-10"
+                    className="absolute top-4 right-4 text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/40 p-2 rounded-xl transition duration-200 z-10 focus:outline-none focus:ring-2 focus:ring-red-500"
                     title="Delete trip plan"
+                    aria-label={`Delete trip plan to ${trip.destination}`}
                   >
-                    <Trash2 className="w-5 h-5" />
+                    <Trash2 className="w-5 h-5" aria-hidden="true" />
                   </button>
 
                   <div className="pr-8">
                     {/* Destination Title */}
                     <div className="flex items-start gap-2 mb-3">
-                      <MapPin className="w-5 h-5 text-teal-500 shrink-0 mt-0.5" />
+                      <MapPin className="w-5 h-5 text-teal-500 shrink-0 mt-0.5" aria-hidden="true" />
                       <h3 className="font-extrabold text-xl text-slate-800 dark:text-slate-100 group-hover:text-teal-600 dark:group-hover:text-indigo-400 transition duration-200 leading-snug">
                         {trip.destination}
                       </h3>
@@ -251,7 +273,7 @@ export default function MyTrips() {
 
                     {/* Dates / Duration */}
                     <div className="flex items-center gap-2 text-slate-500 dark:text-slate-400 text-sm mb-5 font-semibold">
-                      <Calendar className="w-4 h-4 text-slate-400" />
+                      <Calendar className="w-4 h-4 text-slate-400" aria-hidden="true" />
                       <span>
                         {formatDate(trip.startDate)} - {formatDate(trip.endDate)}
                       </span>
@@ -264,7 +286,7 @@ export default function MyTrips() {
                     <div className="flex flex-wrap gap-2.5 mb-6">
                       {/* Travelers badge */}
                       <span className="inline-flex items-center gap-1 bg-slate-50 dark:bg-slate-800/50 border border-slate-200/50 dark:border-slate-800 text-slate-600 dark:text-slate-300 px-3 py-1 rounded-full text-xs font-bold">
-                        <Users className="w-3.5 h-3.5 text-teal-500" />
+                        <Users className="w-3.5 h-3.5 text-teal-500" aria-hidden="true" />
                         {trip.travelers} {trip.travelers === 1 ? 'Traveler' : 'Travelers'}
                       </span>
 
@@ -276,7 +298,7 @@ export default function MyTrips() {
                           ? 'bg-orange-50 dark:bg-orange-950/20 text-orange-600 dark:text-orange-400 border-orange-100 dark:border-orange-900/50'
                           : 'bg-teal-50 dark:bg-teal-950/20 text-teal-600 dark:text-teal-400 border-teal-100 dark:border-teal-900/50'
                       }`}>
-                        <DollarSign className="w-3.5 h-3.5" />
+                        <DollarSign className="w-3.5 h-3.5" aria-hidden="true" />
                         {trip.budget}
                       </span>
                     </div>
@@ -284,7 +306,7 @@ export default function MyTrips() {
                     {/* Action Button */}
                     <div className="flex items-center gap-1.5 text-teal-600 dark:text-indigo-400 font-extrabold text-sm group-hover:gap-3 transition-all duration-300">
                       <span>Open Details</span>
-                      <ArrowRight className="w-4 h-4" />
+                      <ArrowRight className="w-4 h-4" aria-hidden="true" />
                     </div>
 
                   </div>
@@ -297,16 +319,22 @@ export default function MyTrips() {
 
       {/* Delete Confirmation Modal Overlay */}
       {deleteModalOpen && selectedTrip && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs transition duration-300">
+        <div 
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs transition duration-300"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="delete-modal-title"
+          aria-describedby="delete-modal-description"
+        >
           {/* Modal Container */}
           <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 w-full max-w-md rounded-2xl p-6 shadow-2xl animate-in scale-in duration-200">
             <div className="flex items-start gap-4 mb-4">
               <div className="w-12 h-12 bg-red-50 dark:bg-red-950/20 rounded-full flex items-center justify-center shrink-0">
-                <AlertTriangle className="w-6 h-6 text-red-500" />
+                <AlertTriangle className="w-6 h-6 text-red-500" aria-hidden="true" />
               </div>
               <div>
-                <h3 className="text-xl font-bold text-slate-900 dark:text-white">Delete Trip Plan?</h3>
-                <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">
+                <h3 id="delete-modal-title" className="text-xl font-bold text-slate-900 dark:text-white">Delete Trip Plan?</h3>
+                <p id="delete-modal-description" className="text-slate-500 dark:text-slate-400 text-sm mt-1">
                   Are you sure you want to permanently delete your itinerary to <span className="font-extrabold text-slate-800 dark:text-slate-200">"{selectedTrip.destination}"</span>?
                 </p>
               </div>
