@@ -89,7 +89,10 @@ export const api = {
   // Keep all the existing weather/event methods below...
   async getItinerary(id) { return this.request(`/itinerary/${id}`); },
   async analyzeItinerary(itineraryId) {
-    return this.request(`/itinerary/${itineraryId}/analyze`);
+    return this.request('/itinerary/analyze', {
+      method: 'POST',
+      body: { itineraryId },
+    });
   },
   async getSuggestions(itineraryId, status = null) {
     const query = status ? `?status=${status}` : '';
