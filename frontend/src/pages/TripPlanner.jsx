@@ -159,11 +159,16 @@ export default function TripPlanner() {
   const [isRefining, setIsRefining] = useState(false);
   const [showResetConfirm, setShowResetConfirm] = useState(false);
 
+  const isDateValid =
+    !formData.startDate ||
+    !formData.endDate ||
+    new Date(formData.endDate) >= new Date(formData.startDate);
+
   const isStep1Valid =
-    formData.destination.trim() !== "" &&
-    formData.startDate !== "" &&
-    formData.endDate !== "";
-  const isStep3Valid = formData.interests.length > 0;
+    formData.destination.trim() !== '' &&
+    formData.startDate !== '' &&
+    formData.endDate !== '' &&
+    isDateValid;
 
   useEffect(() => {
     const style = document.createElement("style");
@@ -220,7 +225,12 @@ export default function TripPlanner() {
       setError("Missing information. Please go back and fill in all details.");
       return;
     }
-
+    const start = new Date(formData.startDate);
+    const end = new Date(formData.endDate);
+    if (end < start) {
+      setError("End date cannot be earlier than start date.");
+      return;
+    }
     setIsGenerating(true);
     setError("");
 
@@ -525,7 +535,9 @@ export default function TripPlanner() {
                   className="w-full bg-gray-50 dark:bg-gray-800 border dark:border-gray-700 rounded-xl px-6 py-4 text-lg outline-none focus:ring-2 focus:ring-teal-500/20 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-300"
                 />
               </div>
-              <div className="grid md:grid-cols-2 gap-6">
+           
+              <div className="grid md:grid-cols-2 gap-8">     
+                {/* Start Date */}
                 <div className="bg-white dark:bg-gray-900 rounded-2xl p-8 shadow-xl border dark:border-gray-800">
                   <label className="flex items-center text-sm font-bold text-gray-700 dark:text-gray-300 mb-3 uppercase tracking-wider">
                     <Calendar className="w-5 h-5 mr-2 text-teal-500" /> Start
@@ -538,23 +550,32 @@ export default function TripPlanner() {
                     className="w-full bg-gray-50 dark:bg-gray-800 border dark:border-gray-700 rounded-xl px-6 py-4 outline-none text-gray-900 dark:text-white"
                   />
                 </div>
+
+                {/* End Date */}
                 <div className="bg-white dark:bg-gray-900 rounded-2xl p-8 shadow-xl border dark:border-gray-800">
                   <label className="flex items-center text-sm font-bold text-gray-700 dark:text-gray-300 mb-3 uppercase tracking-wider">
                     <Calendar className="w-5 h-5 mr-2 text-orange-500" /> End
                     Date
                   </label>
                   <input
-                    type="date"
-                    value={formData.endDate}
-                    min={formData.startDate || undefined}
-                    onChange={(e) => handleEndDateChange(e.target.value)}
-                    className="w-full bg-gray-50 dark:bg-gray-800 border dark:border-gray-700 rounded-xl px-6 py-4 outline-none text-gray-900 dark:text-white transition-all focus:ring-2 focus:ring-teal-500/20"
-                  />
-                  {formData.startDate && (
-                    <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
-                      Dates before {formData.startDate} are unavailable.
-                    </p>
-                  )}
+  type="date"
+  value={formData.endDate}
+  min={formData.startDate || undefined}
+  onChange={(e) => handleEndDateChange(e.target.value)}
+  className="w-full bg-gray-50 dark:bg-gray-800 border dark:border-gray-700 rounded-xl px-6 py-4 outline-none text-gray-900 dark:text-white transition-all focus:ring-2 focus:ring-teal-500/20"
+/>
+
+{!isDateValid && (
+  <p className="text-red-600 text-sm mt-2 font-medium">
+    End date cannot be earlier than start date.
+  </p>
+)}
+
+{formData.startDate && (
+  <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+    Dates before {formData.startDate} are unavailable.
+  </p>
+)}
                 </div>
               </div>
             </StepSection>
@@ -600,6 +621,7 @@ export default function TripPlanner() {
                   </button>
                 </div>
               </div>
+
               <div className="bg-white dark:bg-gray-900 rounded-2xl p-8 shadow-xl border dark:border-gray-800">
                 <label className="flex items-center text-sm font-bold text-gray-700 dark:text-gray-300 mb-4 uppercase tracking-wider">
                   <DollarSign className="w-5 h-5 mr-2 text-teal-500" /> Budget
