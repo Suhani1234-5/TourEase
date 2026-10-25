@@ -262,7 +262,7 @@ export default function TripPlanner() {
 
   const handleStartOver = () => {
     setShowResetConfirm(false);
-    setGeneratedPlane(null);
+    setGeneratedPlan(null);
     setStep(1);
     setFormData({
       destination: "",

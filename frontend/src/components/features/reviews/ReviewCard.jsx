@@ -143,7 +143,7 @@ const ReviewCard = ({ review, refreshReviews }) => {
       <div className="mt-4 pt-3 border-t border-gray-100 dark:border-gray-800 flex items-center justify-between">
         <button
           onClick={handleLike}
-          disabled={isLiked || isMock}
+          disabled={isLiked || Boolean(review?.isMock)}
           className={`flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1.5 rounded-lg border transition-all duration-200 ${
             isLiked
               ? "bg-teal-50 dark:bg-teal-900/20 border-teal-200 dark:border-teal-800 text-teal-600 dark:text-teal-400 cursor-default"
